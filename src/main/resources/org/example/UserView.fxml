@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="15" alignment="TOP_CENTER" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.GUI.UserWindowController"
+      style="-fx-background-color: #f4f7f6; -fx-font-family: 'Segoe UI';">
+
+    <padding>
+        <Insets top="25" right="25" bottom="25" left="25"/>
+    </padding>
+
+    <Label text="Gestion des Utilisateurs TalentFlow"
+           style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+
+    <Separator/>
+
+    <GridPane hgap="15" vgap="15" alignment="CENTER">
+        <columnConstraints>
+            <ColumnConstraints minWidth="150" prefWidth="200"/>
+            <ColumnConstraints minWidth="150" prefWidth="200"/>
+        </columnConstraints>
+
+        <TextField fx:id="nomField" promptText="Nom"
+                   GridPane.columnIndex="0" GridPane.rowIndex="0" style="-fx-padding: 8;"/>
+        <TextField fx:id="prenomField" promptText="Prénom"
+                   GridPane.columnIndex="1" GridPane.rowIndex="0" style="-fx-padding: 8;"/>
+
+        <TextField fx:id="emailField" promptText="Email (ex: test@mail.com)"
+                   GridPane.columnIndex="0" GridPane.rowIndex="1" style="-fx-padding: 8;"/>
+        <TextField fx:id="telField" promptText="Téléphone (8 chiffres)"
+                   GridPane.columnIndex="1" GridPane.rowIndex="1" style="-fx-padding: 8;"/>
+
+        <PasswordField fx:id="passField" promptText="Mot de passe"
+                       GridPane.columnIndex="0" GridPane.rowIndex="2" style="-fx-padding: 8;"/>
+        <ComboBox fx:id="roleCombo" promptText="Choisir un rôle"
+                  prefWidth="200" GridPane.columnIndex="1" GridPane.rowIndex="2" style="-fx-padding: 5;"/>
+    </GridPane>
+
+    <HBox spacing="15" alignment="CENTER">
+        <Button text="Ajouter" onAction="#handleInsert"
+                style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold;"/>
+        <Button text="Modifier" onAction="#handleUpdate"
+                style="-fx-background-color: #f39c12; -fx-text-fill: white; -fx-font-weight: bold;"/>
+        <Button text="Supprimer" onAction="#handleDelete"
+                style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold;"/>
+        <Button text="Effacer" onAction="#clearFields"
+                style="-fx-background-color: #95a5a6; -fx-text-fill: white;"/>
+    </HBox>
+
+    <Separator/>
+
+    <TableView fx:id="userTable" VBox.vgrow="ALWAYS" style="-fx-background-radius: 5;">
+        <columns>
+            <TableColumn fx:id="colNom" text="Nom" prefWidth="120"/>
+            <TableColumn fx:id="colEmail" text="Email" prefWidth="200"/>
+            <TableColumn fx:id="colRole" text="Rôle" prefWidth="100"/>
+            <TableColumn fx:id="colTel" text="Téléphone" prefWidth="120"/>
+        </columns>
+    </TableView>
+
+</VBox>
