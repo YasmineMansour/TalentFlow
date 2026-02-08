@@ -13,29 +13,28 @@ public class App extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            // 1. Charger le fichier FXML depuis le dossier resources
-            // Le "/" au début est CRUCIAL, il part de la racine du dossier resources
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/UserView.fxml"));
-            Parent root = loader.load();
+            // 1. On charge la vue de CONNEXION au démarrage
+            // C'est le point d'entrée sécurisé de TalentFlow
+            Parent root = FXMLLoader.load(getClass().getResource("/org/example/LoginView.fxml"));
 
-            // 2. Créer la scène avec le contenu du FXML
+            // 2. Créer la scène initiale
             Scene scene = new Scene(root);
 
             // 3. Configurer la fenêtre principale
-            stage.setTitle("TalentFlow - Système de Gestion de Candidatures");
+            stage.setTitle("TalentFlow - Connexion");
             stage.setScene(scene);
 
-            // Empêcher la fenêtre d'être trop petite
+            // Définir une taille minimale raisonnable pour le Login
             stage.setMinWidth(600);
-            stage.setMinHeight(500);
+            stage.setMinHeight(450);
 
             // 4. Afficher la fenêtre
             stage.show();
 
-            System.out.println("Interface graphique lancée avec succès !");
+            System.out.println("Page de connexion lancée avec succès !");
 
         } catch (IOException e) {
-            System.err.println("Erreur lors du chargement de l'interface FXML : " + e.getMessage());
+            System.err.println("Erreur de chargement FXML (Vérifiez le chemin de LoginView.fxml) : " + e.getMessage());
             e.printStackTrace();
         } catch (Exception e) {
             System.err.println("Une erreur inattendue est survenue : " + e.getMessage());
@@ -44,7 +43,6 @@ public class App extends Application {
     }
 
     public static void main(String[] args) {
-        // Lance l'application JavaFX
         launch(args);
     }
 }
