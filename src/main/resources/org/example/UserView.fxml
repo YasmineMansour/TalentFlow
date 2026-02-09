@@ -29,33 +29,36 @@
             <ColumnConstraints minWidth="150" prefWidth="250"/>
             <ColumnConstraints minWidth="150" prefWidth="250"/>
         </columnConstraints>
+        <children>
+            <TextField fx:id="nomField" promptText="Nom"
+                       GridPane.columnIndex="0" GridPane.rowIndex="0" style="-fx-padding: 8; -fx-background-radius: 5;"/>
+            <TextField fx:id="prenomField" promptText="Prénom"
+                       GridPane.columnIndex="1" GridPane.rowIndex="0" style="-fx-padding: 8; -fx-background-radius: 5;"/>
 
-        <TextField fx:id="nomField" promptText="Nom"
-                   GridPane.columnIndex="0" GridPane.rowIndex="0" style="-fx-padding: 8; -fx-background-radius: 5;"/>
-        <TextField fx:id="prenomField" promptText="Prénom"
-                   GridPane.columnIndex="1" GridPane.rowIndex="0" style="-fx-padding: 8; -fx-background-radius: 5;"/>
+            <TextField fx:id="emailField" promptText="Email (ex: test@mail.com)"
+                       GridPane.columnIndex="0" GridPane.rowIndex="1" style="-fx-padding: 8; -fx-background-radius: 5;"/>
+            <TextField fx:id="telField" promptText="Téléphone (8 chiffres)"
+                       GridPane.columnIndex="1" GridPane.rowIndex="1" style="-fx-padding: 8; -fx-background-radius: 5;"/>
 
-        <TextField fx:id="emailField" promptText="Email (ex: test@mail.com)"
-                   GridPane.columnIndex="0" GridPane.rowIndex="1" style="-fx-padding: 8; -fx-background-radius: 5;"/>
-        <TextField fx:id="telField" promptText="Téléphone (8 chiffres)"
-                   GridPane.columnIndex="1" GridPane.rowIndex="1" style="-fx-padding: 8; -fx-background-radius: 5;"/>
+            <PasswordField fx:id="passwordField" promptText="Mot de passe"
+                           GridPane.columnIndex="0" GridPane.rowIndex="2" style="-fx-padding: 8; -fx-background-radius: 5;"/>
 
-        <PasswordField fx:id="passwordField" promptText="Mot de passe"
-                       GridPane.columnIndex="0" GridPane.rowIndex="2" style="-fx-padding: 8; -fx-background-radius: 5;"/>
-
-        <ComboBox fx:id="roleCombo" promptText="Choisir un rôle"
-                  maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="2" style="-fx-padding: 5; -fx-background-radius: 5;"/>
+            <ComboBox fx:id="roleCombo" promptText="Choisir un rôle"
+                      maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="2" style="-fx-padding: 5; -fx-background-radius: 5;"/>
+        </children>
     </GridPane>
 
     <HBox spacing="15" alignment="CENTER" style="-fx-padding: 10 0 10 0;">
-        <Button text="➕ Ajouter" onAction="#handleInsert"
-                style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 20; -fx-cursor: hand; -fx-background-radius: 5;"/>
-        <Button text="✏️ Modifier" onAction="#handleUpdate"
-                style="-fx-background-color: #f39c12; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 20; -fx-cursor: hand; -fx-background-radius: 5;"/>
-        <Button text="🗑️ Supprimer" onAction="#handleDelete"
-                style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 20; -fx-cursor: hand; -fx-background-radius: 5;"/>
-        <Button text="🧹 Effacer" onAction="#clearFields"
-                style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 20; -fx-cursor: hand; -fx-background-radius: 5;"/>
+        <children>
+            <Button text="➕ Ajouter" onAction="#handleInsert"
+                    style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 20; -fx-cursor: hand; -fx-background-radius: 5;"/>
+            <Button text="✏️ Modifier" onAction="#handleUpdate"
+                    style="-fx-background-color: #f39c12; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 20; -fx-cursor: hand; -fx-background-radius: 5;"/>
+            <Button text="🗑️ Supprimer" onAction="#handleDelete"
+                    style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 20; -fx-cursor: hand; -fx-background-radius: 5;"/>
+            <Button text="🧹 Effacer" onAction="#clearFields"
+                    style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 20; -fx-cursor: hand; -fx-background-radius: 5;"/>
+        </children>
     </HBox>
 
     <Separator/>

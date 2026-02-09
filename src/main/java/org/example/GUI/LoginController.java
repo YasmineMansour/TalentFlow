@@ -42,6 +42,19 @@ public class LoginController {
         }
     }
 
+    @FXML
+    private void handleShowRegister() {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/org/example/RegisterView.fxml"));
+            Stage stage = (Stage) emailField.getScene().getWindow();
+            stage.getScene().setRoot(root);
+            stage.setTitle("TalentFlow - Inscription");
+        } catch (IOException e) {
+            errorLabel.setText("Erreur de chargement de la page d'inscription.");
+            e.printStackTrace();
+        }
+    }
+
     private void loadDashboard() {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/org/example/MainDashboard.fxml"));
@@ -50,7 +63,7 @@ public class LoginController {
             stage.setTitle("TalentFlow - Dashboard");
             stage.centerOnScreen();
         } catch (IOException e) {
-            System.err.println("Erreur chargement FXML: " + e.getMessage());
+            System.err.println("Erreur chargement Dashboard FXML: " + e.getMessage());
         }
     }
 }

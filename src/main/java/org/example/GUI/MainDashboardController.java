@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import org.example.model.User;
 
 import java.io.IOException;
+import java.net.URL;
 
 public class MainDashboardController {
 
@@ -22,80 +23,84 @@ public class MainDashboardController {
 
     @FXML
     public void initialize() {
-        // 1. Vérifier si un utilisateur est bien connecté
         User currentUser = UserSession.getInstance();
 
         if (currentUser == null) {
-            // Sécurité : si pas de session, on ferme ou on redirige
-            System.err.println("Tentative d'accès sans session active.");
+            System.err.println("Accès refusé : Aucune session active.");
             return;
         }
 
-        // 2. Personnaliser l'accueil
         if (welcomeLabel != null) {
-            welcomeLabel.setText("Bienvenue, " + currentUser.getPrenom() + " (" + currentUser.getRole() + ")");
+            welcomeLabel.setText("Bienvenue, " + currentUser.getPrenom() + " [" + currentUser.getRole().toUpperCase() + "]");
         }
 
-        // 3. Gestion des droits d'accès (RBAC)
-        String role = currentUser.getRole().toUpperCase();
+        applySecurityRestrictions(currentUser.getRole().toUpperCase());
+    }
 
-        if (!role.equals("ADMIN")) {
-            // Seul l'ADMIN peut voir le bouton de gestion des utilisateurs
+    private void applySecurityRestrictions(String role) {
+        if (!role.equalsIgnoreCase("ADMIN")) {
             if (btnUsers != null) {
                 btnUsers.setVisible(false);
-                btnUsers.setManaged(false); // Libère l'espace dans la barre latérale
+                btnUsers.setManaged(false);
             }
-        }
-
-        // Logique spécifique pour le CANDIDAT
-        if (role.equals("CANDIDAT")) {
-            // Un candidat ne gère pas les offres, il les consulte seulement
-            // Tu peux désactiver d'autres boutons ici
         }
     }
 
     @FXML
     private void showUsers() {
+        // Chemin absolu à partir de la racine des ressources
         loadView("/org/example/UserView.fxml");
     }
 
     @FXML
     private void showOffres() {
-        // Simulation d'une vue pour le Front-Office (Candidat/RH)
         loadView("/org/example/OffresView.fxml");
     }
 
     /**
-     * Méthode générique pour charger une vue dans la zone centrale
+     * Charge dynamiquement un fichier FXML dans la zone centrale
      */
     private void loadView(String fxmlPath) {
         try {
-            Parent view = FXMLLoader.load(getClass().getResource(fxmlPath));
-            contentArea.getChildren().setAll(view);
+            URL resource = getClass().getResource(fxmlPath);
+
+            if (resource == null) {
+                throw new IOException("Fichier introuvable : " + fxmlPath);
+            }
+
+            FXMLLoader loader = new FXMLLoader(resource);
+            Parent view = loader.load();
+
+            // On vide et on remplace le contenu de la zone centrale
+            contentArea.getChildren().clear();
+            contentArea.getChildren().add(view);
+
         } catch (IOException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Erreur de navigation");
-            alert.setHeaderText("Impossible de charger la vue");
-            alert.setContentText("Le fichier FXML est introuvable : " + fxmlPath);
-            alert.showAndWait();
+            showErrorAlert("Erreur de navigation", "Impossible de charger la page : " + fxmlPath);
             e.printStackTrace();
         }
     }
 
     @FXML
     private void handleLogout() {
-        // Nettoyer la session
         UserSession.cleanUserSession();
-
         try {
-            // Retour à la page de connexion
             Parent root = FXMLLoader.load(getClass().getResource("/org/example/LoginView.fxml"));
             Stage stage = (Stage) contentArea.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("TalentFlow - Connexion");
+            stage.centerOnScreen();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Erreur lors de la déconnexion : " + e.getMessage());
             System.exit(0);
         }
+    }
+
+    private void showErrorAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

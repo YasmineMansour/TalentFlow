@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox alignment="CENTER" spacing="20.0" prefHeight="400.0" prefWidth="600.0"
+<VBox alignment="CENTER" spacing="20.0" prefHeight="450.0" prefWidth="600.0"
       style="-fx-background-color: #f4f7f6;"
-      xmlns="https://javafx.com/javafx/17"
+      xmlns="http://javafx.com/javafx/17"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="org.example.GUI.LoginController">
     <children>
@@ -33,6 +32,11 @@
                         <Font size="13.0" />
                     </font>
                 </Label>
+
+                <Separator prefWidth="200.0" />
+
+                <Hyperlink text="Pas encore de compte ? S'inscrire ici" onAction="#handleShowRegister"
+                           alignment="CENTER" maxWidth="Infinity" style="-fx-text-fill: #2980b9; -fx-font-size: 13;"/>
             </children>
         </VBox>
     </children>

@@ -7,40 +7,52 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserDAO {
-    // Connexion à la base de données via ton utilitaire MyConnection
-    private Connection conn = MyConnection.getInstance().getConnection();
+    private Connection conn;
 
-    // --- MÉTHODE LOGIN (Pour LoginController) ---
-    // Résout l'erreur : cannot find symbol method login
+    public UserDAO() {
+        // Initialisation sécurisée dans le constructeur
+        try {
+            this.conn = MyConnection.getInstance().getConnection();
+            if (this.conn == null) {
+                System.err.println("❌ UserDAO : La connexion est nulle. Vérifiez XAMPP / MySQL.");
+            }
+        } catch (Exception e) {
+            System.err.println("❌ UserDAO : Erreur lors de l'accès à MyConnection : " + e.getMessage());
+        }
+    }
+
+    // --- MÉTHODE LOGIN ---
     public User login(String email, String password) {
+        if (conn == null) return null;
         String sql = "SELECT * FROM user WHERE email = ? AND password = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, email);
             pstmt.setString(2, password);
-            ResultSet rs = pstmt.executeQuery();
-
-            if (rs.next()) {
-                // Retourne un objet User complet trouvé en base
-                return new User(
-                        rs.getInt("id"),
-                        rs.getString("nom"),
-                        rs.getString("prenom"),
-                        rs.getString("email"),
-                        rs.getString("password"),
-                        rs.getString("role"),
-                        rs.getString("telephone")
-                );
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return new User(
+                            rs.getInt("id"),
+                            rs.getString("nom"),
+                            rs.getString("prenom"),
+                            rs.getString("email"),
+                            rs.getString("password"),
+                            rs.getString("role"),
+                            rs.getString("telephone")
+                    );
+                }
             }
         } catch (SQLException e) {
-            System.err.println("Erreur lors du login : " + e.getMessage());
             e.printStackTrace();
         }
-        return null; // Retourne null si aucun utilisateur n'est trouvé
+        return null;
     }
 
-    // --- MÉTHODE CREATE (Pour handleInsert) ---
-    // Résout l'erreur : cannot resolve method 'create'
+    // --- MÉTHODE CREATE ---
     public void create(User user) {
+        if (conn == null) {
+            System.err.println("❌ Impossible de créer : Connexion BDD inexistante.");
+            return;
+        }
         String sql = "INSERT INTO user (nom, prenom, email, password, role, telephone) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, user.getNom());
@@ -50,15 +62,17 @@ public class UserDAO {
             pstmt.setString(5, user.getRole());
             pstmt.setString(6, user.getTelephone());
             pstmt.executeUpdate();
+            System.out.println("✅ Utilisateur inséré avec succès.");
         } catch (SQLException e) {
+            System.err.println("❌ Erreur SQL lors de l'insertion : " + e.getMessage());
             e.printStackTrace();
         }
     }
 
-    // --- MÉTHODE READ ALL (Pour le TableView) ---
-    // Résout l'erreur : cannot resolve method 'readAll'
+    // --- MÉTHODE READ ALL ---
     public List<User> readAll() {
         List<User> users = new ArrayList<>();
+        if (conn == null) return users;
         String sql = "SELECT * FROM user";
         try (Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
@@ -80,8 +94,8 @@ public class UserDAO {
     }
 
     // --- MÉTHODE UPDATE ---
-    // Résout l'erreur : cannot resolve method 'update'
     public void update(User user) {
+        if (conn == null) return;
         String sql = "UPDATE user SET nom=?, prenom=?, email=?, password=?, role=?, telephone=? WHERE id=?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, user.getNom());
@@ -98,8 +112,8 @@ public class UserDAO {
     }
 
     // --- MÉTHODE DELETE ---
-    // Résout l'erreur : cannot resolve method 'delete'
     public void delete(int id) {
+        if (conn == null) return;
         String sql = "DELETE FROM user WHERE id=?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, id);
