@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 import org.example.dao.UserDAO;
 import org.example.model.User;
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 public class LoginController {
 
@@ -25,6 +26,12 @@ public class LoginController {
 
         if (email.isEmpty() || password.isEmpty()) {
             errorLabel.setText("Veuillez remplir tous les champs !");
+            return;
+        }
+
+        // Contrôle de saisie Email
+        if (!Pattern.matches("^[A-Za-z0-9+_.-]+@(.+)$", email)) {
+            errorLabel.setText("Format d'email invalide !");
             return;
         }
 

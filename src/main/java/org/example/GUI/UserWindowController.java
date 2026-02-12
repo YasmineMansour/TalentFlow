@@ -7,6 +7,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.example.dao.UserDAO;
 import org.example.model.User;
+import org.example.utils.ValidationUtils;
+
 import java.util.List;
 
 public class UserWindowController {
@@ -117,8 +119,24 @@ public class UserWindowController {
 
     private boolean validerSaisie() {
         if (nomField.getText().isEmpty() || emailField.getText().isEmpty() || roleCombo.getValue() == null) {
-            statusLabel.setText("⚠️ Champs obligatoires manquants.");
-            statusLabel.setStyle("-fx-text-fill: red;");
+            statusLabel.setText("⚠️ Nom, Email et Rôle sont obligatoires.");
+            return false;
+        }
+        if (ValidationUtils.isInvalidName(nomField.getText()) || ValidationUtils.isInvalidName(prenomField.getText())) {
+            statusLabel.setText("⚠️ Nom/Prénom invalides.");
+            return false;
+        }
+        if (ValidationUtils.isInvalidEmail(emailField.getText())) {
+            statusLabel.setText("⚠️ Email invalide.");
+            return false;
+        }
+        if (ValidationUtils.isInvalidTel(telField.getText())) {
+            statusLabel.setText("⚠️ Téléphone invalide (8 chiffres).");
+            return false;
+        }
+        // Note: On ne valide le password que s'il n'est pas vide (cas de l'update)
+        if (!passwordField.getText().isEmpty() && ValidationUtils.isInvalidPassword(passwordField.getText())) {
+            statusLabel.setText("⚠️ Mot de passe trop faible.");
             return false;
         }
         return true;

@@ -6,6 +6,8 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import org.example.dao.UserDAO;
 import org.example.model.User;
+import org.example.utils.ValidationUtils;
+
 import java.io.IOException;
 
 public class RegisterController {
@@ -46,16 +48,24 @@ public class RegisterController {
     }
 
     private boolean validerChamps() {
-        if (nomField.getText().isEmpty() || emailField.getText().isEmpty() || passwordField.getText().isEmpty()) {
-            statusLabel.setText("⚠️ Veuillez remplir tous les champs.");
+        if (nomField.getText().isEmpty() || prenomField.getText().isEmpty() || emailField.getText().isEmpty()) {
+            statusLabel.setText("⚠️ Tous les champs sont obligatoires.");
             return false;
         }
-        if (!passwordField.getText().equals(confirmPasswordField.getText())) {
-            statusLabel.setText("⚠️ Les mots de passe ne correspondent pas.");
+        if (ValidationUtils.isInvalidName(nomField.getText())) {
+            statusLabel.setText("⚠️ Nom invalide (lettres uniquement).");
             return false;
         }
-        if (telField.getText().length() != 8) {
-            statusLabel.setText("⚠️ Le téléphone doit avoir 8 chiffres.");
+        if (ValidationUtils.isInvalidEmail(emailField.getText())) {
+            statusLabel.setText("⚠️ Format email incorrect.");
+            return false;
+        }
+        if (ValidationUtils.isInvalidTel(telField.getText())) {
+            statusLabel.setText("⚠️ Le téléphone doit contenir 8 chiffres.");
+            return false;
+        }
+        if (ValidationUtils.isInvalidPassword(passwordField.getText())) {
+            statusLabel.setText("⚠️ Password: 8 caractères, 1 Maj, 1 Chiffre, 1 Symbole.");
             return false;
         }
         return true;
