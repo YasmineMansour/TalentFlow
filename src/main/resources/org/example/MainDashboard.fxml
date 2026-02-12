@@ -18,17 +18,24 @@
                         <Font name="System Bold" size="24.0" />
                     </font>
                 </Label>
+
+                <Label fx:id="welcomeLabel" text="Connecté : ..." textFill="#bdc3c7">
+                    <font>
+                        <Font size="13.0" />
+                    </font>
+                </Label>
+
                 <Separator prefWidth="200.0" style="-fx-padding: 10 0 20 0;" />
 
                 <VBox spacing="15.0">
                     <children>
-                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showUsers" style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-cursor: hand;" text="👥 Utilisateurs">
+                        <Button fx:id="btnUsers" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showUsers" style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-cursor: hand;" text="👥 Utilisateurs">
                             <font>
                                 <Font size="14.0" />
                             </font>
                         </Button>
 
-                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-text-fill: #bdc3c7; -fx-cursor: hand;" text="💼 Offres d'emploi">
+                        <Button fx:id="btnOffres" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showOffres" style="-fx-background-color: transparent; -fx-text-fill: #bdc3c7; -fx-cursor: hand;" text="💼 Offres d'emploi">
                             <font>
                                 <Font size="14.0" />
                             </font>
