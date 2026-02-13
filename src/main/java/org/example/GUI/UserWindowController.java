@@ -64,46 +64,61 @@ public class UserWindowController {
     private void handleInsert() {
         if (!validerSaisie()) return;
 
-        User newUser = new User(0, nomField.getText(), prenomField.getText(),
-                emailField.getText(), passwordField.getText(),
-                roleCombo.getValue(), telField.getText());
-        userDAO.create(newUser);
-        statusLabel.setText("✅ Utilisateur ajouté !");
-        statusLabel.setStyle("-fx-text-fill: green;");
-        refreshTable();
-        clearFields();
+        // --- MODIFICATION : AJOUT CONFIRMATION ---
+        if (confirmerAction("Voulez-vous vraiment ajouter cet utilisateur ?")) {
+            User newUser = new User(0, nomField.getText(), prenomField.getText(),
+                    emailField.getText(), passwordField.getText(),
+                    roleCombo.getValue(), telField.getText());
+            userDAO.create(newUser);
+            statusLabel.setText("✅ Utilisateur ajouté !");
+            statusLabel.setStyle("-fx-text-fill: green;");
+            refreshTable();
+            clearFields();
+        }
     }
 
     @FXML
     private void handleUpdate() {
         if (selectedUser == null) {
             statusLabel.setText("⚠️ Sélectionnez un utilisateur à modifier.");
+            statusLabel.setStyle("-fx-text-fill: #e67e22;");
             return;
         }
-        if (!validerSaisie()) return;
 
-        selectedUser.setNom(nomField.getText());
-        selectedUser.setPrenom(prenomField.getText());
-        selectedUser.setEmail(emailField.getText());
-        selectedUser.setTelephone(telField.getText());
-        selectedUser.setRole(roleCombo.getValue());
-        selectedUser.setPassword(passwordField.getText());
+        // --- MODIFICATION : AJOUT CONFIRMATION ---
+        if (confirmerAction("Voulez-vous enregistrer les modifications pour " + selectedUser.getNom() + " ?")) {
+            if (!validerSaisie()) return;
 
-        userDAO.update(selectedUser);
-        statusLabel.setText("✅ Modification réussie !");
-        refreshTable();
+            selectedUser.setNom(nomField.getText());
+            selectedUser.setPrenom(prenomField.getText());
+            selectedUser.setEmail(emailField.getText());
+            selectedUser.setTelephone(telField.getText());
+            selectedUser.setRole(roleCombo.getValue());
+            selectedUser.setPassword(passwordField.getText());
+
+            userDAO.update(selectedUser);
+            statusLabel.setText("✅ Modification réussie !");
+            statusLabel.setStyle("-fx-text-fill: green;");
+            refreshTable();
+        }
     }
 
     @FXML
     private void handleDelete() {
         if (selectedUser == null) {
             statusLabel.setText("⚠️ Sélectionnez un utilisateur à supprimer.");
+            statusLabel.setStyle("-fx-text-fill: #e67e22;");
             return;
         }
-        userDAO.delete(selectedUser.getId());
-        statusLabel.setText("✅ Utilisateur supprimé !");
-        refreshTable();
-        clearFields();
+
+        // --- MODIFICATION : AJOUT CONFIRMATION ---
+        if (confirmerAction("Êtes-vous sûr de vouloir supprimer l'utilisateur " + selectedUser.getNom() + " ?")) {
+            userDAO.delete(selectedUser.getId());
+            statusLabel.setText("✅ Utilisateur supprimé !");
+            statusLabel.setStyle("-fx-text-fill: green;");
+            refreshTable();
+            clearFields();
+        }
     }
 
     @FXML
@@ -118,6 +133,8 @@ public class UserWindowController {
     }
 
     private boolean validerSaisie() {
+        statusLabel.setStyle("-fx-text-fill: red;"); // Par défaut en rouge pour les erreurs
+
         if (nomField.getText().isEmpty() || emailField.getText().isEmpty() || roleCombo.getValue() == null) {
             statusLabel.setText("⚠️ Nom, Email et Rôle sont obligatoires.");
             return false;
@@ -134,11 +151,24 @@ public class UserWindowController {
             statusLabel.setText("⚠️ Téléphone invalide (8 chiffres).");
             return false;
         }
-        // Note: On ne valide le password que s'il n'est pas vide (cas de l'update)
         if (!passwordField.getText().isEmpty() && ValidationUtils.isInvalidPassword(passwordField.getText())) {
             statusLabel.setText("⚠️ Mot de passe trop faible.");
             return false;
         }
         return true;
+    }
+
+    private boolean confirmerAction(String message) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation de l'action");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+
+        ButtonType boutonOui = new ButtonType("Oui");
+        ButtonType boutonNon = new ButtonType("Non", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getButtonTypes().setAll(boutonOui, boutonNon);
+
+        java.util.Optional<ButtonType> result = alert.showAndWait();
+        return result.isPresent() && result.get() == boutonOui;
     }
 }
