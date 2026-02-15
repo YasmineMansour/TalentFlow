@@ -1,0 +1,11 @@
+# Fichiers compilés
+target/
+*.class
+
+# IntelliJ
+.idea/
+*.iml
+*.iws
+
+# Divers
+.DS_Store
