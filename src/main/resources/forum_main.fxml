@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane fx:id="mainRoot" prefHeight="700.0" prefWidth="900.0" stylesheets="@style.css"
+            xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Controlles.MainController">
+    <left>
+        <VBox fx:id="sidebar" spacing="15" styleClass="sidebar" prefWidth="200">
+            <Label fx:id="logoLabel" text="TALENTFLOW" styleClass="logo"/>
+            <Button text="🏠 Home" onAction="#showForum" styleClass="nav-button"/>
+            <Button text="✉️ Messages" onAction="#showMessaging" styleClass="nav-button"/>
+            <Separator/>
+            <Button fx:id="darkModeBtn" text="🌙 Dark Mode" onAction="#handleDarkMode" styleClass="nav-button" />
+            <Button onAction="#handleLogout" text="🚪 Logout" styleClass="nav-button, delete-button" maxWidth="Infinity"/>
+        </VBox>
+    </left>
+    <center>
+        <StackPane fx:id="contentArea" />
+    </center>
+</BorderPane>

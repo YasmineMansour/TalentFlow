@@ -1,0 +1,237 @@
+/* ========================================= */
+/* THEME: Clean Blue - Core & Root           */
+/* ========================================= */
+.root, .app-root {
+    -fx-font-family: "Segoe UI", "Inter", sans-serif;
+    -fx-background-color: #F5F1E8; /* Light theme background from your prompt [cite: 300] */
+}
+
+/* Sidebar & Navigation */
+.sidebar {
+    -fx-background-color: #0F172A; /* Deep Navy [cite: 238, 277] */
+    -fx-padding: 20;
+    -fx-spacing: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 15, 0, 0, 0);
+}
+
+.logo {
+    -fx-text-fill: white;
+    -fx-font-size: 22px;
+    -fx-font-weight: 800;
+    -fx-padding: 0 0 15 0;
+}
+
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #94A3B8;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-padding: 12 16;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+}
+
+.nav-button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+    -fx-text-fill: white;
+}
+
+/* ========================================= */
+/* CARDS & PANELS                            */
+/* ========================================= */
+.post-card, .panel, .login-card {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-border-color: #E3E3E3;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0, 0, 4);
+}
+
+.title, .post-title {
+    -fx-text-fill: #2E5C9A; /* Primary Blue from your prompt [cite: 300] */
+    -fx-font-size: 20px;
+    -fx-font-weight: 800;
+}
+
+/* ========================================= */
+/* BUTTONS                                   */
+/* ========================================= */
+.button {
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-padding: 8 15;
+    -fx-font-weight: 700;
+    -fx-cursor: hand;
+}
+
+.primary-button, .btn-primary {
+    -fx-background-color: #2E5C9A;
+    -fx-text-fill: white;
+}
+
+.primary-button:hover {
+    -fx-background-color: #244b7d;
+}
+
+.delete-button, .btn-danger {
+    -fx-background-color: #E74C3C;
+    -fx-text-fill: white;
+}
+
+.action-button, .btn-ghost {
+    -fx-background-color: transparent;
+    -fx-border-color: #2E5C9A;
+    -fx-border-width: 1;
+    -fx-text-fill: #2E5C9A;
+}
+
+/* ========================================= */
+/* INPUTS                                    */
+/* ========================================= */
+.text-field, .text-area, .combo-box {
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: #CFCFCF;
+    -fx-background-color: white;
+    -fx-padding: 10;
+}
+
+.text-field:focused, .text-area:focused, .combo-box:focused {
+    -fx-border-color: #2E5C9A;
+}
+
+/* ========================================= */
+/* DARK THEME OVERRIDES                      */
+/* ========================================= */
+.dark-theme {
+    -fx-background-color: #020617; /* Near black background [cite: 269] */
+}
+
+.dark-theme .post-card, .dark-theme .panel {
+    -fx-background-color: #1E293B; /* Dark Slate card [cite: 261] */
+    -fx-border-color: rgba(255,255,255,0.1);
+}
+
+.dark-theme .post-title, .dark-theme .title {
+    -fx-text-fill: #60A5FA; /* Brighter blue for visibility */
+}
+
+.dark-theme .text-field, .dark-theme .text-area, .dark-theme .combo-box {
+    -fx-background-color: #334155;
+    -fx-text-fill: white;
+    -fx-border-color: #475569;
+}
+
+.dark-theme .post-meta {
+    -fx-text-fill: #94A3B8;
+}
+/* --- DARK MODE BACKGROUNDS --- */
+.dark-theme {
+    /* The main window background */
+    -fx-background-color: #0B0E14;
+}
+
+/* --- THE "WHITE" PARTS BECOME DARK --- */
+.dark-theme .main-content-area,
+.dark-theme .scroll-pane,
+.dark-theme .scroll-pane .viewport,
+.dark-theme .stack-pane {
+    /* Target the container where content is loaded */
+    -fx-background-color: #0B0E14;
+}
+
+/* --- CARDS & FORMS --- */
+.dark-theme .panel,
+.dark-theme .post-card,
+.dark-theme .login-card,
+.dark-theme .add-post-container {
+    /* The white "cards" become deep obsidian */
+    -fx-background-color: #161B22;
+    -fx-border-color: #21262D;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 10, 0, 0, 4);
+}
+
+/* --- LISTS & TABLES --- */
+.dark-theme .list-view,
+.dark-theme .table-view {
+    -fx-background-color: #161B22;
+    -fx-border-color: #30363D;
+}
+
+.dark-theme .list-cell:filled {
+    -fx-background-color: #161B22;
+    -fx-text-fill: #E6EDF3;
+}
+.dark-theme .text-field,
+.dark-theme .text-area,
+.dark-theme .combo-box,
+.dark-theme .search-field {
+    -fx-background-color: #0D1117; /* Darker than the card */
+    -fx-text-fill: white;
+    -fx-border-color: #30363D;
+}
+.dark-theme .label,
+.dark-theme .text {
+    -fx-text-fill: #E6EDF3; /* Off-white for readability */
+}
+
+/* Special "Attracting" Bold for Names we discussed */
+.dark-theme .contact-name {
+    -fx-text-fill: #F8FAFC;
+    -fx-font-weight: 900;
+}
+/* ========================================= */
+/* BOLD & ATTRACTIVE CONTACT LIST      */
+/* ========================================= */
+
+/* 1. Target the List Container */
+.list-view, #contactList {
+    -fx-background-color: #0F172A; /* Deep Navy base */
+    -fx-background-radius: 12;
+    -fx-border-color: #1E293B;
+    -fx-border-width: 1;
+}
+
+/* 2. Style the individual cells for Boldness */
+.list-view .list-cell, #contactList .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #CBD5E1; /* Soft white/grey */
+    -fx-padding: 15 12;
+    -fx-font-size: 15px;
+    -fx-font-weight: 800; /* Extra bold for "Attracting" names */
+    -fx-border-color: rgba(255, 255, 255, 0.05);
+    -fx-border-width: 0 0 1 0; /* Separator line */
+}
+
+/* 3. Hover state */
+.list-view .list-cell:hover, #contactList .list-cell:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+    -fx-text-fill: white;
+}
+
+/* 4. Selected state (The Blue Highlight) */
+.list-view .list-cell:selected, #contactList .list-cell:selected {
+    -fx-background-color: #2563EB; /* Your primary Blue */
+    -fx-text-fill: white;
+    -fx-font-weight: 900; /* Max boldness when active */
+}
+
+/* ========================================= */
+/* DEEPER DARK MODE OVERRIDES           */
+/* ========================================= */
+
+.dark-theme .list-view, .dark-theme #contactList {
+    -fx-background-color: #020617; /* True Midnight Black */
+    -fx-border-color: #0F172A;
+}
+
+.dark-theme .list-cell:filled {
+    -fx-text-fill: #F8FAFC; /* Crisp white for the names */
+}
+
+/* Remove default selection color that JavaFX adds */
+.list-view .list-cell:filled:selected:focused,
+.list-view .list-cell:filled:selected {
+    -fx-background-color: #2563EB;
+}

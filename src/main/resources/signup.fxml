@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="550.0" prefWidth="400.0" style="-fx-background-color: white;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controlles.LoginController">
+    <children>
+        <VBox alignment="CENTER" layoutX="50.0" layoutY="30.0" prefWidth="300.0" spacing="15.0">
+            <children>
+                <Label text="TalentFlow">
+                    <font>
+                        <Font name="System Bold" size="32.0" />
+                    </font>
+                </Label>
+                <Label text="Create your account" textFill="#7c7c7c" />
+
+                <VBox spacing="5.0">
+                    <children>
+                        <Label text="Username" />
+                        <TextField fx:id="regUserField" prefHeight="40.0" promptText="Choose a username" style="-fx-background-radius: 5;" />
+                    </children>
+                </VBox>
+
+                <VBox spacing="5.0">
+                    <children>
+                        <Label text="Password" />
+                        <PasswordField fx:id="regPassField" prefHeight="40.0" promptText="Create a password" style="-fx-background-radius: 5;" />
+                    </children>
+                </VBox>
+
+                <VBox spacing="5.0">
+                    <children>
+                        <Label text="I am a..." />
+                        <ComboBox fx:id="roleBox" maxWidth="Infinity" prefHeight="40.0" promptText="Select your role" style="-fx-background-radius: 5;">
+                            <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                    <String fx:value="candidate" />
+                                    <String fx:value="job-provider" />
+                                </FXCollections>
+                            </items>
+                        </ComboBox>
+                    </children>
+                </VBox>
+
+                <Button fx:id="btnSignUp" maxWidth="Infinity" onAction="#handleSignUp" prefHeight="45.0" styleClass="primary-button" text="Sign Up" />
+
+                <Separator prefWidth="200.0" />
+
+                <HBox alignment="CENTER" spacing="5.0">
+                    <children>
+                        <Label text="Already have an account?" />
+                        <Hyperlink onAction="#handleGoToLogin" text="Log In" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>

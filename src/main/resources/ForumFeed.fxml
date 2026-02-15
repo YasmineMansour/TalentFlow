@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="10" styleClass="main-feed" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controlles.ForumController">
+    <HBox alignment="CENTER_LEFT" spacing="10" styleClass="header-bar">
+        <TextField fx:id="searchBar" promptText="Search Forum..." HBox.hgrow="ALWAYS" />
+        <Button text="+ Create Post" styleClass="primary-button" onAction="#handleCreatePost" />
+        <ComboBox fx:id="sortFilter" promptText="Sort By" />
+    </HBox>
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
+        <VBox fx:id="postsContainer" spacing="15" styleClass="post-list"/>
+    </ScrollPane>
+</VBox>

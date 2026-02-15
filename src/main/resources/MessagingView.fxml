@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<HBox prefHeight="700.0" prefWidth="1000.0" spacing="20" styleClass="main-content-area" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controlles.MessagingController">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <VBox prefWidth="320" styleClass="post-card" spacing="10">
+        <VBox spacing="5" style="-fx-padding: 0 0 10 0;">
+            <Label text="Messages" styleClass="post-title" style="-fx-font-size: 26;"/>
+            <Label text="Recent Conversations" styleClass="post-meta" style="-fx-font-weight: bold; -fx-text-fill: #2563EB;"/>
+        </VBox>
+
+        <VBox VBox.vgrow="ALWAYS" style="-fx-background-color: #0F172A; -fx-background-radius: 12;">
+            <ListView fx:id="contactList" VBox.vgrow="ALWAYS" />
+        </VBox>
+    </VBox>
+    <VBox HBox.hgrow="ALWAYS" spacing="0" styleClass="post-card">
+        <HBox alignment="CENTER_LEFT" prefHeight="60" spacing="15">
+            <VBox>
+                <Label fx:id="chatPartnerName" text="Select a contact" styleClass="post-title" style="-fx-font-size: 20;"/>
+                <Label text="Online" styleClass="role-badge, candidate" style="-fx-font-size: 9;"/>
+            </VBox>
+            <Region HBox.hgrow="ALWAYS" />
+            <Button text="⋮" styleClass="action-button" style="-fx-font-size: 20;"/>
+        </HBox>
+
+        <Separator styleClass="sidebar-separator">
+            <VBox.margin><Insets top="10" bottom="10"/></VBox.margin>
+        </Separator>
+
+        <ScrollPane fx:id="scrollPane" fitToWidth="true" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent; -fx-background: transparent; -fx-border-color: transparent;">
+            <VBox fx:id="chatBubbleContainer" spacing="15" style="-fx-padding: 10;"/>
+        </ScrollPane>
+
+        <HBox spacing="15" alignment="CENTER" style="-fx-padding: 20 0 0 0;">
+            <TextField fx:id="messageInput" HBox.hgrow="ALWAYS" promptText="Type your message here..." styleClass="text-field"/>
+            <Button onAction="#handleSendMessage" styleClass="primary-button" text="Send ➔" />
+        </HBox>
+    </VBox>
+</HBox>

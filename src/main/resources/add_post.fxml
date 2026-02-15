@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+
+<VBox spacing="20" alignment="TOP_LEFT" prefWidth="450" styleClass="login-card"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controlles.AddPostController">
+
+    <stylesheets>
+        <URL value="@/style.css" /> </stylesheets>
+
+    <VBox spacing="5">
+        <Label text="Create New Post" styleClass="post-title"/>
+        <Label text="Share your thoughts with the TalentFlow community" styleClass="post-meta"/>
+    </VBox>
+
+    <Separator opacity="0.4"/>
+
+    <VBox spacing="15">
+        <VBox spacing="5">
+            <Label text="Title" style="-fx-font-weight: bold; -fx-text-fill: #475569;"/>
+            <TextField fx:id="titleField" promptText="Give your post a catchy title" styleClass="text-field" />
+        </VBox>
+
+        <VBox spacing="5">
+            <Label text="Content" style="-fx-font-weight: bold; -fx-text-fill: #475569;"/>
+            <TextArea fx:id="contentField" promptText="What's on your mind?" prefHeight="180" wrapText="true" styleClass="text-area" />
+        </VBox>
+    </VBox>
+
+    <HBox spacing="15" alignment="CENTER_RIGHT">
+        <Button text="Cancel" onAction="#handleCancel" styleClass="action-button"/>
+        <Button text="Post to TalentFlow" onAction="#handleSave" styleClass="primary-button"/>
+    </HBox>
+</VBox>
