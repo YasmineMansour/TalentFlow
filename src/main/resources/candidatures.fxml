@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import java.net.URL?>
+
+<BorderPane prefHeight="620.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.CandidatureController">
+    <stylesheets>
+        <URL value="@/style.css" />
+    </stylesheets>
+
+    <padding><Insets top="20" right="20" bottom="20" left="20" /></padding>
+
+    <!-- ── TOP: Header ───────────────────────────────────── -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="12" BorderPane.margin="$marginBottom">
+            <padding><Insets bottom="16" /></padding>
+            <Button onAction="#handleRetour" styleClass="button, btn-secondary" text="←  Retour" />
+            <Label text="Candidatures" styleClass="title" />
+            <Label text="— Postuler et consulter les candidatures pour cette offre" styleClass="subtitle" />
+        </HBox>
+    </top>
+
+    <!-- ── LEFT: Form Card ───────────────────────────────── -->
+    <left>
+        <VBox spacing="18" prefWidth="320" styleClass="panel">
+            <Label text="Nouvelle candidature" styleClass="title" style="-fx-font-size: 18px;" />
+            <Label text="Remplissez le formulaire pour postuler" styleClass="label-muted" />
+
+            <Separator />
+
+            <VBox spacing="6">
+                <Label text="Nom complet" styleClass="label-muted" />
+                <TextField fx:id="tfNomCandidat" promptText="Ex: Ahmed Ben Salah" styleClass="field" />
+            </VBox>
+
+            <VBox spacing="6">
+                <Label text="Adresse email" styleClass="label-muted" />
+                <TextField fx:id="tfEmail" promptText="Ex: ahmed@email.com" styleClass="field" />
+            </VBox>
+
+            <VBox spacing="6">
+                <Label text="CV (fichier PDF)" styleClass="label-muted" />
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Button onAction="#handleChoisirCV" styleClass="button, btn-outline" text="Parcourir..." />
+                    <Label fx:id="lblPathCV" text="Aucun fichier sélectionné" styleClass="label-muted" textOverrun="ELLIPSIS" maxWidth="160" />
+                </HBox>
+            </VBox>
+
+            <Region VBox.vgrow="ALWAYS" />
+
+            <Button onAction="#handleAjouterCandidature" maxWidth="Infinity" styleClass="button, btn-success" text="Envoyer ma candidature  →" />
+        </VBox>
+    </left>
+
+    <!-- ── CENTER: Table ─────────────────────────────────── -->
+    <center>
+        <VBox spacing="12" BorderPane.margin="$margins">
+            <padding><Insets left="20" /></padding>
+
+            <Label text="Candidatures reçues" styleClass="title" style="-fx-font-size: 18px;" />
+            <Label text="Liste des candidats ayant postulé à cette offre" styleClass="label-muted" />
+
+            <TableView fx:id="tableCandidatures" VBox.vgrow="ALWAYS" styleClass="table-view">
+                <columns>
+                    <TableColumn fx:id="colNom" prefWidth="180.0" text="Candidat" />
+                    <TableColumn fx:id="colEmail" prefWidth="220.0" text="Email" />
+                    <TableColumn fx:id="colStatut" prefWidth="110.0" text="Statut" />
+                </columns>
+                <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY" /></columnResizePolicy>
+            </TableView>
+        </VBox>
+    </center>
+</BorderPane>
