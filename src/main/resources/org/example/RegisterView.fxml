@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" spacing="15" prefHeight="550.0" prefWidth="500.0"
+      style="-fx-background-color: #f4f7f6;" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.GUI.RegisterController">
+
+    <padding><Insets top="30" right="40" bottom="30" left="40"/></padding>
+
+    <Label text="Créer un compte TalentFlow" textFill="#2c3e50">
+        <font><Font name="System Bold" size="24.0" /></font>
+    </Label>
+
+    <VBox spacing="10" maxWidth="350">
+        <TextField fx:id="nomField" promptText="Nom" style="-fx-padding: 10;"/>
+        <TextField fx:id="prenomField" promptText="Prénom" style="-fx-padding: 10;"/>
+        <TextField fx:id="emailField" promptText="Email" style="-fx-padding: 10;"/>
+        <TextField fx:id="telField" promptText="Téléphone (8 chiffres)" style="-fx-padding: 10;"/>
+        <PasswordField fx:id="passwordField" promptText="Mot de passe" style="-fx-padding: 10;"/>
+        <PasswordField fx:id="confirmPasswordField" promptText="Confirmer le mot de passe" style="-fx-padding: 10;"/>
+
+        <Button text="S'inscrire" onAction="#handleRegister" maxWidth="Infinity"
+                style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 12;"/>
+
+        <Label fx:id="statusLabel" textFill="#e74c3c" wrapText="true"/>
+
+        <Hyperlink text="Déjà un compte ? Se connecter" onAction="#handleBackToLogin" alignment="CENTER" maxWidth="Infinity"/>
+    </VBox>
+</VBox>

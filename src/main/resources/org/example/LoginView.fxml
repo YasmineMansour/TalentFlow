@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox alignment="CENTER" spacing="20.0" prefHeight="450.0" prefWidth="600.0"
+      style="-fx-background-color: #f4f7f6;"
+      xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.GUI.LoginController">
+    <children>
+        <Label text="Connexion TalentFlow" textFill="#2c3e50">
+            <font>
+                <Font name="System Bold" size="28.0" />
+            </font>
+        </Label>
+
+        <VBox maxWidth="300.0" spacing="15.0">
+            <children>
+                <TextField fx:id="emailField" promptText="Email"
+                           style="-fx-padding: 10; -fx-background-radius: 5;" />
+
+                <PasswordField fx:id="passwordField" promptText="Mot de passe"
+                               style="-fx-padding: 10; -fx-background-radius: 5;" />
+
+                <Button maxWidth="Infinity" onAction="#handleLogin"
+                        style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10; -fx-cursor: hand; -fx-background-radius: 5;"
+                        text="Se connecter" />
+
+                <Label fx:id="errorLabel" textAlignment="CENTER" wrapText="true" textFill="#e74c3c">
+                    <font>
+                        <Font size="13.0" />
+                    </font>
+                </Label>
+
+                <Separator prefWidth="200.0" />
+
+                <Hyperlink text="Pas encore de compte ? S'inscrire ici" onAction="#handleShowRegister"
+                           alignment="CENTER" maxWidth="Infinity" style="-fx-text-fill: #2980b9; -fx-font-size: 13;"/>
+            </children>
+        </VBox>
+    </children>
+</VBox>
