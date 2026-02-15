@@ -1,34 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<<<<<<< HEAD
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.example</groupId>
     <artifactId>workshop3A9</artifactId>
     <version>1.0-SNAPSHOT</version>
+=======
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.example</groupId>
+    <artifactId>talentflow</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+>>>>>>> eb1aa3574e8e87bf9bb979c37776569cf650d4a2
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+<<<<<<< HEAD
     </properties>
     <dependencies>
+=======
+        <!-- Optional: JavaFX version property -->
+        <javafx.version>21</javafx.version>
+    </properties>
+
+    <!-- Dépôts -->
+    <repositories>
+        <!-- Maven Central -->
+        <repository>
+            <id>central</id>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </repository>
+
+        <!-- Dépôt officiel MySQL pour les dernières versions -->
+        <repository>
+            <id>mysql-repo</id>
+            <name>MySQL Repository</name>
+            <url>https://repo.mysql.com/maven/</url>
+        </repository>
+    </repositories>
+
+    <!-- Dépendances -->
+    <dependencies>
+        <!-- MySQL Connector -->
+>>>>>>> eb1aa3574e8e87bf9bb979c37776569cf650d4a2
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.33</version>
         </dependency>
 
+<<<<<<< HEAD
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>22.0.1</version>
+=======
+        <!-- JavaFX -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>${javafx.version}</version>
+>>>>>>> eb1aa3574e8e87bf9bb979c37776569cf650d4a2
         </dependency>
 
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
+<<<<<<< HEAD
             <version>22.0.1</version>
         </dependency>
         <dependency>
@@ -39,6 +86,13 @@
         </dependency>
     </dependencies>
 
+=======
+            <version>${javafx.version}</version>
+        </dependency>
+    </dependencies>
+
+    <!-- Build plugins (optionnel mais recommandé pour JavaFX) -->
+>>>>>>> eb1aa3574e8e87bf9bb979c37776569cf650d4a2
     <build>
         <plugins>
             <plugin>
@@ -46,9 +100,18 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
+<<<<<<< HEAD
                     <mainClass>GUI.HomePage</mainClass>
+=======
+                    <mainClass>org.example.App</mainClass>
+>>>>>>> eb1aa3574e8e87bf9bb979c37776569cf650d4a2
                 </configuration>
             </plugin>
         </plugins>
     </build>
+<<<<<<< HEAD
 </project>
+=======
+
+</project>
+>>>>>>> eb1aa3574e8e87bf9bb979c37776569cf650d4a2
