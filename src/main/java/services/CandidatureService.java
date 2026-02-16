@@ -93,9 +93,18 @@ public class CandidatureService {
         }
     }
 
-    // DELETE
+    // DELETE (supprime d'abord les entretiens liés pour éviter l'erreur FK)
     public void delete(int id) throws SQLException {
         if (id <= 0) throw new IllegalArgumentException("ID invalide.");
+
+        // 1) supprimer les entretiens liés
+        String deleteEntretiens = "DELETE FROM entretien WHERE candidature_id=?";
+        try (PreparedStatement ps = connection.prepareStatement(deleteEntretiens)) {
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        }
+
+        // 2) supprimer la candidature
         String sql = "DELETE FROM candidature WHERE id=?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, id);

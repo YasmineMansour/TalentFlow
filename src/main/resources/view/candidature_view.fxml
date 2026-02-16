@@ -85,13 +85,16 @@
                     <Label fx:id="lblError" wrapText="true" managed="false" visible="false" styleClass="error"/>
 
                     <Separator style="-fx-opacity: 0.3;"/>
-                    <HBox spacing="10" alignment="CENTER_LEFT">
-                        <Button text="Ajouter"   onAction="#onAjouter"   styleClass="btn-primary"/>
-                        <Button text="Modifier"  onAction="#onModifier"  styleClass="btn-secondary"/>
-                        <Button text="Supprimer" onAction="#onSupprimer" styleClass="btn-danger"/>
-                        <Region HBox.hgrow="ALWAYS"/>
-                        <Button text="Vider"     onAction="#onClear"     styleClass="btn-ghost"/>
-                    </HBox>
+                    <VBox spacing="8">
+                        <HBox spacing="8" alignment="CENTER_LEFT">
+                            <Button text="Ajouter"   onAction="#onAjouter"   styleClass="btn-primary"  minWidth="80"/>
+                            <Button text="Modifier"  onAction="#onModifier"  styleClass="btn-secondary" minWidth="80"/>
+                            <Button text="Supprimer" onAction="#onSupprimer" styleClass="btn-danger"   minWidth="85"/>
+                        </HBox>
+                        <HBox spacing="8" alignment="CENTER_LEFT">
+                            <Button text="Vider"     onAction="#onClear"     styleClass="btn-ghost"    minWidth="80"/>
+                        </HBox>
+                    </VBox>
 
                 </VBox>
             </ScrollPane>
