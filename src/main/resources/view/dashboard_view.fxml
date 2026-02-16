@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controllers.DashboardController"
+            prefWidth="1100" prefHeight="700"
+            style="-fx-background-color: linear-gradient(to bottom right, #f0f2f5, #e4e8ee);">
+
+    <top>
+        <HBox spacing="10" alignment="CENTER_LEFT"
+              style="-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);">
+            <padding><Insets top="18" right="24" bottom="18" left="24"/></padding>
+            <Label text="Dashboard" style="-fx-font-size: 22; -fx-font-weight: bold; -fx-text-fill: #1a237e;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label text="Vue d'ensemble" style="-fx-text-fill: #7f8c8d; -fx-font-size: 13;"/>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox spacing="18">
+            <padding><Insets top="20" right="24" bottom="20" left="24"/></padding>
+
+            <!-- KPI CARDS -->
+            <HBox spacing="18">
+                <VBox styleClass="kpi-card, kpi-card-blue" HBox.hgrow="ALWAYS">
+                    <Label text="Total Candidatures" styleClass="kpi-label"/>
+                    <Label fx:id="lblTotalCandidatures" text="0" styleClass="kpi-value"/>
+                </VBox>
+                <VBox styleClass="kpi-card, kpi-card-green" HBox.hgrow="ALWAYS">
+                    <Label text="Total Entretiens" styleClass="kpi-label"/>
+                    <Label fx:id="lblTotalEntretiens" text="0" styleClass="kpi-value"/>
+                </VBox>
+                <VBox styleClass="kpi-card, kpi-card-orange" HBox.hgrow="ALWAYS">
+                    <Label text="Recrutements (ACCEPTE)" styleClass="kpi-label"/>
+                    <Label fx:id="lblRecrutements" text="0" styleClass="kpi-value"/>
+                </VBox>
+            </HBox>
+
+            <!-- Charts + Today list -->
+            <HBox spacing="18" VBox.vgrow="ALWAYS">
+                <!-- LEFT: Charts -->
+                <VBox spacing="16" HBox.hgrow="ALWAYS"
+                      style="-fx-background-color: white; -fx-background-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 10, 0, 0, 3);">
+                    <padding><Insets top="16" right="18" bottom="16" left="18"/></padding>
+
+                    <Label text="Répartition des candidatures"
+                           style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+                    <PieChart fx:id="pieCandidatures" prefHeight="230" legendSide="BOTTOM"/>
+
+                    <Separator/>
+
+                    <Label text="Entretiens par mois (6 derniers mois)"
+                           style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+                    <BarChart fx:id="barEntretiens" prefHeight="230" legendVisible="false">
+                        <xAxis>
+                            <CategoryAxis fx:id="barX" side="BOTTOM"/>
+                        </xAxis>
+                        <yAxis>
+                            <NumberAxis fx:id="barY" side="LEFT"/>
+                        </yAxis>
+                    </BarChart>
+                </VBox>
+
+                <!-- RIGHT: Today list -->
+                <VBox spacing="12" prefWidth="300" minWidth="260"
+                      style="-fx-background-color: white; -fx-background-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 10, 0, 0, 3);">
+                    <padding><Insets top="16" right="18" bottom="16" left="18"/></padding>
+                    <Label text="Entretiens prévus aujourd'hui"
+                           style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+                    <ListView fx:id="lvToday" VBox.vgrow="ALWAYS"
+                              style="-fx-background-color: transparent; -fx-background-radius: 10;"/>
+                </VBox>
+            </HBox>
+        </VBox>
+    </center>
+
+</BorderPane>

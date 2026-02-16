@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controllers.EntretienController"
+            prefWidth="1100" prefHeight="700"
+            style="-fx-background-color: linear-gradient(to bottom right, #f0f2f5, #e4e8ee);">
+
+    <top>
+        <HBox spacing="10" alignment="CENTER_LEFT"
+              style="-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);">
+            <padding><Insets top="16" right="24" bottom="16" left="24"/></padding>
+            <Label text="Gestion des Entretiens"
+                   style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #1a237e;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="Rafraîchir" onAction="#onRefresh" styleClass="btn-secondary"/>
+        </HBox>
+    </top>
+
+    <center>
+        <HBox spacing="18">
+            <padding><Insets top="18" right="20" bottom="18" left="20"/></padding>
+
+            <!-- ===== LEFT: TABLE ===== -->
+            <VBox spacing="12" HBox.hgrow="ALWAYS"
+                  style="-fx-background-color: white; -fx-background-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 10, 0, 0, 3);">
+                <padding><Insets top="16" right="18" bottom="16" left="18"/></padding>
+
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="Liste des entretiens"
+                           style="-fx-font-size: 15; -fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <TextField fx:id="tfSearch" promptText="Rechercher (nom, type, statut)..."
+                               onKeyReleased="#onSearch" styleClass="search" prefWidth="250"/>
+                </HBox>
+
+                <TableView fx:id="tvEntretiens" VBox.vgrow="ALWAYS"
+                           onMouseClicked="#onTableClick">
+                    <columns>
+                        <TableColumn fx:id="colId"          text="ID"            prefWidth="45"  style="-fx-alignment: CENTER;"/>
+                        <TableColumn fx:id="colCandidature" text="Candidat"      prefWidth="150"/>
+                        <TableColumn fx:id="colDateHeure"   text="Date / Heure"  prefWidth="140" style="-fx-alignment: CENTER;"/>
+                        <TableColumn fx:id="colType"        text="Type"          prefWidth="110" style="-fx-alignment: CENTER;"/>
+                        <TableColumn fx:id="colStatut"      text="Statut"        prefWidth="95"  style="-fx-alignment: CENTER;"/>
+                        <TableColumn fx:id="colNotes"       text="Notes (T/C)"   prefWidth="85"  style="-fx-alignment: CENTER;"/>
+                        <TableColumn fx:id="colLieu"        text="Lieu"          prefWidth="115"/>
+                        <TableColumn fx:id="colLien"        text="Lien"          prefWidth="115"/>
+                    </columns>
+                </TableView>
+            </VBox>
+
+            <!-- ===== RIGHT: FORM ===== -->
+            <ScrollPane fitToWidth="true" prefWidth="400" minWidth="360"
+                        style="-fx-background-color: transparent; -fx-background: transparent;">
+                <VBox spacing="14"
+                      style="-fx-background-color: white; -fx-background-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 10, 0, 0, 3);">
+                    <padding><Insets top="18" right="20" bottom="18" left="20"/></padding>
+
+                    <Label text="Formulaire entretien"
+                           style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #1a237e;"/>
+
+                    <Separator style="-fx-opacity: 0.3;"/>
+
+                    <GridPane hgap="12" vgap="12">
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="120" prefWidth="130"/>
+                            <ColumnConstraints hgrow="ALWAYS"/>
+                        </columnConstraints>
+
+                        <!-- Row 0: Candidature -->
+                        <Label text="Candidature" styleClass="form-label" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                        <ComboBox fx:id="cbCandidature" promptText="Choisir une candidature"
+                                  maxWidth="Infinity" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                        <!-- Row 1: Date -->
+                        <Label text="Date" styleClass="form-label" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                        <DatePicker fx:id="dpDate" maxWidth="Infinity"
+                                    GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                        <!-- Row 2: Heure -->
+                        <Label text="Heure" styleClass="form-label" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                        <TextField fx:id="tfHeure" promptText="HH:mm (ex: 14:30)"
+                                   GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                        <!-- Row 3: Type -->
+                        <Label text="Type" styleClass="form-label" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                        <ComboBox fx:id="cbType" promptText="EN_LIGNE / PRESENTIEL / TELEPHONIQUE"
+                                  maxWidth="Infinity" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                        <!-- Row 4: Statut -->
+                        <Label text="Statut" styleClass="form-label" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                        <ComboBox fx:id="cbStatut" promptText="PLANIFIE / REALISE / ANNULE"
+                                  maxWidth="Infinity" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+                        <!-- Row 5: Lieu -->
+                        <Label text="Lieu" styleClass="form-label" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+                        <TextField fx:id="tfLieu" promptText="Adresse (présentiel)"
+                                   GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+                        <!-- Row 6: Lien -->
+                        <Label text="Lien" styleClass="form-label" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+                        <TextField fx:id="tfLien" promptText="URL (en ligne)"
+                                   GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+
+                        <!-- Row 7: Note technique -->
+                        <Label text="Note technique" styleClass="form-label" GridPane.rowIndex="7" GridPane.columnIndex="0"/>
+                        <TextField fx:id="tfNoteTech" promptText="0 - 20"
+                                   GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+
+                        <!-- Row 8: Note communication -->
+                        <Label text="Note comm." styleClass="form-label" GridPane.rowIndex="8" GridPane.columnIndex="0"/>
+                        <TextField fx:id="tfNoteCom" promptText="0 - 20"
+                                   GridPane.rowIndex="8" GridPane.columnIndex="1"/>
+
+                        <!-- Row 9: Commentaire -->
+                        <Label text="Commentaire" styleClass="form-label" GridPane.rowIndex="9" GridPane.columnIndex="0"/>
+                        <TextArea fx:id="taCommentaire" promptText="Remarques..."
+                                  prefRowCount="3"
+                                  GridPane.rowIndex="9" GridPane.columnIndex="1"/>
+                    </GridPane>
+
+                    <!-- Error label -->
+                    <Label fx:id="lblError" wrapText="true" managed="false" visible="false" styleClass="error"/>
+
+                    <!-- Buttons -->
+                    <Separator style="-fx-opacity: 0.3;"/>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Button text="Ajouter"   onAction="#onAjouter"         styleClass="btn-primary"/>
+                        <Button text="Modifier"  onAction="#onModifier"        styleClass="btn-secondary"/>
+                        <Button text="Supprimer" onAction="#onSupprimer"       styleClass="btn-danger"/>
+                        <Button text="Feedback"  onAction="#onAjouterFeedback" styleClass="btn-feedback"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button text="Vider"     onAction="#onClear"           styleClass="btn-ghost"/>
+                    </HBox>
+
+                </VBox>
+            </ScrollPane>
+
+        </HBox>
+    </center>
+
+</BorderPane>
