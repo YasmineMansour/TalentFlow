@@ -19,6 +19,7 @@ public class MainDashboardController {
     @FXML private StackPane contentArea;
     @FXML private Button btnUsers;
     @FXML private Button btnOffres;
+    @FXML private Button btnDashboard;
     @FXML private Label welcomeLabel;
 
     @FXML
@@ -31,10 +32,13 @@ public class MainDashboardController {
         }
 
         if (welcomeLabel != null) {
-            welcomeLabel.setText("Bienvenue, " + currentUser.getPrenom() + " [" + currentUser.getRole().toUpperCase() + "]");
+            welcomeLabel.setText(currentUser.getPrenom() + " " + currentUser.getNom() + " [" + currentUser.getRole().toUpperCase() + "]");
         }
 
         applySecurityRestrictions(currentUser.getRole().toUpperCase());
+
+        // Charger le tableau de bord statistique par défaut
+        showDashboard();
     }
 
     private void applySecurityRestrictions(String role) {
@@ -47,8 +51,12 @@ public class MainDashboardController {
     }
 
     @FXML
+    private void showDashboard() {
+        loadView("/org/example/DashboardHome.fxml");
+    }
+
+    @FXML
     private void showUsers() {
-        // Chemin absolu à partir de la racine des ressources
         loadView("/org/example/UserView.fxml");
     }
 
@@ -57,9 +65,6 @@ public class MainDashboardController {
         loadView("/org/example/OffresView.fxml");
     }
 
-    /**
-     * Charge dynamiquement un fichier FXML dans la zone centrale
-     */
     private void loadView(String fxmlPath) {
         try {
             URL resource = getClass().getResource(fxmlPath);
@@ -71,7 +76,6 @@ public class MainDashboardController {
             FXMLLoader loader = new FXMLLoader(resource);
             Parent view = loader.load();
 
-            // On vide et on remplace le contenu de la zone centrale
             contentArea.getChildren().clear();
             contentArea.getChildren().add(view);
 

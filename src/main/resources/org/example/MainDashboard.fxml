@@ -4,76 +4,72 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
+<?import javafx.geometry.Insets?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.GUI.MainDashboardController">
+<BorderPane prefHeight="750.0" prefWidth="1200.0"
+            xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.GUI.MainDashboardController"
+            stylesheets="@styles.css">
 
     <left>
-        <VBox prefHeight="700.0" prefWidth="220.0" style="-fx-background-color: #2c3e50; -fx-padding: 20;" BorderPane.alignment="CENTER">
+        <VBox prefWidth="240" styleClass="sidebar" BorderPane.alignment="CENTER">
             <children>
-                <Label text="TalentFlow" textFill="WHITE">
-                    <font>
-                        <Font name="System Bold" size="24.0" />
-                    </font>
+                <!-- Logo -->
+                <Label text="TalentFlow" styleClass="sidebar-title">
+                    <VBox.margin><Insets bottom="2"/></VBox.margin>
+                </Label>
+                <Label fx:id="welcomeLabel" text="Connecté : ..." styleClass="sidebar-subtitle">
+                    <VBox.margin><Insets bottom="15"/></VBox.margin>
                 </Label>
 
-                <Label fx:id="welcomeLabel" text="Connecté : ..." textFill="#bdc3c7">
-                    <font>
-                        <Font size="13.0" />
-                    </font>
+                <Separator style="-fx-background-color: rgba(255,255,255,0.1);">
+                    <VBox.margin><Insets bottom="20"/></VBox.margin>
+                </Separator>
+
+                <!-- Navigation -->
+                <Label text="NAVIGATION" style="-fx-text-fill: #636e72; -fx-font-size: 11px; -fx-font-weight: bold;">
+                    <VBox.margin><Insets bottom="10" left="5"/></VBox.margin>
                 </Label>
 
-                <Separator prefWidth="200.0" style="-fx-padding: 10 0 20 0;" />
-
-                <VBox spacing="15.0">
+                <VBox spacing="6">
                     <children>
-                        <Button fx:id="btnUsers" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showUsers" style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-cursor: hand;" text="👥 Utilisateurs">
-                            <font>
-                                <Font size="14.0" />
-                            </font>
-                        </Button>
+                        <Button fx:id="btnDashboard" text="📊  Tableau de bord" onAction="#showDashboard"
+                                maxWidth="Infinity" mnemonicParsing="false" styleClass="sidebar-btn-active"/>
 
-                        <Button fx:id="btnOffres" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showOffres" style="-fx-background-color: transparent; -fx-text-fill: #bdc3c7; -fx-cursor: hand;" text="💼 Offres d'emploi">
-                            <font>
-                                <Font size="14.0" />
-                            </font>
-                        </Button>
+                        <Button fx:id="btnUsers" text="👥  Utilisateurs" onAction="#showUsers"
+                                maxWidth="Infinity" mnemonicParsing="false" styleClass="sidebar-btn"/>
 
-                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-text-fill: #bdc3c7; -fx-cursor: hand;" text="📄 Candidatures">
-                            <font>
-                                <Font size="14.0" />
-                            </font>
-                        </Button>
+                        <Button fx:id="btnOffres" text="💼  Offres d'emploi" onAction="#showOffres"
+                                maxWidth="Infinity" mnemonicParsing="false" styleClass="sidebar-btn"/>
 
-                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-text-fill: #bdc3c7; -fx-cursor: hand;" text="📅 Entretiens">
-                            <font>
-                                <Font size="14.0" />
-                            </font>
-                        </Button>
+                        <Button text="📄  Candidatures"
+                                maxWidth="Infinity" mnemonicParsing="false" styleClass="sidebar-btn"/>
+
+                        <Button text="📅  Entretiens"
+                                maxWidth="Infinity" mnemonicParsing="false" styleClass="sidebar-btn"/>
                     </children>
                 </VBox>
 
-                <VBox VBox.vgrow="ALWAYS" />
+                <!-- Spacer -->
+                <Region VBox.vgrow="ALWAYS"/>
 
-                <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleLogout" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="Déconnexion">
-                    <font>
-                        <Font size="14.0" />
-                    </font>
-                </Button>
+                <Separator style="-fx-background-color: rgba(255,255,255,0.1);">
+                    <VBox.margin><Insets top="10" bottom="15"/></VBox.margin>
+                </Separator>
+
+                <Button text="Déconnexion" onAction="#handleLogout"
+                        maxWidth="Infinity" mnemonicParsing="false" styleClass="sidebar-btn-logout"/>
             </children>
         </VBox>
     </left>
 
     <center>
-        <StackPane fx:id="contentArea" prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: #f4f7f6;" BorderPane.alignment="CENTER">
+        <StackPane fx:id="contentArea" styleClass="content-area" BorderPane.alignment="CENTER">
             <children>
-                <Label text="Bienvenue dans TalentFlow" textFill="#7f8c8d">
-                    <font>
-                        <Font size="18.0" />
-                    </font>
-                </Label>
+                <Label text="Chargement..." style="-fx-text-fill: #b2bec3; -fx-font-size: 16px;"/>
             </children>
         </StackPane>
     </center>

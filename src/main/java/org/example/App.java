@@ -13,31 +13,28 @@ public class App extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            // 1. On charge la vue de CONNEXION au démarrage
-            // C'est le point d'entrée sécurisé de TalentFlow
             Parent root = FXMLLoader.load(getClass().getResource("/org/example/LoginView.fxml"));
-
-            // 2. Créer la scène initiale
             Scene scene = new Scene(root);
 
-            // 3. Configurer la fenêtre principale
+            // Charger la feuille de style globale
+            String css = getClass().getResource("/org/example/styles.css").toExternalForm();
+            scene.getStylesheets().add(css);
+
             stage.setTitle("TalentFlow - Connexion");
             stage.setScene(scene);
-
-            // Définir une taille minimale raisonnable pour le Login
-            stage.setMinWidth(600);
-            stage.setMinHeight(450);
-
-            // 4. Afficher la fenêtre
+            stage.setMinWidth(900);
+            stage.setMinHeight(550);
+            stage.setMaximized(true);
+            stage.centerOnScreen();
             stage.show();
 
-            System.out.println("Page de connexion lancée avec succès !");
+            System.out.println("✅ TalentFlow lancé avec succès !");
 
         } catch (IOException e) {
-            System.err.println("Erreur de chargement FXML (Vérifiez le chemin de LoginView.fxml) : " + e.getMessage());
+            System.err.println("Erreur de chargement FXML : " + e.getMessage());
             e.printStackTrace();
         } catch (Exception e) {
-            System.err.println("Une erreur inattendue est survenue : " + e.getMessage());
+            System.err.println("Erreur inattendue : " + e.getMessage());
             e.printStackTrace();
         }
     }

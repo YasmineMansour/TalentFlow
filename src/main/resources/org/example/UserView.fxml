@@ -3,76 +3,101 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.text.Font?>
 
-<VBox spacing="15" alignment="TOP_CENTER" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+<VBox spacing="20" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="org.example.GUI.UserWindowController"
-      style="-fx-background-color: #f4f7f6; -fx-font-family: 'Segoe UI';">
+      style="-fx-background-color: #f0f2f5;">
 
     <padding>
-        <Insets top="25" right="25" bottom="25" left="25"/>
+        <Insets top="10" right="10" bottom="10" left="10"/>
     </padding>
 
-    <Label text="Gestion des Utilisateurs TalentFlow"
-           style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;">
-        <font>
-            <Font name="System Bold" size="24.0" />
-        </font>
-    </Label>
-
-    <Separator/>
-
-    <Label fx:id="statusLabel" textFill="#e74c3c" style="-fx-font-weight: bold;" wrapText="true" textAlignment="CENTER"/>
-
-    <GridPane hgap="15" vgap="15" alignment="CENTER">
-        <columnConstraints>
-            <ColumnConstraints minWidth="150" prefWidth="250"/>
-            <ColumnConstraints minWidth="150" prefWidth="250"/>
-        </columnConstraints>
-        <children>
-            <TextField fx:id="nomField" promptText="Nom"
-                       GridPane.columnIndex="0" GridPane.rowIndex="0" style="-fx-padding: 8; -fx-background-radius: 5;"/>
-            <TextField fx:id="prenomField" promptText="Prénom"
-                       GridPane.columnIndex="1" GridPane.rowIndex="0" style="-fx-padding: 8; -fx-background-radius: 5;"/>
-
-            <TextField fx:id="emailField" promptText="Email (ex: test@mail.com)"
-                       GridPane.columnIndex="0" GridPane.rowIndex="1" style="-fx-padding: 8; -fx-background-radius: 5;"/>
-            <TextField fx:id="telField" promptText="Téléphone (8 chiffres)"
-                       GridPane.columnIndex="1" GridPane.rowIndex="1" style="-fx-padding: 8; -fx-background-radius: 5;"/>
-
-            <PasswordField fx:id="passwordField" promptText="Mot de passe"
-                           GridPane.columnIndex="0" GridPane.rowIndex="2" style="-fx-padding: 8; -fx-background-radius: 5;"/>
-
-            <ComboBox fx:id="roleCombo" promptText="Choisir un rôle"
-                      maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="2" style="-fx-padding: 5; -fx-background-radius: 5;"/>
-        </children>
-    </GridPane>
-
-    <HBox spacing="15" alignment="CENTER" style="-fx-padding: 10 0 10 0;">
-        <children>
-            <Button text="➕ Ajouter" onAction="#handleInsert"
-                    style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 20; -fx-cursor: hand; -fx-background-radius: 5;"/>
-            <Button text="✏️ Modifier" onAction="#handleUpdate"
-                    style="-fx-background-color: #f39c12; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 20; -fx-cursor: hand; -fx-background-radius: 5;"/>
-            <Button text="🗑️ Supprimer" onAction="#handleDelete"
-                    style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 20; -fx-cursor: hand; -fx-background-radius: 5;"/>
-            <Button text="🧹 Effacer" onAction="#clearFields"
-                    style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 20; -fx-cursor: hand; -fx-background-radius: 5;"/>
-        </children>
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT" spacing="15">
+        <Label text="Gestion des Utilisateurs" styleClass="title-label"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label fx:id="countLabel" text="0 utilisateur(s)" styleClass="subtitle-label"/>
     </HBox>
 
-    <Separator/>
+    <!-- Form Card -->
+    <VBox styleClass="card-small" spacing="16">
+        <Label text="Informations de l'utilisateur" styleClass="section-title"/>
+        <Separator/>
 
-    <TableView fx:id="userTable" VBox.vgrow="ALWAYS" style="-fx-background-radius: 5; -fx-border-color: #bdc3c7; -fx-border-radius: 5;">
+        <GridPane hgap="15" vgap="14" alignment="CENTER">
+            <columnConstraints>
+                <ColumnConstraints hgrow="ALWAYS" percentWidth="50"/>
+                <ColumnConstraints hgrow="ALWAYS" percentWidth="50"/>
+            </columnConstraints>
+            <children>
+                <!-- Row 0: Nom / Prénom -->
+                <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                    <Label text="Nom" style="-fx-text-fill: #636e72; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                    <TextField fx:id="nomField" promptText="Nom de famille" styleClass="text-field"/>
+                </VBox>
+                <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                    <Label text="Prénom" style="-fx-text-fill: #636e72; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                    <TextField fx:id="prenomField" promptText="Prénom" styleClass="text-field"/>
+                </VBox>
+
+                <!-- Row 1: Email / Téléphone -->
+                <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                    <Label text="Email" style="-fx-text-fill: #636e72; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                    <TextField fx:id="emailField" promptText="exemple@email.com" styleClass="text-field"/>
+                </VBox>
+                <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                    <Label text="Téléphone" style="-fx-text-fill: #636e72; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                    <TextField fx:id="telField" promptText="8 chiffres" styleClass="text-field"/>
+                </VBox>
+
+                <!-- Row 2: Password / Role -->
+                <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                    <Label text="Mot de passe" style="-fx-text-fill: #636e72; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                    <HBox spacing="0" alignment="CENTER_LEFT">
+                        <StackPane HBox.hgrow="ALWAYS">
+                            <PasswordField fx:id="passwordField" promptText="Mot de passe" styleClass="password-field"/>
+                            <TextField fx:id="passwordVisible" promptText="Mot de passe" styleClass="text-field" visible="false"/>
+                        </StackPane>
+                        <Button fx:id="togglePasswordBtn" text="👁" onAction="#togglePassword" styleClass="btn-toggle-password"/>
+                    </HBox>
+                </VBox>
+                <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                    <Label text="Rôle" style="-fx-text-fill: #636e72; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                    <ComboBox fx:id="roleCombo" promptText="Choisir un rôle" maxWidth="Infinity" styleClass="combo-box"/>
+                </VBox>
+            </children>
+        </GridPane>
+
+        <!-- Status + Actions -->
+        <Label fx:id="statusLabel" wrapText="true" textAlignment="CENTER" styleClass="error-label"/>
+
+        <HBox spacing="12" alignment="CENTER">
+            <Button text="➕  Ajouter" onAction="#handleInsert" styleClass="btn-success"/>
+            <Button text="✏️  Modifier" onAction="#handleUpdate" styleClass="btn-warning"/>
+            <Button text="🗑️  Supprimer" onAction="#handleDelete" styleClass="btn-danger"/>
+            <Button text="🧹  Effacer" onAction="#clearFields" styleClass="btn-secondary"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="📄  Exporter PDF" onAction="#handleExportPdf" styleClass="btn-primary"/>
+        </HBox>
+    </VBox>
+
+    <!-- Search Bar -->
+    <HBox spacing="12" alignment="CENTER_LEFT">
+        <TextField fx:id="searchField" promptText="🔍 Rechercher par nom, prénom ou email..."
+                   HBox.hgrow="ALWAYS" styleClass="text-field"/>
+    </HBox>
+
+    <!-- Table -->
+    <TableView fx:id="userTable" VBox.vgrow="ALWAYS" styleClass="table-view">
         <columns>
-            <TableColumn fx:id="colNom" text="Nom" prefWidth="150"/>
-            <TableColumn fx:id="colEmail" text="Email" prefWidth="250"/>
-            <TableColumn fx:id="colRole" text="Rôle" prefWidth="120"/>
-            <TableColumn fx:id="colTel" text="Téléphone" prefWidth="150"/>
+            <TableColumn fx:id="colNom" text="Nom" prefWidth="130"/>
+            <TableColumn fx:id="colPrenom" text="Prénom" prefWidth="130"/>
+            <TableColumn fx:id="colEmail" text="Email" prefWidth="230"/>
+            <TableColumn fx:id="colRole" text="Rôle" prefWidth="110"/>
+            <TableColumn fx:id="colTel" text="Téléphone" prefWidth="130"/>
         </columns>
         <placeholder>
-            <Label text="Aucun utilisateur trouvé dans la base de données."/>
+            <Label text="Aucun utilisateur trouvé" styleClass="subtitle-label"/>
         </placeholder>
     </TableView>
-
 </VBox>

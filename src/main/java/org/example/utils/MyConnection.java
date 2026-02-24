@@ -5,8 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class MyConnection {
-    // Connexion à TA base de données talent_flow_db
-    private final String url = "jdbc:mysql://localhost:3306/talent_flow_db?useSSL=false&serverTimezone=UTC";
+    private final String url = "jdbc:mysql://localhost:3306/talent_flow_db?useSSL=false&serverTimezone=UTC&autoReconnect=true";
     private final String login = "root";
     private final String pwd = "";
     private Connection connection;
@@ -14,15 +13,28 @@ public class MyConnection {
 
     // Constructeur privé (Singleton)
     private MyConnection() {
+        connect();
+    }
+
+    private void connect() {
         try {
             connection = DriverManager.getConnection(url, login, pwd);
-            System.out.println("You have been successfully connected to the database !");
+            System.out.println("✅ Connexion à la base de données réussie !");
         } catch (SQLException e) {
-            System.err.println("Erreur de connexion : " + e.getMessage());
+            System.err.println("❌ Erreur de connexion : " + e.getMessage());
         }
     }
 
     public Connection getConnection() {
+        try {
+            if (connection == null || connection.isClosed()) {
+                System.out.println("🔄 Reconnexion à la base de données...");
+                connect();
+            }
+        } catch (SQLException e) {
+            System.err.println("❌ Erreur lors de la vérification de la connexion : " + e.getMessage());
+            connect();
+        }
         return connection;
     }
 

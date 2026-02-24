@@ -2,42 +2,77 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
 
-<VBox alignment="CENTER" spacing="20.0" prefHeight="450.0" prefWidth="600.0"
-      style="-fx-background-color: #f4f7f6;"
+<HBox alignment="CENTER" prefHeight="550.0" prefWidth="900.0"
       xmlns="http://javafx.com/javafx/17"
       xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="org.example.GUI.LoginController">
-    <children>
-        <Label text="Connexion TalentFlow" textFill="#2c3e50">
-            <font>
-                <Font name="System Bold" size="28.0" />
-            </font>
-        </Label>
+      fx:controller="org.example.GUI.LoginController"
+      stylesheets="@styles.css">
 
-        <VBox maxWidth="300.0" spacing="15.0">
-            <children>
-                <TextField fx:id="emailField" promptText="Email"
-                           style="-fx-padding: 10; -fx-background-radius: 5;" />
+    <!-- Left decorative panel -->
+    <VBox alignment="CENTER" spacing="20" prefWidth="400"
+          style="-fx-background-color: linear-gradient(to bottom right, #6c5ce7, #a29bfe); -fx-padding: 50;">
+        <children>
+            <Label text="TalentFlow" style="-fx-text-fill: white; -fx-font-size: 36px; -fx-font-weight: bold;"/>
+            <Label text="Plateforme intelligente de gestion des talents"
+                   style="-fx-text-fill: rgba(255,255,255,0.85); -fx-font-size: 14px;" wrapText="true" textAlignment="CENTER"/>
+            <Region prefHeight="20"/>
+            <Label text="Connectez-vous pour accéder à votre espace"
+                   style="-fx-text-fill: rgba(255,255,255,0.7); -fx-font-size: 12px;"/>
+        </children>
+    </VBox>
 
-                <PasswordField fx:id="passwordField" promptText="Mot de passe"
-                               style="-fx-padding: 10; -fx-background-radius: 5;" />
+    <!-- Right login form -->
+    <VBox alignment="CENTER" spacing="8" prefWidth="500" style="-fx-background-color: white; -fx-padding: 50;">
+        <children>
+            <Label text="Connexion" styleClass="title-label">
+                <VBox.margin><Insets bottom="5"/></VBox.margin>
+            </Label>
+            <Label text="Accédez à votre tableau de bord" styleClass="subtitle-label">
+                <VBox.margin><Insets bottom="25"/></VBox.margin>
+            </Label>
 
-                <Button maxWidth="Infinity" onAction="#handleLogin"
-                        style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10; -fx-cursor: hand; -fx-background-radius: 5;"
-                        text="Se connecter" />
+            <VBox maxWidth="340" spacing="16">
+                <children>
+                    <!-- Email -->
+                    <VBox spacing="6">
+                        <Label text="Adresse email" style="-fx-text-fill: #636e72; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                        <TextField fx:id="emailField" promptText="exemple@email.com" styleClass="text-field"/>
+                    </VBox>
 
-                <Label fx:id="errorLabel" textAlignment="CENTER" wrapText="true" textFill="#e74c3c">
-                    <font>
-                        <Font size="13.0" />
-                    </font>
-                </Label>
+                    <!-- Password with eye toggle -->
+                    <VBox spacing="6">
+                        <Label text="Mot de passe" style="-fx-text-fill: #636e72; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                        <HBox spacing="0" alignment="CENTER_LEFT">
+                            <StackPane HBox.hgrow="ALWAYS">
+                                <PasswordField fx:id="passwordField" promptText="Entrez votre mot de passe" styleClass="password-field"/>
+                                <TextField fx:id="passwordVisible" promptText="Entrez votre mot de passe" styleClass="text-field" visible="false"/>
+                            </StackPane>
+                            <Button fx:id="togglePasswordBtn" text="👁" onAction="#togglePassword" styleClass="btn-toggle-password"/>
+                        </HBox>
+                    </VBox>
 
-                <Separator prefWidth="200.0" />
+                    <!-- Login button -->
+                    <Button text="Se connecter" onAction="#handleLogin" maxWidth="Infinity" styleClass="btn-primary">
+                        <VBox.margin><Insets top="8"/></VBox.margin>
+                    </Button>
 
-                <Hyperlink text="Pas encore de compte ? S'inscrire ici" onAction="#handleShowRegister"
-                           alignment="CENTER" maxWidth="Infinity" style="-fx-text-fill: #2980b9; -fx-font-size: 13;"/>
-            </children>
-        </VBox>
-    </children>
-</VBox>
+                    <!-- Error label -->
+                    <Label fx:id="errorLabel" textAlignment="CENTER" wrapText="true" styleClass="error-label"/>
+
+                    <!-- Forgot password -->
+                    <Hyperlink text="Mot de passe oublié ?" onAction="#handleForgotPassword"
+                               alignment="CENTER" maxWidth="Infinity" styleClass="hyperlink"/>
+
+                    <Separator>
+                        <VBox.margin><Insets top="5" bottom="5"/></VBox.margin>
+                    </Separator>
+
+                    <Hyperlink text="Pas encore de compte ? Créer un compte" onAction="#handleShowRegister"
+                               alignment="CENTER" maxWidth="Infinity" styleClass="hyperlink"/>
+                </children>
+            </VBox>
+        </children>
+    </VBox>
+</HBox>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+
+<VBox spacing="25" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.GUI.DashboardHomeController"
+      style="-fx-background-color: #f0f2f5;">
+
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+
+    <!-- Header -->
+    <VBox spacing="4">
+        <Label fx:id="greetingLabel" text="Bonjour !" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2d3436;"/>
+        <Label text="Voici un aperçu de votre plateforme TalentFlow" style="-fx-font-size: 14px; -fx-text-fill: #636e72;"/>
+    </VBox>
+
+    <!-- Stat Cards Row -->
+    <HBox spacing="20" alignment="CENTER_LEFT">
+        <children>
+            <!-- Total Users -->
+            <VBox styleClass="stat-card, stat-card-purple" spacing="8">
+                <Label text="👥" styleClass="stat-icon"/>
+                <Label fx:id="totalUsersLabel" text="0" styleClass="stat-number"/>
+                <Label text="Total Utilisateurs" styleClass="stat-label"/>
+            </VBox>
+
+            <!-- Admins -->
+            <VBox styleClass="stat-card, stat-card-blue" spacing="8">
+                <Label text="🛡" styleClass="stat-icon"/>
+                <Label fx:id="adminCountLabel" text="0" styleClass="stat-number"/>
+                <Label text="Administrateurs" styleClass="stat-label"/>
+            </VBox>
+
+            <!-- RH -->
+            <VBox styleClass="stat-card, stat-card-green" spacing="8">
+                <Label text="🏢" styleClass="stat-icon"/>
+                <Label fx:id="rhCountLabel" text="0" styleClass="stat-number"/>
+                <Label text="Ressources Humaines" styleClass="stat-label"/>
+            </VBox>
+
+            <!-- Candidats -->
+            <VBox styleClass="stat-card, stat-card-orange" spacing="8">
+                <Label text="🎓" styleClass="stat-icon"/>
+                <Label fx:id="candidatCountLabel" text="0" styleClass="stat-number"/>
+                <Label text="Candidats" styleClass="stat-label"/>
+            </VBox>
+        </children>
+    </HBox>
+
+    <Separator/>
+
+    <!-- Charts Row -->
+    <HBox spacing="20" VBox.vgrow="ALWAYS">
+        <children>
+            <!-- Pie Chart -->
+            <VBox styleClass="card-small" HBox.hgrow="ALWAYS" spacing="10">
+                <Label text="Répartition par Rôle" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2d3436;"/>
+                <PieChart fx:id="rolePieChart" prefHeight="280" legendVisible="true" labelsVisible="true"/>
+            </VBox>
+
+            <!-- Recent Users -->
+            <VBox styleClass="card-small" HBox.hgrow="ALWAYS" spacing="12" prefWidth="350">
+                <Label text="Derniers utilisateurs inscrits" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2d3436;"/>
+                <VBox fx:id="recentUsersBox" spacing="10"/>
+            </VBox>
+        </children>
+    </HBox>
+</VBox>

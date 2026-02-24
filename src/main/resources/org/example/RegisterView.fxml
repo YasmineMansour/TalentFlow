@@ -2,31 +2,103 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" spacing="15" prefHeight="550.0" prefWidth="500.0"
-      style="-fx-background-color: #f4f7f6;" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="org.example.GUI.RegisterController">
+<HBox alignment="CENTER" prefHeight="620.0" prefWidth="900.0"
+      xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.GUI.RegisterController"
+      stylesheets="@styles.css">
 
-    <padding><Insets top="30" right="40" bottom="30" left="40"/></padding>
-
-    <Label text="Créer un compte TalentFlow" textFill="#2c3e50">
-        <font><Font name="System Bold" size="24.0" /></font>
-    </Label>
-
-    <VBox spacing="10" maxWidth="350">
-        <TextField fx:id="nomField" promptText="Nom" style="-fx-padding: 10;"/>
-        <TextField fx:id="prenomField" promptText="Prénom" style="-fx-padding: 10;"/>
-        <TextField fx:id="emailField" promptText="Email" style="-fx-padding: 10;"/>
-        <TextField fx:id="telField" promptText="Téléphone (8 chiffres)" style="-fx-padding: 10;"/>
-        <PasswordField fx:id="passwordField" promptText="Mot de passe" style="-fx-padding: 10;"/>
-        <PasswordField fx:id="confirmPasswordField" promptText="Confirmer le mot de passe" style="-fx-padding: 10;"/>
-
-        <Button text="S'inscrire" onAction="#handleRegister" maxWidth="Infinity"
-                style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 12;"/>
-
-        <Label fx:id="statusLabel" textFill="#e74c3c" wrapText="true"/>
-
-        <Hyperlink text="Déjà un compte ? Se connecter" onAction="#handleBackToLogin" alignment="CENTER" maxWidth="Infinity"/>
+    <!-- Left decorative panel -->
+    <VBox alignment="CENTER" spacing="20" prefWidth="380"
+          style="-fx-background-color: linear-gradient(to bottom right, #00b894, #55efc4); -fx-padding: 50;">
+        <children>
+            <Label text="TalentFlow" style="-fx-text-fill: white; -fx-font-size: 36px; -fx-font-weight: bold;"/>
+            <Label text="Rejoignez la communauté TalentFlow et découvrez de nouvelles opportunités"
+                   style="-fx-text-fill: rgba(255,255,255,0.9); -fx-font-size: 14px;" wrapText="true" textAlignment="CENTER"/>
+            <Region prefHeight="15"/>
+            <Label text="Inscription rapide et sécurisée"
+                   style="-fx-text-fill: rgba(255,255,255,0.7); -fx-font-size: 12px;"/>
+        </children>
     </VBox>
-</VBox>
+
+    <!-- Right registration form -->
+    <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefWidth="520" style="-fx-background-color: white;">
+        <VBox alignment="CENTER" spacing="6" style="-fx-background-color: white; -fx-padding: 35 50;">
+            <children>
+                <Label text="Créer un compte" styleClass="title-label">
+                    <VBox.margin><Insets bottom="3"/></VBox.margin>
+                </Label>
+                <Label text="Remplissez les informations ci-dessous" styleClass="subtitle-label">
+                    <VBox.margin><Insets bottom="20"/></VBox.margin>
+                </Label>
+
+                <VBox maxWidth="380" spacing="14">
+                    <children>
+                        <!-- Nom / Prénom side by side -->
+                        <HBox spacing="12">
+                            <VBox spacing="5" HBox.hgrow="ALWAYS">
+                                <Label text="Nom" style="-fx-text-fill: #636e72; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                                <TextField fx:id="nomField" promptText="Votre nom" styleClass="text-field"/>
+                            </VBox>
+                            <VBox spacing="5" HBox.hgrow="ALWAYS">
+                                <Label text="Prénom" style="-fx-text-fill: #636e72; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                                <TextField fx:id="prenomField" promptText="Votre prénom" styleClass="text-field"/>
+                            </VBox>
+                        </HBox>
+
+                        <!-- Email -->
+                        <VBox spacing="5">
+                            <Label text="Email" style="-fx-text-fill: #636e72; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                            <TextField fx:id="emailField" promptText="exemple@email.com" styleClass="text-field"/>
+                        </VBox>
+
+                        <!-- Telephone -->
+                        <VBox spacing="5">
+                            <Label text="Téléphone" style="-fx-text-fill: #636e72; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                            <TextField fx:id="telField" promptText="8 chiffres" styleClass="text-field"/>
+                        </VBox>
+
+                        <!-- Password with eye toggle -->
+                        <VBox spacing="5">
+                            <Label text="Mot de passe" style="-fx-text-fill: #636e72; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                            <HBox spacing="0" alignment="CENTER_LEFT">
+                                <StackPane HBox.hgrow="ALWAYS">
+                                    <PasswordField fx:id="passwordField" promptText="Min 8 car., 1 Maj, 1 Chiffre, 1 Symbole" styleClass="password-field"/>
+                                    <TextField fx:id="passwordVisible" promptText="Min 8 car., 1 Maj, 1 Chiffre, 1 Symbole" styleClass="text-field" visible="false"/>
+                                </StackPane>
+                                <Button fx:id="togglePasswordBtn" text="👁" onAction="#togglePassword" styleClass="btn-toggle-password"/>
+                            </HBox>
+                        </VBox>
+
+                        <!-- Confirm password with eye toggle -->
+                        <VBox spacing="5">
+                            <Label text="Confirmer le mot de passe" style="-fx-text-fill: #636e72; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                            <HBox spacing="0" alignment="CENTER_LEFT">
+                                <StackPane HBox.hgrow="ALWAYS">
+                                    <PasswordField fx:id="confirmPasswordField" promptText="Retapez le mot de passe" styleClass="password-field"/>
+                                    <TextField fx:id="confirmPasswordVisible" promptText="Retapez le mot de passe" styleClass="text-field" visible="false"/>
+                                </StackPane>
+                                <Button fx:id="toggleConfirmBtn" text="👁" onAction="#toggleConfirmPassword" styleClass="btn-toggle-password"/>
+                            </HBox>
+                        </VBox>
+
+                        <!-- Register button -->
+                        <Button text="Créer mon compte" onAction="#handleRegister" maxWidth="Infinity" styleClass="btn-success">
+                            <VBox.margin><Insets top="8"/></VBox.margin>
+                        </Button>
+
+                        <!-- Status label -->
+                        <Label fx:id="statusLabel" wrapText="true" textAlignment="CENTER" styleClass="error-label"/>
+
+                        <Separator>
+                            <VBox.margin><Insets top="3" bottom="3"/></VBox.margin>
+                        </Separator>
+
+                        <Hyperlink text="Déjà un compte ? Se connecter" onAction="#handleBackToLogin"
+                                   alignment="CENTER" maxWidth="Infinity" styleClass="hyperlink"/>
+                    </children>
+                </VBox>
+            </children>
+        </VBox>
+    </ScrollPane>
+</HBox>
