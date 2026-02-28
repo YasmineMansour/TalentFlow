@@ -1,11 +1,14 @@
 module org.example.talentflow {
     requires javafx.controls;
     requires javafx.fxml;
+    requires javafx.web;
     requires java.sql;
+    requires java.desktop;
+    requires jdk.httpserver;
     requires javafx.graphics;
     requires mysql.connector.j;
 
-    // Ouvrir les contrôleurs des offres/candidatures à JavaFX FXML
+    // Ouvrir les contrôleurs des offres/avantages à JavaFX FXML
     opens controllers to javafx.fxml;
 
     // Ouvrir les entités au TableView (PropertyValueFactory)

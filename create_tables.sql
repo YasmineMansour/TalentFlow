@@ -13,13 +13,13 @@ CREATE TABLE IF NOT EXISTS offre (
     statut VARCHAR(50) DEFAULT 'PUBLISHED'
 );
 
-CREATE TABLE IF NOT EXISTS candidature (
+CREATE TABLE IF NOT EXISTS avantage (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nom_candidat VARCHAR(255) NOT NULL,
-    email VARCHAR(255),
-    cv_path VARCHAR(500),
-    statut VARCHAR(50) DEFAULT 'PENDING',
-    date_postulation DATETIME DEFAULT CURRENT_TIMESTAMP,
+    nom VARCHAR(255) NOT NULL,
+    description TEXT,
+    type VARCHAR(50) DEFAULT 'AUTRE',
     offre_id INT NOT NULL,
     FOREIGN KEY (offre_id) REFERENCES offre(id) ON DELETE CASCADE
 );
+
+

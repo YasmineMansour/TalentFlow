@@ -41,13 +41,7 @@
                             </font>
                         </Button>
 
-                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-text-fill: #bdc3c7; -fx-cursor: hand;" text="📄 Candidatures">
-                            <font>
-                                <Font size="14.0" />
-                            </font>
-                        </Button>
-
-                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-text-fill: #bdc3c7; -fx-cursor: hand;" text="📅 Entretiens">
+                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-text-fill: #bdc3c7; -fx-cursor: hand;" text=" Entretiens">
                             <font>
                                 <Font size="14.0" />
                             </font>

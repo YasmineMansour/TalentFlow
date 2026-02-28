@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.geometry.Insets?>
+<?import java.net.URL?>
+
+<BorderPane prefHeight="750.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.StatistiquesController">
+    <stylesheets>
+        <URL value="@/style.css" />
+    </stylesheets>
+
+    <padding><Insets top="16" right="16" bottom="16" left="16" /></padding>
+
+    <!-- ── TOP: Header + KPI Cards ───────────────────────── -->
+    <top>
+        <VBox spacing="14">
+            <!-- Header bar -->
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <Button onAction="#retourOffres" styleClass="button, btn-secondary" text="←  Retour aux Offres" />
+                <Label text="Tableau de Bord — Statistiques" styleClass="heading" />
+            </HBox>
+
+            <!-- KPI Cards Row -->
+            <HBox spacing="16" alignment="CENTER">
+                <!-- KPI: Total offres -->
+                <VBox alignment="CENTER" spacing="4" styleClass="kpi-card" HBox.hgrow="ALWAYS">
+                    <Label text="Total Offres" styleClass="kpi-label" />
+                    <Label fx:id="lblTotal" text="0" styleClass="kpi-value" />
+                </VBox>
+                <!-- KPI: Publiées -->
+                <VBox alignment="CENTER" spacing="4" styleClass="kpi-card, kpi-green" HBox.hgrow="ALWAYS">
+                    <Label text="Publiées" styleClass="kpi-label" />
+                    <Label fx:id="lblPublished" text="0" styleClass="kpi-value" />
+                </VBox>
+                <!-- KPI: Salaire Moy Min -->
+                <VBox alignment="CENTER" spacing="4" styleClass="kpi-card, kpi-blue" HBox.hgrow="ALWAYS">
+                    <Label text="Salaire Moy. Min" styleClass="kpi-label" />
+                    <Label fx:id="lblSalaireMoyMin" text="—" styleClass="kpi-value" />
+                </VBox>
+                <!-- KPI: Salaire Moy Max -->
+                <VBox alignment="CENTER" spacing="4" styleClass="kpi-card, kpi-purple" HBox.hgrow="ALWAYS">
+                    <Label text="Salaire Moy. Max" styleClass="kpi-label" />
+                    <Label fx:id="lblSalaireMoyMax" text="—" styleClass="kpi-value" />
+                </VBox>
+            </HBox>
+
+            <Separator />
+        </VBox>
+    </top>
+
+    <!-- ── CENTER: Charts Grid ───────────────────────────── -->
+    <center>
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent; -fx-border-color: transparent;">
+            <VBox spacing="20">
+                <padding><Insets top="8" bottom="8" /></padding>
+
+                <!-- Row 1: Two Pie Charts -->
+                <HBox spacing="20" alignment="CENTER">
+                    <VBox HBox.hgrow="ALWAYS" styleClass="chart-card">
+                        <PieChart fx:id="pieStatut" prefHeight="280" />
+                    </VBox>
+                    <VBox HBox.hgrow="ALWAYS" styleClass="chart-card">
+                        <PieChart fx:id="pieContrat" prefHeight="280" />
+                    </VBox>
+                </HBox>
+
+                <!-- Row 2: Localisations + Mode de Travail -->
+                <HBox spacing="20" alignment="CENTER">
+                    <VBox HBox.hgrow="ALWAYS" styleClass="chart-card">
+                        <BarChart fx:id="barLocalisations" prefHeight="280">
+                            <xAxis><CategoryAxis fx:id="barLocX" label="Localisation" /></xAxis>
+                            <yAxis><NumberAxis fx:id="barLocY" label="Offres" /></yAxis>
+                        </BarChart>
+                    </VBox>
+                    <VBox HBox.hgrow="ALWAYS" styleClass="chart-card">
+                        <BarChart fx:id="barModeTravail" prefHeight="280">
+                            <xAxis><CategoryAxis fx:id="barModeX" label="Mode" /></xAxis>
+                            <yAxis><NumberAxis fx:id="barModeY" label="Offres" /></yAxis>
+                        </BarChart>
+                    </VBox>
+                </HBox>
+
+                <!-- Row 3: Avantages par offre (full width) -->
+                <VBox styleClass="chart-card">
+                    <BarChart fx:id="barAvantages" prefHeight="280">
+                        <xAxis><CategoryAxis fx:id="barAvX" label="Offre" /></xAxis>
+                        <yAxis><NumberAxis fx:id="barAvY" label="Avantages" /></yAxis>
+                    </BarChart>
+                </VBox>
+
+                <!-- Row 4: Cohérence salariale vs avantages -->
+                <HBox spacing="20" alignment="CENTER">
+                    <VBox HBox.hgrow="ALWAYS" styleClass="chart-card">
+                        <PieChart fx:id="pieCoherence" prefHeight="280" />
+                    </VBox>
+                    <!-- Légende explicative -->
+                    <VBox HBox.hgrow="ALWAYS" styleClass="chart-card" spacing="10" alignment="CENTER_LEFT">
+                        <padding><Insets top="16" right="16" bottom="16" left="16" /></padding>
+                        <Label text="Légende — Cohérence" styleClass="section-title" />
+                        <Label text="🌟 Excellente : Salaire élevé + bon package avantages" style="-fx-text-fill: #059669; -fx-font-size: 13px;" wrapText="true" />
+                        <Label text="✅ Acceptable : Salaire élevé + peu d'avantages" style="-fx-text-fill: #2563EB; -fx-font-size: 13px;" wrapText="true" />
+                        <Label text="🔄 Compensée : Salaire bas + bon package avantages" style="-fx-text-fill: #D97706; -fx-font-size: 13px;" wrapText="true" />
+                        <Label text="⚠ Faible : Salaire bas + peu d'avantages" style="-fx-text-fill: #DC2626; -fx-font-size: 13px;" wrapText="true" />
+                        <Separator />
+                        <Label text="Le salaire est comparé à la moyenne globale. Le score d'attractivité ≥ 50 indique un bon package." styleClass="label-muted" wrapText="true" />
+                    </VBox>
+                </HBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>

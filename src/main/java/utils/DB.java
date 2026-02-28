@@ -17,6 +17,7 @@ public class DB {
     private DB() {
         try {
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            connection.setAutoCommit(true);
             System.out.println("Connected to talent_flow_db");
             createTablesIfNeeded();
         } catch (SQLException e) {
@@ -42,13 +43,11 @@ public class DB {
                 ")"
             );
             st.executeUpdate(
-                "CREATE TABLE IF NOT EXISTS candidature (" +
+                "CREATE TABLE IF NOT EXISTS avantage (" +
                 "  id INT AUTO_INCREMENT PRIMARY KEY," +
-                "  nom_candidat VARCHAR(255) NOT NULL," +
-                "  email VARCHAR(255)," +
-                "  cv_path VARCHAR(500)," +
-                "  statut VARCHAR(50) DEFAULT 'PENDING'," +
-                "  date_postulation DATETIME DEFAULT CURRENT_TIMESTAMP," +
+                "  nom VARCHAR(255) NOT NULL," +
+                "  description TEXT," +
+                "  type VARCHAR(50) DEFAULT 'AUTRE'," +
                 "  offre_id INT NOT NULL," +
                 "  FOREIGN KEY (offre_id) REFERENCES offre(id) ON DELETE CASCADE" +
                 ")"
@@ -69,8 +68,9 @@ public class DB {
 
     public Connection getConnection() {
         try {
-            if (connection == null || connection.isClosed()) {
+            if (connection == null || connection.isClosed() || !connection.isValid(3)) {
                 connection = DriverManager.getConnection(URL, USER, PASSWORD);
+                connection.setAutoCommit(true);
                 System.out.println("Reconnected to talent_flow_db");
             }
         } catch (SQLException e) {

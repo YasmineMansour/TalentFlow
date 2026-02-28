@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.web.WebView?>
+<?import javafx.geometry.Insets?>
+<?import java.net.URL?>
+
+<BorderPane prefHeight="700.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MapController">
+    <stylesheets>
+        <URL value="@/style.css" />
+    </stylesheets>
+
+    <top>
+        <VBox spacing="10" style="-fx-padding: 12 20 10 20;">
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <Label text="Carte des Offres" styleClass="title" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Button onAction="#retourOffres" styleClass="button, btn-secondary" text="Retour aux Offres" />
+            </HBox>
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Ma position :" styleClass="label-muted" />
+                <TextField fx:id="tfPosition" promptText="Ex: Tunis, Ariana, Sousse..." prefWidth="200" styleClass="field" />
+                <Label text="Rayon :" styleClass="label-muted" />
+                <ComboBox fx:id="comboRayon" prefWidth="120" styleClass="combo-box" />
+                <Button onAction="#handleFiltrerRayon" styleClass="button, btn-primary" text="Filtrer" />
+                <Button onAction="#handleResetCarte" styleClass="button, btn-outline" text="Tout afficher" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Label fx:id="lblResultats" text="" styleClass="label-muted" />
+            </HBox>
+
+            <Label fx:id="lblMapInfo" text="" styleClass="label-muted" style="-fx-font-size: 12px;" />
+        </VBox>
+    </top>
+
+    <center>
+        <WebView fx:id="webViewMap" />
+    </center>
+</BorderPane>

@@ -12,6 +12,12 @@ public class Offre {
     private boolean active;
     private String statut;
 
+    // Champ transient pour le classement (Or/Argent/Bronze) — non persisté en base
+    private transient String classement;
+
+    // Champ transient pour l'indice de cohérence salariale — non persisté en base
+    private transient String coherence;
+
     // 1. Constructeur par défaut (Indispensable pour "new Offre()")
     public Offre() {}
 
@@ -75,4 +81,41 @@ public class Offre {
 
     public String getStatut() { return statut; }
     public void setStatut(String statut) { this.statut = statut; }
+
+    public String getClassement() { return classement; }
+    public void setClassement(String classement) { this.classement = classement; }
+
+    public String getCoherence() { return coherence; }
+    public void setCoherence(String coherence) { this.coherence = coherence; }
+
+    // --- Salary range display helper ---
+    public String getSalaireRange() {
+        if (salaireMin == 0 && salaireMax == 0) return "Non précisé";
+        return String.format("%.0f - %.0f DT", salaireMin, salaireMax);
+    }
+
+    @Override
+    public String toString() {
+        return "Offre{" +
+                "id=" + id +
+                ", titre='" + titre + '\'' +
+                ", localisation='" + localisation + '\'' +
+                ", typeContrat='" + typeContrat + '\'' +
+                ", modeTravail='" + modeTravail + '\'' +
+                ", statut='" + statut + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Offre offre = (Offre) o;
+        return id == offre.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(id);
+    }
 }
