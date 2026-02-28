@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 import org.example.dao.UserDAO;
 import org.example.model.User;
 import org.example.utils.EmailService;
+import org.example.utils.GoogleAuthService;
 import org.example.utils.SmsService;
 import org.example.utils.ValidationUtils;
 import org.example.utils.VerificationService;
@@ -83,8 +84,7 @@ public class LoginController {
 
                         Platform.runLater(() -> {
                             if (!emailSent) {
-                                // Mode dev : afficher le code si email non configuré
-                                System.out.println("🔑 [DEV] Code 2FA : " + code);
+                                System.err.println("⚠️ Échec de l'envoi du code par email à : " + user.getEmail());
                             }
                             loadVerification();
                         });
@@ -106,13 +106,67 @@ public class LoginController {
     }
 
     @FXML
+    private void handleGoogleLogin() {
+        if (!GoogleAuthService.isConfigured()) {
+            errorLabel.setStyle("-fx-text-fill: #d63031;");
+            errorLabel.setText("⚠️ Connexion Google non configurée. Configurez CLIENT_ID et CLIENT_SECRET.");
+            return;
+        }
+
+        errorLabel.setStyle("-fx-text-fill: #636e72;");
+        errorLabel.setText("Ouverture du navigateur pour la connexion Google...");
+
+        GoogleAuthService.authenticate().thenAccept(userInfo -> {
+            Platform.runLater(() -> {
+                try {
+                    // Trouver ou créer l'utilisateur avec les infos Google
+                    User user = userDAO.findOrCreateGoogleUser(
+                            userInfo.getEmail(),
+                            userInfo.getFamilyName(),
+                            userInfo.getGivenName()
+                    );
+
+                    if (user != null) {
+                        // Envoyer un email de bienvenue si nouvel utilisateur
+                        if (user.getCreatedAt() != null &&
+                                java.time.Duration.between(user.getCreatedAt(), java.time.LocalDateTime.now()).getSeconds() < 5) {
+                            String email = user.getEmail();
+                            String prenom = user.getPrenom();
+                            new Thread(() -> EmailService.sendWelcomeEmail(email, prenom)).start();
+                        }
+
+                        // Connexion directe (pas de 2FA pour Google)
+                        UserSession.setInstance(user);
+                        errorLabel.setStyle("-fx-text-fill: #00b894;");
+                        errorLabel.setText("✅ Connexion Google réussie !");
+                        loadDashboard();
+                    } else {
+                        errorLabel.setStyle("-fx-text-fill: #d63031;");
+                        errorLabel.setText("❌ Erreur lors de la création du compte Google.");
+                    }
+                } catch (Exception e) {
+                    errorLabel.setStyle("-fx-text-fill: #d63031;");
+                    errorLabel.setText("❌ Erreur lors de la connexion Google.");
+                    e.printStackTrace();
+                }
+            });
+        }).exceptionally(ex -> {
+            Platform.runLater(() -> {
+                errorLabel.setStyle("-fx-text-fill: #d63031;");
+                errorLabel.setText("❌ Connexion Google annulée ou échouée.");
+            });
+            return null;
+        });
+    }
+
+    @FXML
     private void handleShowRegister() {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/org/example/RegisterView.fxml"));
             Stage stage = (Stage) emailField.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("TalentFlow - Inscription");
-            stage.centerOnScreen();
+            stage.setMaximized(true);
         } catch (IOException e) {
             errorLabel.setText("Erreur de chargement de la page d'inscription.");
             e.printStackTrace();
@@ -126,7 +180,7 @@ public class LoginController {
             Stage stage = (Stage) emailField.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("TalentFlow - Mot de passe oublié");
-            stage.centerOnScreen();
+            stage.setMaximized(true);
         } catch (IOException e) {
             errorLabel.setText("Erreur de chargement de la page.");
             e.printStackTrace();
@@ -139,7 +193,7 @@ public class LoginController {
             Stage stage = (Stage) emailField.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("TalentFlow - Vérification 2FA");
-            stage.centerOnScreen();
+            stage.setMaximized(true);
         } catch (IOException e) {
             System.err.println("Erreur chargement Verification FXML: " + e.getMessage());
         }
@@ -153,7 +207,7 @@ public class LoginController {
             stage.setTitle("TalentFlow - Dashboard");
             stage.setMinWidth(1200);
             stage.setMinHeight(750);
-            stage.centerOnScreen();
+            stage.setMaximized(true);
         } catch (IOException e) {
             System.err.println("Erreur chargement Dashboard FXML: " + e.getMessage());
         }

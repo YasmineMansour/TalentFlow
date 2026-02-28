@@ -8,7 +8,8 @@ module org.example.talentflow {
     requires jakarta.mail;          // Envoi d'emails (Jakarta Mail)
     requires java.net.http;         // Appels HTTP pour Twilio SMS API
     requires com.github.librepdf.openpdf;  // Export PDF (OpenPDF)
-    requires java.desktop;          // java.awt.Color pour OpenPDF
+    requires java.desktop;          // java.awt.Color pour OpenPDF + java.awt.Desktop pour Google OAuth
+    requires jdk.httpserver;         // Serveur HTTP local pour callback Google OAuth
 
     // Autorise JavaFX à accéder aux contrôleurs
     opens org.example.GUI to javafx.fxml;

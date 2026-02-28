@@ -98,11 +98,9 @@ public class VerificationController {
 
             Platform.runLater(() -> {
                 if (sent) {
-                    showSuccess("✅ Nouveau code envoyé !");
+                    showSuccess("✅ Nouveau code envoyé à votre adresse email !");
                 } else {
-                    // Afficher le code dans la console si l'email échoue (mode dev)
-                    statusLabel.setStyle("-fx-text-fill: #e67e22;");
-                    statusLabel.setText("⚠️ Email non configuré. Code : " + newCode);
+                    showError("❌ Échec de l'envoi du code. Vérifiez votre connexion et réessayez.");
                 }
             });
         }).start();
@@ -119,7 +117,7 @@ public class VerificationController {
             Stage stage = (Stage) codeField.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("TalentFlow - Connexion");
-            stage.centerOnScreen();
+            stage.setMaximized(true);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -133,7 +131,7 @@ public class VerificationController {
             stage.setTitle("TalentFlow - Dashboard");
             stage.setMinWidth(1200);
             stage.setMinHeight(750);
-            stage.centerOnScreen();
+            stage.setMaximized(true);
         } catch (IOException e) {
             System.err.println("Erreur chargement Dashboard : " + e.getMessage());
         }

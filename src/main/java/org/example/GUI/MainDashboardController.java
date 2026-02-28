@@ -8,6 +8,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
+import javafx.scene.Node;
 import javafx.stage.Stage;
 import org.example.model.User;
 
@@ -78,6 +79,15 @@ public class MainDashboardController {
 
             contentArea.getChildren().clear();
             contentArea.getChildren().add(view);
+
+            // Forcer la vue chargée à remplir tout l'espace disponible
+            if (view instanceof Node) {
+                StackPane.setAlignment(view, javafx.geometry.Pos.TOP_LEFT);
+            }
+            if (view instanceof javafx.scene.layout.Region region) {
+                region.prefWidthProperty().bind(contentArea.widthProperty());
+                region.prefHeightProperty().bind(contentArea.heightProperty());
+            }
 
         } catch (IOException e) {
             showErrorAlert("Erreur de navigation", "Impossible de charger la page : " + fxmlPath);

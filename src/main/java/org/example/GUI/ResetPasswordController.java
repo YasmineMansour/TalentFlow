@@ -136,7 +136,7 @@ public class ResetPasswordController {
             Stage stage = (Stage) codeField.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("TalentFlow - Connexion");
-            stage.centerOnScreen();
+            stage.setMaximized(true);
         } catch (IOException e) {
             e.printStackTrace();
         }

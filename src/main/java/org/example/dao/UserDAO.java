@@ -299,6 +299,28 @@ public class UserDAO {
         return users;
     }
 
+    // --- TROUVER OU CRÉER UN UTILISATEUR GOOGLE ---
+    public User findOrCreateGoogleUser(String email, String nom, String prenom) {
+        User existing = findByEmail(email);
+        if (existing != null) return existing;
+
+        // Créer un nouvel utilisateur avec un mot de passe aléatoire (connexion Google uniquement)
+        User newUser = new User(0,
+                nom != null && !nom.isEmpty() ? nom : "Utilisateur",
+                prenom != null && !prenom.isEmpty() ? prenom : "Google",
+                email,
+                java.util.UUID.randomUUID().toString(),  // mot de passe aléatoire
+                "CANDIDAT",
+                ""
+        );
+        boolean created = create(newUser);
+        if (created) {
+            System.out.println("✅ Utilisateur Google créé : " + email);
+            return findByEmail(email);
+        }
+        return null;
+    }
+
     // --- MÉTHODE UTILITAIRE : Mapper un ResultSet vers un objet User ---
     private User mapUser(ResultSet rs) throws SQLException {
         return new User(

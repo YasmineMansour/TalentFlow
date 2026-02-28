@@ -37,7 +37,7 @@ public class VerificationService {
     public static String generateCode(String email) {
         String code = String.format("%06d", random.nextInt(1000000));
         codes.put(email.toLowerCase().trim(), new CodeEntry(code, System.currentTimeMillis() + CODE_VALIDITY_MS));
-        System.out.println("🔑 Code généré pour " + email + " : " + code);
+        System.out.println("🔑 Code de vérification généré pour : " + email);
         return code;
     }
 

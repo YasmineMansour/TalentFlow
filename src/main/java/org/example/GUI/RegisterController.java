@@ -8,8 +8,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import org.example.dao.UserDAO;
+import org.example.model.FraudCheckResult;
 import org.example.model.User;
 import org.example.utils.EmailService;
+import org.example.utils.FraudDetectionService;
+import org.example.utils.GoogleAuthService;
 import org.example.utils.ValidationUtils;
 
 import java.io.IOException;
@@ -56,14 +59,28 @@ public class RegisterController {
 
         if (!validerChamps()) return;
 
+        String nom = nomField.getText().trim();
+        String prenom = prenomField.getText().trim();
+        String email = emailField.getText().trim();
+        String tel = telField.getText().trim();
+
+        // 🛡️ Détection de fraude IA avant inscription
+        FraudCheckResult fraudCheck = FraudDetectionService.analyzeUser(email, nom, prenom, tel);
+        if (fraudCheck.isFlaggedForReview()) {
+            statusLabel.setStyle("-fx-text-fill: #d63031;");
+            statusLabel.setText("🛡️ Inscription bloquée : " + fraudCheck.getRiskLevel().getLabel()
+                    + " — " + String.join(", ", fraudCheck.getFlags()));
+            return;
+        }
+        // Avertissement pour risque moyen (mais on laisse passer)
+        if (fraudCheck.getRiskLevel() == FraudCheckResult.RiskLevel.MOYEN) {
+            System.out.println("⚠️ Inscription avec risque moyen — Flags: " + fraudCheck.getFlags());
+        }
+
         User newUser = new User(
-                0,
-                nomField.getText().trim(),
-                prenomField.getText().trim(),
-                emailField.getText().trim(),
+                0, nom, prenom, email,
                 passwordField.getText(),
-                "CANDIDAT",
-                telField.getText().trim()
+                "CANDIDAT", tel
         );
 
         try {
@@ -73,9 +90,9 @@ public class RegisterController {
                 statusLabel.setText("✅ Compte créé avec succès !");
 
                 // Envoyer un email de bienvenue en arrière-plan
-                String email = newUser.getEmail();
-                String prenom = newUser.getPrenom();
-                new Thread(() -> EmailService.sendWelcomeEmail(email, prenom)).start();
+                final String userEmail = newUser.getEmail();
+                final String userPrenom = newUser.getPrenom();
+                new Thread(() -> EmailService.sendWelcomeEmail(userEmail, userPrenom)).start();
 
                 new Thread(() -> {
                     try {
@@ -116,6 +133,12 @@ public class RegisterController {
             statusLabel.setText("⚠️ Format email incorrect.");
             return false;
         }
+        // 🛡️ Vérification rapide email jetable en temps réel
+        String emailWarning = FraudDetectionService.quickEmailCheck(email);
+        if (emailWarning != null) {
+            statusLabel.setText(emailWarning);
+            return false;
+        }
         if (ValidationUtils.isInvalidTel(tel)) {
             statusLabel.setText("⚠️ Le téléphone doit contenir exactement 8 chiffres.");
             return false;
@@ -133,13 +156,78 @@ public class RegisterController {
     }
 
     @FXML
+    private void handleGoogleRegister() {
+        if (!GoogleAuthService.isConfigured()) {
+            statusLabel.setStyle("-fx-text-fill: #d63031;");
+            statusLabel.setText("⚠️ Connexion Google non configurée. Configurez CLIENT_ID et CLIENT_SECRET.");
+            return;
+        }
+
+        statusLabel.setStyle("-fx-text-fill: #636e72;");
+        statusLabel.setText("Ouverture du navigateur pour l'inscription Google...");
+
+        GoogleAuthService.authenticate().thenAccept(userInfo -> {
+            Platform.runLater(() -> {
+                try {
+                    // Vérifier si l'utilisateur existe déjà
+                    User existingUser = userDAO.findByEmail(userInfo.getEmail());
+                    if (existingUser != null) {
+                        statusLabel.setStyle("-fx-text-fill: #fdcb6e;");
+                        statusLabel.setText("ℹ️ Ce compte Google existe déjà. Redirection vers la connexion...");
+                        new Thread(() -> {
+                            try { Thread.sleep(1500); } catch (InterruptedException ignored) {}
+                            Platform.runLater(this::handleBackToLogin);
+                        }).start();
+                        return;
+                    }
+
+                    // Créer le nouvel utilisateur
+                    User user = userDAO.findOrCreateGoogleUser(
+                            userInfo.getEmail(),
+                            userInfo.getFamilyName(),
+                            userInfo.getGivenName()
+                    );
+
+                    if (user != null) {
+                        // Envoyer un email de bienvenue
+                        String email = user.getEmail();
+                        String prenom = user.getPrenom();
+                        new Thread(() -> EmailService.sendWelcomeEmail(email, prenom)).start();
+
+                        statusLabel.setStyle("-fx-text-fill: #00b894;");
+                        statusLabel.setText("✅ Compte créé avec Google ! Redirection...");
+
+                        new Thread(() -> {
+                            try { Thread.sleep(1500); } catch (InterruptedException ignored) {}
+                            Platform.runLater(this::handleBackToLogin);
+                        }).start();
+                    } else {
+                        statusLabel.setStyle("-fx-text-fill: #d63031;");
+                        statusLabel.setText("❌ Erreur lors de la création du compte Google.");
+                    }
+                } catch (Exception e) {
+                    statusLabel.setStyle("-fx-text-fill: #d63031;");
+                    statusLabel.setText("❌ Erreur lors de l'inscription Google.");
+                    e.printStackTrace();
+                }
+            });
+        }).exceptionally(ex -> {
+            Platform.runLater(() -> {
+                statusLabel.setStyle("-fx-text-fill: #d63031;");
+                statusLabel.setText("❌ Inscription Google annulée ou échouée.");
+            });
+            return null;
+        });
+    }
+
+    @FXML
     private void handleBackToLogin() {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/org/example/LoginView.fxml"));
             Stage stage = (Stage) nomField.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("TalentFlow - Connexion");
-            stage.centerOnScreen();
+            stage.setMaximized(true);
         } catch (IOException e) {
             e.printStackTrace();
         }

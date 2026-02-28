@@ -69,14 +69,7 @@ public class ForgotPasswordController {
                 } else {
                     // Mode dev : afficher le code si email non configuré
                     UserSession.setPendingEmail(email);
-                    statusLabel.setStyle("-fx-text-fill: #e67e22;");
-                    statusLabel.setText("⚠️ Email non configuré. Code : " + code + " — Cliquez pour continuer.");
-
-                    // Permettre de continuer même sans email configuré
-                    new Thread(() -> {
-                        try { Thread.sleep(2000); } catch (InterruptedException ignored) {}
-                        Platform.runLater(this::loadResetPasswordView);
-                    }).start();
+                    showError("❌ Échec de l'envoi du code. Vérifiez votre connexion et réessayez.");
                 }
             });
         }).start();
@@ -89,7 +82,7 @@ public class ForgotPasswordController {
             Stage stage = (Stage) emailField.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("TalentFlow - Connexion");
-            stage.centerOnScreen();
+            stage.setMaximized(true);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -101,7 +94,7 @@ public class ForgotPasswordController {
             Stage stage = (Stage) emailField.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("TalentFlow - Nouveau mot de passe");
-            stage.centerOnScreen();
+            stage.setMaximized(true);
         } catch (IOException e) {
             showError("Erreur de chargement de la page.");
             e.printStackTrace();
