@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane prefHeight="620.0" prefWidth="980.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.GUI.AvantageController"
+            stylesheets="@styles.css">
+
+    <padding><Insets top="20" right="20" bottom="20" left="20" /></padding>
+
+    <left>
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent;">
+        <VBox spacing="16.0" prefWidth="300.0" styleClass="panel">
+            <Label text="Gestion des Avantages" styleClass="title" />
+            <Label fx:id="lblOffreTitre" text="Pour l'offre sélectionnée" styleClass="subtitle" wrapText="true" />
+
+            <Separator />
+
+            <Label text="AJOUTER UN AVANTAGE" styleClass="section-title" />
+
+            <VBox spacing="6">
+                <Label text="Nom de l'avantage" styleClass="label-muted" />
+                <TextField fx:id="tfNom" promptText="Ex: Assurance Médicale" styleClass="field" />
+            </VBox>
+
+            <VBox spacing="6">
+                <Label text="Catégorie" styleClass="label-muted" />
+                <ComboBox fx:id="comboType" maxWidth="Infinity" promptText="-- Type d'avantage --" styleClass="combo-box" />
+            </VBox>
+
+            <VBox spacing="6">
+                <Label text="Description détaillée" styleClass="label-muted" />
+                <TextArea fx:id="taDescription" prefHeight="120.0" promptText="Détails (ex: 3 jours/semaine, 100% remboursé...)" styleClass="field-area" wrapText="true" />
+            </VBox>
+
+            <Region VBox.vgrow="ALWAYS" />
+
+            <VBox spacing="10">
+                <Button onAction="#handleAjouter" maxWidth="Infinity" styleClass="button, btn-success" text="＋  Enregistrer l'avantage" />
+
+                <HBox spacing="10">
+                    <Button fx:id="btnModifier" onAction="#handleModifier" HBox.hgrow="ALWAYS" maxWidth="Infinity" styleClass="button, btn-warning" text="✎  Modifier" />
+                    <Button onAction="#handleSupprimer" HBox.hgrow="ALWAYS" maxWidth="Infinity" styleClass="button, btn-danger" text="🗑  Supprimer" />
+                </HBox>
+            </VBox>
+
+            <Separator />
+
+            <Button onAction="#retourOffres" maxWidth="Infinity" styleClass="button, btn-ghost" text="←  Retour aux Offres" />
+
+            <Separator />
+
+            <!-- Section: Traduction automatique -->
+            <Label text="TRADUCTION AUTOMATIQUE" styleClass="section-title" />
+
+            <HBox spacing="8">
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label text="De" styleClass="label-muted" />
+                    <ComboBox fx:id="comboLangueSource" maxWidth="Infinity" promptText="Source" styleClass="combo-box" />
+                </VBox>
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label text="Vers" styleClass="label-muted" />
+                    <ComboBox fx:id="comboLangueCible" maxWidth="Infinity" promptText="Cible" styleClass="combo-box" />
+                </VBox>
+            </HBox>
+
+            <Button onAction="#handleTraduire" maxWidth="Infinity" styleClass="button, btn-primary" text="🌐  Traduire l'avantage" />
+            <Label fx:id="lblTraduction" text="" styleClass="label-muted" style="-fx-font-size: 11px; -fx-wrap-text: true;" wrapText="true" />
+        </VBox>
+        </ScrollPane>
+    </left>
+
+    <center>
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent;">
+        <VBox spacing="12.0">
+            <padding><Insets left="20" /></padding>
+
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label text="Avantages associés" styleClass="title" />
+            </HBox>
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Button text="Score attractivité" onAction="#handleScoreAttractivite" styleClass="button, btn-outline"/>
+                <Label fx:id="lblScore" text="" styleClass="label-muted"/>
+                <Label fx:id="lblBadge" text="" />
+            </HBox>
+
+            <Label text="Liste des bonus et bénéfices liés à ce poste" styleClass="label-muted" />
+
+            <!-- Zone de résultat de traduction -->
+            <TitledPane fx:id="paneTraduction" text="Traduction" expanded="false" animated="true" styleClass="titled-pane">
+                <VBox spacing="8" style="-fx-padding: 10;">
+                    <Label text="Nom traduit :" styleClass="label-muted" style="-fx-font-weight: bold;" />
+                    <Label fx:id="lblNomTraduit" text="—" wrapText="true" style="-fx-font-size: 13px;" />
+                    <Label text="Description traduite :" styleClass="label-muted" style="-fx-font-weight: bold;" />
+                    <TextArea fx:id="taDescriptionTraduite" prefHeight="60" editable="false" wrapText="true" style="-fx-font-size: 12px; -fx-opacity: 0.9;" />
+                </VBox>
+            </TitledPane>
+
+            <!-- IA – Générateur intelligent d'avantages -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Button text="IA Suggérer des avantages" onAction="#handleSuggererAvantages" styleClass="button, btn-primary" />
+                <Label fx:id="lblSuggestionStatus" text="" styleClass="label-muted" style="-fx-font-size: 11px;" wrapText="true" />
+            </HBox>
+
+            <TitledPane fx:id="paneSuggestions" text="Suggestions IA" expanded="false" animated="true" styleClass="titled-pane">
+                <ScrollPane fitToWidth="true" maxHeight="250" style="-fx-background-color: transparent;">
+                    <VBox fx:id="vboxSuggestions" spacing="8" style="-fx-padding: 10;">
+                        <Label text="Cliquez sur 'IA Suggérer des avantages' pour générer des suggestions basées sur l'offre." styleClass="label-muted" wrapText="true" style="-fx-font-size: 11px; -fx-font-style: italic;" />
+                    </VBox>
+                </ScrollPane>
+            </TitledPane>
+
+            <TableView fx:id="tableAvantages" onMouseClicked="#chargerSelection" VBox.vgrow="ALWAYS" styleClass="table-view" prefHeight="220">
+                <columns>
+                    <TableColumn fx:id="colNom" prefWidth="180.0" text="Avantage" />
+                    <TableColumn fx:id="colType" prefWidth="120.0" text="Type" />
+                    <TableColumn fx:id="colDesc" prefWidth="350.0" text="Description" />
+                </columns>
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                </columnResizePolicy>
+            </TableView>
+
+            <!-- Pie Chart : Répartition par type -->
+            <VBox styleClass="chart-card" spacing="4">
+                <Label text="📊 Statistiques par type" styleClass="section-title" />
+                <PieChart fx:id="pieTypeStats" prefHeight="260" legendSide="RIGHT" />
+            </VBox>
+        </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>

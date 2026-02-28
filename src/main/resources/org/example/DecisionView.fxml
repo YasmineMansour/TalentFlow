@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.GUI.DecisionController"
+            prefWidth="1100" prefHeight="700"
+            styleClass="app-root"
+            stylesheets="@styles.css">
+
+    <!-- TOP BAR -->
+    <top>
+        <HBox spacing="10" alignment="CENTER_LEFT" styleClass="app-topbar">
+            <padding><Insets top="16" right="24" bottom="16" left="24"/></padding>
+
+            <Label text="Gestion des Decisions" styleClass="title"/>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <TextField fx:id="tfSearch" promptText="Rechercher..."
+                       styleClass="search"/>
+
+            <ComboBox fx:id="cbFilterDecision" promptText="Décision"
+                      style="-fx-pref-width: 150;"/>
+
+            <ComboBox fx:id="cbTriScore" promptText="Tri Score"
+                      style="-fx-pref-width: 160;"/>
+
+            <Region prefWidth="12"/>
+
+            <Button text="Rafraichir" onAction="#onRefresh" styleClass="btn-refresh"/>
+        </HBox>
+    </top>
+
+    <center>
+        <HBox spacing="18">
+            <padding><Insets top="18" right="20" bottom="18" left="20"/></padding>
+
+            <!-- LEFT TABLE -->
+            <VBox spacing="12" HBox.hgrow="ALWAYS" styleClass="panel">
+                <padding><Insets top="16" right="18" bottom="16" left="18"/></padding>
+
+                <Label text="Liste des decisions" styleClass="section-title"/>
+
+                <TableView fx:id="tvDecisions" VBox.vgrow="ALWAYS">
+                    <placeholder>
+                        <Label text="Aucune decision pour le moment."
+                               style="-fx-text-fill:#7f8c8d; -fx-font-style: italic;"/>
+                    </placeholder>
+                    <columns>
+                        <TableColumn fx:id="colEmailCandidat" text="Email Candidat" prefWidth="180"/>
+                        <TableColumn fx:id="colDecision"    text="Decision"    prefWidth="120"/>
+                        <TableColumn fx:id="colScore"       text="Score"       prefWidth="120"/>
+                        <TableColumn fx:id="colMotif"       text="Motif"       prefWidth="250"/>
+                    </columns>
+                </TableView>
+            </VBox>
+
+            <!-- RIGHT FORM -->
+            <ScrollPane fitToWidth="true" prefWidth="500" minWidth="460" hbarPolicy="NEVER"
+                        style="-fx-background-color:transparent; -fx-background:transparent;">
+              <VBox spacing="18" styleClass="panel">
+                <padding><Insets top="22" right="26" bottom="22" left="26"/></padding>
+
+                <Label text="Formulaire decision" styleClass="section-title"
+                       style="-fx-text-fill:#1a237e; -fx-font-size:18;"/>
+
+                <Separator/>
+
+                <GridPane hgap="18" vgap="18">
+
+                    <columnConstraints>
+                        <ColumnConstraints minWidth="120" prefWidth="130"/>
+                        <ColumnConstraints hgrow="ALWAYS" minWidth="200"/>
+                    </columnConstraints>
+
+                    <!-- Email Candidat -->
+                    <Label text="Email Candidat :" styleClass="form-label"
+                           GridPane.rowIndex="0"/>
+                    <ComboBox fx:id="cbEntretien" maxWidth="Infinity"
+                              promptText="Sélectionner un candidat..."
+                              GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                    <!-- Decision -->
+                    <Label text="Decision :" styleClass="form-label"
+                           GridPane.rowIndex="1"/>
+                    <ComboBox fx:id="cbDecision" maxWidth="Infinity"
+                              GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                    <!-- Motif -->
+                    <Label text="Motif :" styleClass="form-label"
+                           GridPane.rowIndex="2"/>
+                    <TextArea fx:id="tfMotif" promptText="Raison de la decision..."
+                              prefRowCount="4" maxWidth="Infinity"
+                              GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                </GridPane>
+
+                <!-- SCORE LABEL -->
+                <Label fx:id="lblScore" text="Score : -"
+                       style="-fx-text-fill: #7f8c8d; -fx-font-weight: bold; -fx-font-size: 14;"
+                       alignment="CENTER" maxWidth="Infinity"/>
+
+                <Separator/>
+
+                <!-- MOTEUR DECISIONAL AUTO -->
+                <Label text="Moteur décisionnel automatique"
+                       style="-fx-text-fill:#1a237e; -fx-font-size:15; -fx-font-weight:bold;"
+                       alignment="CENTER" maxWidth="Infinity"/>
+
+                <GridPane hgap="14" vgap="10">
+                    <columnConstraints>
+                        <ColumnConstraints minWidth="180" prefWidth="200"/>
+                        <ColumnConstraints hgrow="ALWAYS" minWidth="100"/>
+                    </columnConstraints>
+
+                    <Label text="Seuil ACCEPTE (≥) :" style="-fx-font-weight:bold; -fx-text-fill:#27ae60;"
+                           GridPane.rowIndex="0"/>
+                    <Spinner fx:id="spinAccepte" editable="true"
+                             GridPane.rowIndex="0" GridPane.columnIndex="1" maxWidth="Infinity"/>
+
+                    <Label text="Seuil REFUSE (&lt;) :" style="-fx-font-weight:bold; -fx-text-fill:#e74c3c;"
+                           GridPane.rowIndex="1"/>
+                    <Spinner fx:id="spinRefuse" editable="true"
+                             GridPane.rowIndex="1" GridPane.columnIndex="1" maxWidth="Infinity"/>
+
+                    <Label text="Entre les deux :" style="-fx-font-weight:bold; -fx-text-fill:#f39c12;"
+                           GridPane.rowIndex="2"/>
+                    <Label text="→ EN_ATTENTE (automatique)" style="-fx-text-fill:#f39c12;"
+                           GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                </GridPane>
+
+                <CheckBox fx:id="chkAutoEngine" text="Activer le moteur automatique"
+                          style="-fx-font-size:13; -fx-font-weight:bold;"/>
+
+                <Button text="Appliquer sur toutes les EN_ATTENTE" onAction="#onAutoDecideAll"
+                        styleClass="btn-primary" maxWidth="Infinity"
+                        style="-fx-font-size:13;"/>
+
+                <Label fx:id="lblAutoResult" text="" wrapText="true"
+                       style="-fx-text-fill:#2980b9; -fx-font-style:italic;"
+                       alignment="CENTER" maxWidth="Infinity"/>
+
+                <!-- ERROR LABEL -->
+                <Label fx:id="lblError" wrapText="true"
+                       managed="false" visible="false" styleClass="error"/>
+
+                <Separator/>
+
+                <!-- BUTTONS -->
+                <HBox spacing="10" alignment="CENTER">
+                    <Button text="Ajouter"   onAction="#onAjouter"   styleClass="btn-primary"   minWidth="90"/>
+                    <Button text="Modifier"  onAction="#onModifier"  styleClass="btn-feedback"  minWidth="90"/>
+                    <Button text="Supprimer" onAction="#onSupprimer" styleClass="btn-danger"    minWidth="95"/>
+                    <Button text="Vider"     onAction="#onClear"     styleClass="btn-ghost"     minWidth="75"/>
+                </HBox>
+
+              </VBox>
+            </ScrollPane>
+
+        </HBox>
+    </center>
+</BorderPane>

@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane prefHeight="700.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.GUI.OffreController"
+            stylesheets="@styles.css">
+
+    <padding><Insets top="20" right="20" bottom="20" left="20" /></padding>
+
+    <!-- ── LEFT PANEL: Form ──────────────────────────────── -->
+    <left>
+        <ScrollPane fitToWidth="true" prefWidth="320.0" hbarPolicy="NEVER" style="-fx-background-color: transparent; -fx-border-color: transparent;">
+            <VBox spacing="14.0" styleClass="panel">
+                <!-- Header -->
+                <Label text="Gestion des Offres" styleClass="title" />
+                <Label text="Créer, modifier ou supprimer une offre d'emploi" styleClass="subtitle" />
+
+                <Separator />
+
+                <!-- Section: Informations principales -->
+                <Label text="INFORMATIONS PRINCIPALES" styleClass="section-title" />
+
+                <VBox spacing="6">
+                    <Label text="Titre *" styleClass="label-muted" />
+                    <TextField fx:id="tfTitre" promptText="Ex: Développeur Java Senior" styleClass="field" />
+                </VBox>
+
+                <VBox spacing="6">
+                    <Label text="Description *" styleClass="label-muted" />
+                    <TextArea fx:id="taDescription" prefHeight="80.0" promptText="Décrivez les missions et responsabilités..." styleClass="field-area" wrapText="true" />
+                </VBox>
+
+                <VBox spacing="6">
+                    <Label text="Localisation *" styleClass="label-muted" />
+                    <TextField fx:id="tfLocalisation" promptText="Ex: Tunis, Ben Arous..." styleClass="field" />
+                    <Label fx:id="lblLocValidation" text="" styleClass="label-muted" style="-fx-font-size: 11px;" />
+                </VBox>
+
+                <Separator />
+
+                <!-- Section: Détails du contrat -->
+                <Label text="DÉTAILS DU CONTRAT" styleClass="section-title" />
+
+                <HBox spacing="10">
+                    <VBox spacing="6" HBox.hgrow="ALWAYS">
+                        <Label text="Type de contrat *" styleClass="label-muted" />
+                        <ComboBox fx:id="comboTypeContrat" maxWidth="Infinity" promptText="-- Contrat --" styleClass="combo-box" />
+                    </VBox>
+                    <VBox spacing="6" HBox.hgrow="ALWAYS">
+                        <Label text="Mode de travail *" styleClass="label-muted" />
+                        <ComboBox fx:id="comboModeTravail" maxWidth="Infinity" promptText="-- Mode --" styleClass="combo-box" />
+                    </VBox>
+                </HBox>
+
+                <VBox spacing="6">
+                    <Label text="Statut *" styleClass="label-muted" />
+                    <ComboBox fx:id="comboStatut" maxWidth="Infinity" promptText="-- Sélectionner --" styleClass="combo-box" />
+                </VBox>
+
+                <Separator />
+
+                <!-- Section: Salaire -->
+                <Label text="FOURCHETTE SALARIALE (DT)" styleClass="section-title" />
+                <HBox spacing="10">
+                    <VBox spacing="4" HBox.hgrow="ALWAYS">
+                        <Label text="Min" styleClass="label-muted" />
+                        <TextField fx:id="tfSalaireMin" promptText="0" styleClass="field" />
+                    </VBox>
+                    <VBox spacing="4" HBox.hgrow="ALWAYS">
+                        <Label text="Max" styleClass="label-muted" />
+                        <TextField fx:id="tfSalaireMax" promptText="0" styleClass="field" />
+                    </VBox>
+                </HBox>
+
+                <Region VBox.vgrow="ALWAYS" />
+
+                <!-- Action Buttons -->
+                <VBox spacing="10">
+                    <Button onAction="#handleAjouter" maxWidth="Infinity" styleClass="button, btn-success" text="＋  Ajouter l'offre" />
+                    <HBox spacing="10">
+                        <Button onAction="#handleModifier" HBox.hgrow="ALWAYS" maxWidth="Infinity" styleClass="button, btn-primary" text="Modifier" />
+                        <Button onAction="#handleSupprimer" HBox.hgrow="ALWAYS" maxWidth="Infinity" styleClass="button, btn-danger" text="Supprimer" />
+                    </HBox>
+                </VBox>
+
+                <Separator />
+
+                <!-- Section: Traduction automatique -->
+                <Label text="TRADUCTION AUTOMATIQUE" styleClass="section-title" />
+
+                <HBox spacing="8">
+                    <VBox spacing="4" HBox.hgrow="ALWAYS">
+                        <Label text="De" styleClass="label-muted" />
+                        <ComboBox fx:id="comboLangueSource" maxWidth="Infinity" promptText="Source" styleClass="combo-box" />
+                    </VBox>
+                    <VBox spacing="4" HBox.hgrow="ALWAYS">
+                        <Label text="Vers" styleClass="label-muted" />
+                        <ComboBox fx:id="comboLangueCible" maxWidth="Infinity" promptText="Cible" styleClass="combo-box" />
+                    </VBox>
+                </HBox>
+
+                <Button onAction="#handleTraduire" maxWidth="Infinity" styleClass="button, btn-primary" text="🌐  Traduire l'offre" />
+                <Label fx:id="lblTraduction" text="" styleClass="label-muted" style="-fx-font-size: 11px; -fx-wrap-text: true;" wrapText="true" />
+
+                <Separator />
+
+                <!-- Section: Conversion multi-devises -->
+                <Label text="CONVERSION MULTI-DEVISES" styleClass="section-title" />
+
+                <VBox spacing="6">
+                    <Label text="Devise source" styleClass="label-muted" />
+                    <ComboBox fx:id="comboDeviseSource" maxWidth="Infinity" promptText="-- Devise --" styleClass="combo-box" />
+                </VBox>
+
+                <Button onAction="#handleConvertirDevise" maxWidth="Infinity" styleClass="button, btn-primary" text="💱  Convertir le salaire" />
+            </VBox>
+        </ScrollPane>
+    </left>
+
+    <!-- ── CENTER: Table ─────────────────────────────────── -->
+    <center>
+        <VBox spacing="12.0">
+            <padding><Insets left="20" /></padding>
+
+            <Label text="Liste des offres publiées" styleClass="title" />
+            <Label text="Cliquez sur une ligne pour la charger dans le formulaire" styleClass="label-muted" />
+
+            <HBox spacing="8" alignment="CENTER_LEFT">
+                <TextField fx:id="tfRecherche" promptText="Rechercher (titre, description, localisation)..." HBox.hgrow="ALWAYS" styleClass="field" />
+                <Button text="🔍 Rechercher" onAction="#handleRechercher" styleClass="button, btn-primary" />
+                <Button text="Tout afficher" onAction="#handleAfficherTout" styleClass="button, btn-outline" />
+            </HBox>
+
+            <HBox spacing="8" alignment="CENTER_LEFT">
+                <Button text="📋 Avantages" onAction="#ouvrirAvantages" styleClass="button, btn-secondary" />
+                <Button text="🗺 Carte" onAction="#ouvrirCarte" styleClass="button, btn-secondary" />
+                <ComboBox fx:id="comboTri" promptText="Trier par..." styleClass="combo-box" />
+                <Button text="Trier" onAction="#handleTri" styleClass="button, btn-outline" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Button text="📊 Tableau de Bord" onAction="#handleStats" styleClass="button, btn-primary" />
+            </HBox>
+
+            <!-- Zone de résultat de traduction -->
+            <TitledPane fx:id="paneTraduction" text="🌐 Traduction" expanded="false" animated="true" styleClass="titled-pane">
+                <VBox spacing="8" style="-fx-padding: 10;">
+                    <Label text="Titre traduit :" styleClass="label-muted" style="-fx-font-weight: bold;" />
+                    <Label fx:id="lblTitreTraduit" text="—" wrapText="true" style="-fx-font-size: 13px;" />
+                    <Label text="Description traduite :" styleClass="label-muted" style="-fx-font-weight: bold;" />
+                    <TextArea fx:id="taDescriptionTraduite" prefHeight="60" editable="false" wrapText="true" style="-fx-font-size: 12px; -fx-opacity: 0.9;" />
+                    <Label text="Localisation traduite :" styleClass="label-muted" style="-fx-font-weight: bold;" />
+                    <Label fx:id="lblLocTraduite" text="—" wrapText="true" style="-fx-font-size: 13px;" />
+                </VBox>
+            </TitledPane>
+
+            <!-- Zone de résultat de conversion devises -->
+            <TitledPane fx:id="paneDevises" text="💱 Conversion Multi-Devises" expanded="false" animated="true" styleClass="titled-pane">
+                <VBox spacing="8" style="-fx-padding: 10;">
+                    <Label fx:id="lblConversionStatus" text="" styleClass="label-muted" style="-fx-font-size: 11px; -fx-wrap-text: true;" wrapText="true" />
+                    <TextArea fx:id="taConversionResult" prefHeight="120" editable="false" wrapText="true" style="-fx-font-size: 13px; -fx-opacity: 0.95;" />
+                </VBox>
+            </TitledPane>
+
+            <TableView fx:id="tableOffres" onMouseClicked="#chargerSelection" VBox.vgrow="ALWAYS" styleClass="table-view">
+                <columns>
+                    <TableColumn fx:id="colTitre" prefWidth="140.0" text="Titre" />
+                    <TableColumn fx:id="colDesc" prefWidth="180.0" text="Description" />
+                    <TableColumn fx:id="colLoc" prefWidth="100.0" text="Localisation" />
+                    <TableColumn fx:id="colContrat" prefWidth="80.0" text="Contrat" />
+                    <TableColumn fx:id="colMode" prefWidth="80.0" text="Mode" />
+                    <TableColumn fx:id="colSalaire" prefWidth="100.0" text="Salaire" />
+                    <TableColumn fx:id="colStatut" prefWidth="90.0" text="Statut" />
+                    <TableColumn fx:id="colClassement" prefWidth="110.0" text="Classement" />
+                    <TableColumn fx:id="colCoherence" prefWidth="120.0" text="Cohérence" />
+                </columns>
+                <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY" /></columnResizePolicy>
+            </TableView>
+
+            <!-- Status bar -->
+            <HBox alignment="CENTER_RIGHT" spacing="10">
+                <Label fx:id="lblCount" text="0 offres trouvées" styleClass="label-muted" />
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>

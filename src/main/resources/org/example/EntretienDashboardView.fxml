@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.GUI.EntretienDashboardController"
+            prefWidth="1100" prefHeight="700"
+            style="-fx-background-color: linear-gradient(to bottom right, #f0f2f5, #e4e8ee);"
+            stylesheets="@styles.css">
+
+    <top>
+        <HBox spacing="10" alignment="CENTER_LEFT"
+              style="-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);">
+            <padding><Insets top="18" right="24" bottom="18" left="24"/></padding>
+            <Label text="Dashboard Entretiens" style="-fx-font-size: 22; -fx-font-weight: bold; -fx-text-fill: #1a237e;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label text="Vue d'ensemble des statistiques" style="-fx-text-fill: #7f8c8d; -fx-font-size: 13;"/>
+        </HBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER"
+                    style="-fx-background-color:transparent; -fx-background:transparent;">
+        <VBox spacing="20">
+            <padding><Insets top="22" right="24" bottom="22" left="24"/></padding>
+
+            <!-- KPI CARDS ROW -->
+            <HBox spacing="16">
+
+                <VBox styleClass="kpi-card, kpi-card-blue" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT">
+                    <Label text="Total Entretiens" styleClass="kpi-label"/>
+                    <Label fx:id="lblTotalEntretiens" text="0" styleClass="kpi-value"/>
+                </VBox>
+
+                <VBox styleClass="kpi-card, kpi-card-orange" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT">
+                    <Label text="Planifiés" styleClass="kpi-label"/>
+                    <Label fx:id="lblPlanifies" text="0" styleClass="kpi-value"/>
+                </VBox>
+
+                <VBox styleClass="kpi-card, kpi-card-green" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT">
+                    <Label text="Réalisés" styleClass="kpi-label"/>
+                    <Label fx:id="lblRealises" text="0" styleClass="kpi-value"/>
+                </VBox>
+
+                <VBox HBox.hgrow="ALWAYS" alignment="CENTER_LEFT"
+                      style="-fx-background-color: white; -fx-background-radius: 16; -fx-padding: 22 20;
+                             -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 14, 0, 0, 3);
+                             -fx-border-color: #27ae60; -fx-border-width: 0 0 0 5; -fx-border-radius: 16;">
+                    <Label text="Recrutés (ACCEPTE)" styleClass="kpi-label"/>
+                    <Label fx:id="lblAcceptes" text="0" styleClass="kpi-value"
+                           style="-fx-text-fill: #27ae60;"/>
+                </VBox>
+
+                <VBox HBox.hgrow="ALWAYS" alignment="CENTER_LEFT"
+                      style="-fx-background-color: white; -fx-background-radius: 16; -fx-padding: 22 20;
+                             -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 14, 0, 0, 3);
+                             -fx-border-color: #8e44ad; -fx-border-width: 0 0 0 5; -fx-border-radius: 16;">
+                    <Label text="Taux réussite" styleClass="kpi-label"/>
+                    <Label fx:id="lblTauxReussite" text="0 %" styleClass="kpi-value"
+                           style="-fx-text-fill: #8e44ad;"/>
+                </VBox>
+            </HBox>
+
+            <!-- ROW 2 : KPI Analytics -->
+            <HBox spacing="16">
+
+                <VBox HBox.hgrow="ALWAYS" alignment="CENTER_LEFT"
+                      style="-fx-background-color: white; -fx-background-radius: 16; -fx-padding: 22 20;
+                             -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 14, 0, 0, 3);
+                             -fx-border-color: #1abc9c; -fx-border-width: 0 0 0 5; -fx-border-radius: 16;">
+                    <Label text="Moy. Technique" styleClass="kpi-label"/>
+                    <Label fx:id="lblMoyTech" text="-" styleClass="kpi-value"
+                           style="-fx-text-fill: #1abc9c;"/>
+                </VBox>
+
+                <VBox HBox.hgrow="ALWAYS" alignment="CENTER_LEFT"
+                      style="-fx-background-color: white; -fx-background-radius: 16; -fx-padding: 22 20;
+                             -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 14, 0, 0, 3);
+                             -fx-border-color: #2980b9; -fx-border-width: 0 0 0 5; -fx-border-radius: 16;">
+                    <Label text="Moy. Communication" styleClass="kpi-label"/>
+                    <Label fx:id="lblMoyCom" text="-" styleClass="kpi-value"
+                           style="-fx-text-fill: #2980b9;"/>
+                </VBox>
+
+                <VBox HBox.hgrow="ALWAYS" alignment="CENTER_LEFT"
+                      style="-fx-background-color: white; -fx-background-radius: 16; -fx-padding: 22 20;
+                             -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 14, 0, 0, 3);
+                             -fx-border-color: #8e44ad; -fx-border-width: 0 0 0 5; -fx-border-radius: 16;">
+                    <Label text="Moy. Générale" styleClass="kpi-label"/>
+                    <Label fx:id="lblMoyGen" text="-" styleClass="kpi-value"
+                           style="-fx-text-fill: #8e44ad;"/>
+                </VBox>
+
+                <VBox HBox.hgrow="ALWAYS" alignment="CENTER_LEFT"
+                      style="-fx-background-color: white; -fx-background-radius: 16; -fx-padding: 22 20;
+                             -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 14, 0, 0, 3);
+                             -fx-border-color: #e74c3c; -fx-border-width: 0 0 0 5; -fx-border-radius: 16;">
+                    <Label text="Taux Annulation" styleClass="kpi-label"/>
+                    <Label fx:id="lblTauxAnnulation" text="0 %" styleClass="kpi-value"
+                           style="-fx-text-fill: #e74c3c;"/>
+                </VBox>
+
+                <VBox HBox.hgrow="ALWAYS" alignment="CENTER_LEFT"
+                      style="-fx-background-color: white; -fx-background-radius: 16; -fx-padding: 22 20;
+                             -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 14, 0, 0, 3);
+                             -fx-border-color: #f39c12; -fx-border-width: 0 0 0 5; -fx-border-radius: 16;">
+                    <Label text="Entretiens Notés" styleClass="kpi-label"/>
+                    <Label fx:id="lblEntretiensNotes" text="0" styleClass="kpi-value"
+                           style="-fx-text-fill: #f39c12;"/>
+                </VBox>
+            </HBox>
+
+            <!-- ROW 3 : Three Pie Charts -->
+            <HBox spacing="18">
+
+                <VBox spacing="8" HBox.hgrow="ALWAYS"
+                      style="-fx-background-color: white; -fx-background-radius: 14;
+                             -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 10, 0, 0, 3);">
+                    <padding><Insets top="16" right="18" bottom="12" left="18"/></padding>
+                    <Label text="Répartition par statut"
+                           style="-fx-font-size: 15; -fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+                    <PieChart fx:id="pieStatuts" prefHeight="240" minHeight="200"
+                              legendSide="BOTTOM" labelsVisible="true" animated="false"/>
+                </VBox>
+
+                <VBox spacing="8" HBox.hgrow="ALWAYS"
+                      style="-fx-background-color: white; -fx-background-radius: 14;
+                             -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 10, 0, 0, 3);">
+                    <padding><Insets top="16" right="18" bottom="12" left="18"/></padding>
+                    <Label text="Répartition des décisions"
+                           style="-fx-font-size: 15; -fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+                    <PieChart fx:id="pieDecisions" prefHeight="240" minHeight="200"
+                              legendSide="BOTTOM" labelsVisible="true" animated="false"/>
+                </VBox>
+
+                <VBox spacing="8" HBox.hgrow="ALWAYS"
+                      style="-fx-background-color: white; -fx-background-radius: 14;
+                             -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 10, 0, 0, 3);">
+                    <padding><Insets top="16" right="18" bottom="12" left="18"/></padding>
+                    <Label text="Par type d'entretien"
+                           style="-fx-font-size: 15; -fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+                    <PieChart fx:id="pieTypes" prefHeight="240" minHeight="200"
+                              legendSide="BOTTOM" labelsVisible="true" animated="false"/>
+                </VBox>
+            </HBox>
+
+            <!-- ROW 4 : Two Bar Charts -->
+            <HBox spacing="18">
+
+                <VBox spacing="8" HBox.hgrow="ALWAYS"
+                      style="-fx-background-color: white; -fx-background-radius: 14;
+                             -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 10, 0, 0, 3);">
+                    <padding><Insets top="16" right="18" bottom="12" left="18"/></padding>
+                    <Label text="Entretiens par mois (6 derniers mois)"
+                           style="-fx-font-size: 15; -fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+                    <BarChart fx:id="barEntretiens" prefHeight="250" legendVisible="false"
+                              animated="false" categoryGap="15" barGap="3"
+                              VBox.vgrow="ALWAYS">
+                        <xAxis><CategoryAxis side="BOTTOM"/></xAxis>
+                        <yAxis><NumberAxis side="LEFT"/></yAxis>
+                    </BarChart>
+                </VBox>
+
+                <VBox spacing="8" HBox.hgrow="ALWAYS"
+                      style="-fx-background-color: white; -fx-background-radius: 14;
+                             -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 10, 0, 0, 3);">
+                    <padding><Insets top="16" right="18" bottom="12" left="18"/></padding>
+                    <Label text="Distribution des notes techniques"
+                           style="-fx-font-size: 15; -fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+                    <BarChart fx:id="barDistribution" prefHeight="250" legendVisible="false"
+                              animated="false" categoryGap="15" barGap="3"
+                              VBox.vgrow="ALWAYS">
+                        <xAxis><CategoryAxis side="BOTTOM" label="Tranche"/></xAxis>
+                        <yAxis><NumberAxis side="LEFT" label="Candidats"/></yAxis>
+                    </BarChart>
+                </VBox>
+            </HBox>
+
+            <!-- ROW 5 : Today list -->
+            <VBox spacing="10"
+                  style="-fx-background-color: white; -fx-background-radius: 14;
+                         -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 10, 0, 0, 3);">
+                <padding><Insets top="16" right="18" bottom="16" left="18"/></padding>
+                <Label text="Entretiens prévus aujourd'hui"
+                       style="-fx-font-size: 15; -fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+                <ListView fx:id="lvToday" prefHeight="160"
+                          style="-fx-background-color: transparent; -fx-background-radius: 10;"/>
+            </VBox>
+
+        </VBox>
+        </ScrollPane>
+    </center>
+
+</BorderPane>

@@ -21,6 +21,9 @@ public class MainDashboardController {
     @FXML private Button btnUsers;
     @FXML private Button btnOffres;
     @FXML private Button btnDashboard;
+    @FXML private Button btnEntretiens;
+    @FXML private Button btnDecisions;
+    @FXML private Button btnStatsEntretiens;
     @FXML private Label welcomeLabel;
 
     @FXML
@@ -66,12 +69,30 @@ public class MainDashboardController {
         loadView("/org/example/OffresView.fxml");
     }
 
+    @FXML
+    private void showEntretiens() {
+        loadView("/org/example/EntretienView.fxml");
+    }
+
+    @FXML
+    private void showDecisions() {
+        loadView("/org/example/DecisionView.fxml");
+    }
+
+    @FXML
+    private void showEntretienDashboard() {
+        loadView("/org/example/EntretienDashboardView.fxml");
+    }
+
     private void loadView(String fxmlPath) {
         try {
             URL resource = getClass().getResource(fxmlPath);
 
             if (resource == null) {
-                throw new IOException("Fichier introuvable : " + fxmlPath);
+                showErrorAlert("Module non disponible",
+                        "La vue " + fxmlPath.substring(fxmlPath.lastIndexOf('/') + 1)
+                        + " n'est pas encore implémentée.");
+                return;
             }
 
             FXMLLoader loader = new FXMLLoader(resource);

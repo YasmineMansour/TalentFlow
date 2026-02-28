@@ -48,7 +48,13 @@
                         <Button text="📄  Candidatures"
                                 maxWidth="Infinity" mnemonicParsing="false" styleClass="sidebar-btn"/>
 
-                        <Button text="📅  Entretiens"
+                        <Button fx:id="btnEntretiens" text="📅  Entretiens" onAction="#showEntretiens"
+                                maxWidth="Infinity" mnemonicParsing="false" styleClass="sidebar-btn"/>
+
+                        <Button fx:id="btnDecisions" text="📋  Décisions" onAction="#showDecisions"
+                                maxWidth="Infinity" mnemonicParsing="false" styleClass="sidebar-btn"/>
+
+                        <Button fx:id="btnStatsEntretiens" text="📊  Stats Entretiens" onAction="#showEntretienDashboard"
                                 maxWidth="Infinity" mnemonicParsing="false" styleClass="sidebar-btn"/>
                     </children>
                 </VBox>
