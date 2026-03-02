@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.GUI.PieceJointeController"
+      spacing="15" style="-fx-padding: 20;">
+
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT" spacing="15">
+        <Button text="← Retour" onAction="#goBack"
+                style="-fx-background-color: #dfe6e9; -fx-cursor: hand; -fx-padding: 6 14;"/>
+        <Label text="📎 Gestion des Pièces Jointes"
+               style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #6c5ce7;"/>
+    </HBox>
+
+    <HBox spacing="20" VBox.vgrow="ALWAYS">
+        <!-- Liste des candidatures -->
+        <VBox spacing="10" prefWidth="260"
+              style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 6, 0, 0, 1);">
+            <Label text="1. Choisir une candidature"
+                   style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2d3436;"/>
+            <ListView fx:id="lvCandidatures" prefHeight="400" VBox.vgrow="ALWAYS"/>
+        </VBox>
+
+        <!-- Zone documents -->
+        <VBox spacing="15" HBox.hgrow="ALWAYS">
+            <!-- Formulaire -->
+            <VBox spacing="10"
+                  style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 6, 0, 0, 1);">
+                <Label text="2. Détails du document"
+                       style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2d3436;"/>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <TextField fx:id="tfTitre" promptText="Nom (ex: Mon CV)" prefWidth="200"/>
+                    <ComboBox fx:id="cbTypeDoc" promptText="Type" prefWidth="120"/>
+                    <TextField fx:id="tfUrl" promptText="URL du fichier (ex: https://...)" HBox.hgrow="ALWAYS"/>
+                </HBox>
+                <HBox spacing="10">
+                    <Button text="➕ Ajouter" onAction="#handleAjouter"
+                            style="-fx-background-color: #6c5ce7; -fx-text-fill: white; -fx-cursor: hand; -fx-padding: 6 14;"/>
+                    <Button text="✏ Modifier" onAction="#handleModifier"
+                            style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-cursor: hand; -fx-padding: 6 14;"/>
+                    <Button text="🗑 Supprimer" onAction="#handleSupprimer"
+                            style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-cursor: hand; -fx-padding: 6 14;"/>
+                </HBox>
+                <Label fx:id="lblMsg" wrapText="true" style="-fx-font-size: 12px;"/>
+            </VBox>
+
+            <!-- Table des pièces jointes -->
+            <VBox VBox.vgrow="ALWAYS"
+                  style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 6, 0, 0, 1);">
+                <Label text="3. Documents attachés"
+                       style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2d3436;">
+                    <VBox.margin><Insets bottom="8"/></VBox.margin>
+                </Label>
+                <TableView fx:id="tvPieces" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colTitre" text="Titre" prefWidth="180"/>
+                        <TableColumn fx:id="colType" text="Type" prefWidth="100"/>
+                        <TableColumn fx:id="colUrl" text="URL" prefWidth="350"/>
+                    </columns>
+                </TableView>
+            </VBox>
+        </VBox>
+    </HBox>
+</VBox>

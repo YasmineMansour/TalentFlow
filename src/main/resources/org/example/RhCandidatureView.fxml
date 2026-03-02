@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.GUI.RhCandidatureController"
+      spacing="12" style="-fx-padding: 20;">
+
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT" spacing="15">
+        <Label text="🛡 Espace RH/Admin — Gestion des Candidatures"
+               style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #6c5ce7;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label fx:id="lblLocation" text="📍 Détection..."
+               style="-fx-text-fill: #7f8c8d; -fx-font-size: 12px;"/>
+    </HBox>
+
+    <!-- Dashboard Stats -->
+    <HBox spacing="12">
+        <VBox HBox.hgrow="ALWAYS" spacing="10">
+            <HBox spacing="10">
+                <VBox HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="3"
+                      style="-fx-background-color: white; -fx-padding: 12; -fx-background-radius: 8; -fx-border-color: #6c5ce7; -fx-border-width: 0 0 0 4; -fx-border-radius: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 6, 0, 0, 1);">
+                    <Label text="TOTAL" style="-fx-font-size: 10; -fx-text-fill: #7f8c8d; -fx-font-weight: bold;"/>
+                    <Label fx:id="statTotal" text="0" style="-fx-font-size: 24; -fx-font-weight: 900; -fx-text-fill: #2c3e50;"/>
+                </VBox>
+                <VBox HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="3"
+                      style="-fx-background-color: white; -fx-padding: 12; -fx-background-radius: 8; -fx-border-color: #27ae60; -fx-border-width: 0 0 0 4; -fx-border-radius: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 6, 0, 0, 1);">
+                    <Label text="ACCEPTÉ" style="-fx-font-size: 10; -fx-text-fill: #7f8c8d; -fx-font-weight: bold;"/>
+                    <Label fx:id="statAccept" text="0" style="-fx-font-size: 24; -fx-font-weight: 900; -fx-text-fill: #27ae60;"/>
+                </VBox>
+            </HBox>
+            <HBox spacing="10">
+                <VBox HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="3"
+                      style="-fx-background-color: white; -fx-padding: 12; -fx-background-radius: 8; -fx-border-color: #f39c12; -fx-border-width: 0 0 0 4; -fx-border-radius: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 6, 0, 0, 1);">
+                    <Label text="EN ATTENTE" style="-fx-font-size: 10; -fx-text-fill: #7f8c8d; -fx-font-weight: bold;"/>
+                    <Label fx:id="statAttente" text="0" style="-fx-font-size: 24; -fx-font-weight: 900; -fx-text-fill: #f39c12;"/>
+                </VBox>
+                <VBox HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="3"
+                      style="-fx-background-color: white; -fx-padding: 12; -fx-background-radius: 8; -fx-border-color: #3498db; -fx-border-width: 0 0 0 4; -fx-border-radius: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 6, 0, 0, 1);">
+                    <Label text="EN COURS" style="-fx-font-size: 10; -fx-text-fill: #7f8c8d; -fx-font-weight: bold;"/>
+                    <Label fx:id="statEnCours" text="0" style="-fx-font-size: 24; -fx-font-weight: 900; -fx-text-fill: #3498db;"/>
+                </VBox>
+                <VBox HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="3"
+                      style="-fx-background-color: white; -fx-padding: 12; -fx-background-radius: 8; -fx-border-color: #e74c3c; -fx-border-width: 0 0 0 4; -fx-border-radius: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 6, 0, 0, 1);">
+                    <Label text="REFUSÉ" style="-fx-font-size: 10; -fx-text-fill: #7f8c8d; -fx-font-weight: bold;"/>
+                    <Label fx:id="statRefuse" text="0" style="-fx-font-size: 24; -fx-font-weight: 900; -fx-text-fill: #e74c3c;"/>
+                </VBox>
+            </HBox>
+        </VBox>
+        <VBox fx:id="chartContainer" prefWidth="320" alignment="CENTER"
+              style="-fx-background-color: white; -fx-padding: 10; -fx-background-radius: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 6, 0, 0, 1);"/>
+    </HBox>
+
+    <!-- Toolbar -->
+    <HBox spacing="10" alignment="CENTER_LEFT"
+          style="-fx-background-color: white; -fx-padding: 12; -fx-background-radius: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 6, 0, 0, 1);">
+        <Label text="Statut :" style="-fx-text-fill: #7f8c8d; -fx-font-weight: bold;"/>
+        <ComboBox fx:id="cbStatut" prefWidth="130"/>
+        <Button text="✅ Appliquer" onAction="#handleUpdateStatut"
+                style="-fx-background-color: #6c5ce7; -fx-text-fill: white; -fx-cursor: hand; -fx-padding: 6 14;"/>
+        <Button text="🗑 Supprimer" onAction="#handleDelete"
+                style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-cursor: hand; -fx-padding: 6 14;"/>
+        <Separator orientation="VERTICAL" prefHeight="25"/>
+        <TextField fx:id="tfSearch" promptText="🔍 Rechercher..." prefWidth="180"/>
+        <Button text="🔥 Plus forts" onAction="#sortByStrength"
+                style="-fx-background-color: #f39c12; -fx-text-fill: white; -fx-cursor: hand; -fx-padding: 6 14;"/>
+        <Button text="📥 Export PDF" onAction="#handleExport"
+                style="-fx-background-color: #6c757d; -fx-text-fill: white; -fx-cursor: hand; -fx-padding: 6 14;"/>
+        <Button text="🔄" onAction="#handleRefresh"
+                style="-fx-background-color: #dfe6e9; -fx-cursor: hand; -fx-padding: 6 10;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label fx:id="lblMsg" style="-fx-font-size: 12px;" wrapText="true"/>
+    </HBox>
+
+    <!-- Table des candidatures -->
+    <VBox VBox.vgrow="ALWAYS" spacing="8"
+          style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 6, 0, 0, 1);">
+        <Label text="📋 Candidatures à traiter"
+               style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2d3436;"/>
+        <TableView fx:id="tvCandidatures" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="colId" text="ID" prefWidth="45"/>
+                <TableColumn fx:id="colActions" text="Dossier" prefWidth="90"/>
+                <TableColumn fx:id="colNomCandidat" text="Candidat" prefWidth="130"/>
+                <TableColumn fx:id="colTitreOffre" text="Offre" prefWidth="150"/>
+                <TableColumn fx:id="colStatut" text="Statut" prefWidth="100"/>
+                <TableColumn fx:id="colDate" text="Date Postulation" prefWidth="140"/>
+                <TableColumn fx:id="colCv" text="URL CV" prefWidth="120"/>
+                <TableColumn fx:id="colMotivation" text="Motivation" prefWidth="220"/>
+            </columns>
+        </TableView>
+    </VBox>
+</VBox>

@@ -134,27 +134,79 @@
 
 /* --- Sidebar --- */
 .sidebar {
-    -fx-background-color: linear-gradient(to bottom, #2d3436, #1e272e);
+    -fx-background-color: linear-gradient(to bottom, #1a1a2e, #16213e);
     -fx-padding: 25 15;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 15, 0, 3, 0);
 }
 
 .sidebar-title {
     -fx-text-fill: white;
-    -fx-font-size: 22px;
+    -fx-font-size: 24px;
     -fx-font-weight: bold;
 }
 
 .sidebar-subtitle {
-    -fx-text-fill: #b2bec3;
+    -fx-text-fill: rgba(255,255,255,0.55);
     -fx-font-size: 12px;
 }
 
+.sidebar-nav-label {
+    -fx-text-fill: rgba(255,255,255,0.3);
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-letter-spacing: 1.5;
+}
+
+.sidebar-separator .line {
+    -fx-border-color: rgba(255,255,255,0.08);
+    -fx-border-width: 1 0 0 0;
+}
+
+/* ── Sidebar ScrollPane ── */
+.sidebar-scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+.sidebar-scroll .viewport {
+    -fx-background-color: transparent;
+}
+.sidebar-scroll > .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 6;
+}
+.sidebar-scroll > .scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+}
+.sidebar-scroll > .scroll-bar:vertical .thumb {
+    -fx-background-color: rgba(255,255,255,0.15);
+    -fx-background-radius: 3;
+}
+.sidebar-scroll > .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: rgba(255,255,255,0.25);
+}
+.sidebar-scroll > .scroll-bar .increment-button,
+.sidebar-scroll > .scroll-bar .decrement-button {
+    -fx-padding: 0;
+    -fx-background-color: transparent;
+}
+.sidebar-scroll > .scroll-bar .increment-arrow,
+.sidebar-scroll > .scroll-bar .decrement-arrow {
+    -fx-shape: "";
+    -fx-padding: 0;
+}
+
+/* ── Sidebar Nav Container ── */
+.sidebar-nav {
+    -fx-padding: 0;
+}
+
+/* ── Standalone sidebar button (Dashboard) ── */
 .sidebar-btn {
     -fx-background-color: transparent;
-    -fx-text-fill: #b2bec3;
+    -fx-text-fill: rgba(255,255,255,0.65);
     -fx-font-size: 14px;
     -fx-padding: 12 16;
-    -fx-background-radius: 8;
+    -fx-background-radius: 10;
     -fx-cursor: hand;
     -fx-alignment: CENTER-LEFT;
 }
@@ -164,30 +216,93 @@
     -fx-text-fill: white;
 }
 
-.sidebar-btn-active {
-    -fx-background-color: rgba(108,92,231,0.3);
+.sidebar-btn.active {
+    -fx-background-color: linear-gradient(to right, rgba(108,92,231,0.4), rgba(108,92,231,0.15));
     -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-border-color: transparent transparent transparent #a29bfe;
+    -fx-border-width: 0 0 0 3;
+    -fx-border-radius: 0 10 10 0;
+    -fx-background-radius: 0 10 10 0;
+}
+
+/* ── Section (accordion group wrapper) ── */
+.sidebar-section {
+    -fx-padding: 0;
+}
+
+/* ── Section header (collapsible toggle) ── */
+.sidebar-section-header {
+    -fx-background-color: transparent;
+    -fx-text-fill: rgba(255,255,255,0.65);
     -fx-font-size: 14px;
     -fx-font-weight: bold;
     -fx-padding: 12 16;
-    -fx-background-radius: 8;
+    -fx-background-radius: 10;
     -fx-cursor: hand;
     -fx-alignment: CENTER-LEFT;
 }
 
+.sidebar-section-header:hover {
+    -fx-background-color: rgba(255,255,255,0.08);
+    -fx-text-fill: white;
+}
+
+.sidebar-section-header.active {
+    -fx-background-color: rgba(108,92,231,0.15);
+    -fx-text-fill: #a29bfe;
+}
+
+/* ── Submenu container ── */
+.sidebar-submenu {
+    -fx-padding: 4 0 6 12;
+}
+
+/* ── Submenu button ── */
+.sidebar-submenu-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: rgba(255,255,255,0.5);
+    -fx-font-size: 13px;
+    -fx-padding: 9 16 9 24;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-alignment: CENTER-LEFT;
+    -fx-border-color: transparent transparent transparent rgba(255,255,255,0.1);
+    -fx-border-width: 0 0 0 2;
+}
+
+.sidebar-submenu-btn:hover {
+    -fx-background-color: rgba(255,255,255,0.06);
+    -fx-text-fill: rgba(255,255,255,0.85);
+    -fx-border-color: transparent transparent transparent rgba(255,255,255,0.25);
+}
+
+.sidebar-submenu-btn.active {
+    -fx-background-color: rgba(108,92,231,0.3);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-border-color: transparent transparent transparent #a29bfe;
+}
+
+/* ── Logout ── */
 .sidebar-btn-logout {
-    -fx-background-color: rgba(255,118,117,0.2);
+    -fx-background-color: rgba(255,118,117,0.15);
     -fx-text-fill: #ff7675;
     -fx-font-weight: bold;
     -fx-font-size: 14px;
-    -fx-padding: 12 16;
-    -fx-background-radius: 8;
+    -fx-padding: 14 16;
+    -fx-background-radius: 10;
     -fx-cursor: hand;
+    -fx-border-color: rgba(255,118,117,0.3);
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
 }
 
 .sidebar-btn-logout:hover {
     -fx-background-color: #ff7675;
     -fx-text-fill: white;
+    -fx-border-color: #ff7675;
+    -fx-effect: dropshadow(gaussian, rgba(255,118,117,0.4), 10, 0, 0, 2);
 }
 
 /* --- Labels --- */
@@ -462,6 +577,84 @@
 .content-area {
     -fx-background-color: #f0f2f5;
     -fx-padding: 25;
+}
+
+/* ═══════════════════════════════════════════
+   Welcome Page Styles
+   ═══════════════════════════════════════════ */
+
+.welcome-hero {
+    -fx-background-color: linear-gradient(to bottom right, #1a1a2e, #16213e);
+    -fx-background-radius: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 20, 0, 0, 6);
+}
+
+.welcome-title {
+    -fx-text-fill: white;
+    -fx-font-size: 34px;
+    -fx-font-weight: bold;
+}
+
+.welcome-username {
+    -fx-text-fill: #a29bfe;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+}
+
+.welcome-role-badge {
+    -fx-background-color: rgba(108,92,231,0.25);
+    -fx-text-fill: #a29bfe;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 20;
+    -fx-background-radius: 20;
+    -fx-border-color: rgba(162,155,254,0.3);
+    -fx-border-radius: 20;
+    -fx-border-width: 1;
+}
+
+.welcome-card {
+    -fx-background-color: white;
+    -fx-background-radius: 16;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 12, 0, 0, 3);
+    -fx-border-color: transparent;
+    -fx-border-radius: 16;
+}
+
+.welcome-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(108,92,231,0.15), 18, 0, 0, 4);
+    -fx-border-color: rgba(108,92,231,0.2);
+}
+
+.welcome-card-title {
+    -fx-text-fill: #2d3436;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.welcome-card-desc {
+    -fx-text-fill: #636e72;
+    -fx-font-size: 13px;
+    -fx-line-spacing: 2;
+}
+
+.welcome-tip {
+    -fx-background-color: linear-gradient(to right, #f0f0ff, #e8e6ff);
+    -fx-background-radius: 14;
+    -fx-border-color: rgba(108,92,231,0.15);
+    -fx-border-radius: 14;
+    -fx-border-width: 1;
+}
+
+.welcome-tip-title {
+    -fx-text-fill: #6c5ce7;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+.welcome-tip-desc {
+    -fx-text-fill: #636e72;
+    -fx-font-size: 13px;
 }
 
 /* ═══════════════════════════════════════════════════════

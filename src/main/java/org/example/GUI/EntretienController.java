@@ -18,6 +18,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 public class EntretienController {
 
@@ -35,7 +36,7 @@ public class EntretienController {
     @FXML private TableColumn<Entretien, String> colScore;
 
     // ── Form fields ──
-    @FXML private TextField tfEmail;
+    @FXML private ComboBox<String> cbEmail;
     @FXML private DatePicker dpDate;
     @FXML private TextField tfHeure;
     @FXML private ComboBox<String> cbType;
@@ -61,6 +62,9 @@ public class EntretienController {
     private final ObservableList<Entretien> masterList = FXCollections.observableArrayList();
     private FilteredList<Entretien> filteredList;
     private Entretien selected;
+
+    /** Emails des candidats ayant postulé */
+    private final ObservableList<String> allCandidateEmails = FXCollections.observableArrayList();
 
     private static final DateTimeFormatter DT_FMT =
             DateTimeFormatter.ofPattern("dd/MM/yyyy  HH:mm");
@@ -148,6 +152,7 @@ public class EntretienController {
 
         cbType.valueProperty().addListener((obs, o, n) -> toggleLieuLien());
 
+        setupEmailComboBox();
         addLiveValidation();
 
         tvEntretiens.getSelectionModel().selectedItemProperty()
@@ -222,18 +227,51 @@ public class EntretienController {
     }
 
     private void addLiveValidation() {
-        tfEmail.textProperty().addListener((obs, o, n) -> validateEmail());
+        cbEmail.getEditor().textProperty().addListener((obs, o, n) -> validateEmail());
         tfHeure.textProperty().addListener((obs, o, n) -> validateHeure());
         tfNoteTech.textProperty().addListener((obs, o, n) -> { validateNote(tfNoteTech); updateScoreFromFields(); });
         tfNoteCom.textProperty().addListener((obs, o, n) -> { validateNote(tfNoteCom); updateScoreFromFields(); });
     }
 
+    /**
+     * Configure le ComboBox email avec tous les emails des candidats ayant postulé.
+     * Le curseur dropdown affiche la liste complète, et la saisie filtre dynamiquement.
+     */
+    private void setupEmailComboBox() {
+        // Charger les emails des candidats
+        try {
+            allCandidateEmails.setAll(service.getCandidateEmails());
+        } catch (Exception e) {
+            System.err.println("Erreur chargement emails candidats: " + e.getMessage());
+        }
+
+        cbEmail.setItems(allCandidateEmails);
+
+        // Filtrage dynamique : quand l'utilisateur tape, on filtre la liste
+        cbEmail.getEditor().textProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal == null || newVal.isBlank()) {
+                cbEmail.setItems(allCandidateEmails);
+                return;
+            }
+            String lower = newVal.toLowerCase().trim();
+            ObservableList<String> filtered = FXCollections.observableArrayList(
+                    allCandidateEmails.stream()
+                            .filter(email -> email.toLowerCase().contains(lower))
+                            .toList()
+            );
+            cbEmail.setItems(filtered);
+            if (!filtered.isEmpty() && !cbEmail.isShowing()) {
+                cbEmail.show();
+            }
+        });
+    }
+
     private void validateEmail() {
-        String email = tfEmail.getText();
+        String email = cbEmail.getEditor().getText();
         if (email != null && email.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"))
-            setValid(tfEmail);
+            setValid(cbEmail.getEditor());
         else
-            setInvalid(tfEmail);
+            setInvalid(cbEmail.getEditor());
     }
 
     private void validateHeure() {
@@ -277,6 +315,11 @@ public class EntretienController {
                 System.out.println("Statut auto-update: " + updated + " entretien(s) passé(s) à REALISE.");
             }
             masterList.setAll(service.getAll());
+
+            // Rafraîchir la liste d'emails pour le ComboBox
+            try {
+                allCandidateEmails.setAll(service.getCandidateEmails());
+            } catch (Exception ignored) { }
         } catch (SQLException e) {
             DialogUtil.showError("Erreur chargement", e.getMessage());
         }
@@ -286,7 +329,7 @@ public class EntretienController {
 
     private void populateForm(Entretien e) {
         selected = e;
-        tfEmail.setText(e.getEmailCandidat());
+        cbEmail.setValue(e.getEmailCandidat());
         dpDate.setValue(e.getDateEntretien() == null ? null : e.getDateEntretien().toLocalDate());
         tfHeure.setText(e.getDateEntretien() == null ? "" :
                 e.getDateEntretien().toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm")));
@@ -372,21 +415,21 @@ public class EntretienController {
         String errStyle = "-fx-border-color: #e74c3c; -fx-border-width: 2; -fx-border-radius: 4;";
         String okStyle = "";
 
-        tfEmail.setStyle(okStyle);
+        cbEmail.getEditor().setStyle(okStyle);
         dpDate.getEditor().setStyle(okStyle);
         tfHeure.setStyle(okStyle);
         cbType.setStyle(okStyle);
         cbStatut.setStyle(okStyle);
 
-        String email = tfEmail.getText();
+        String email = cbEmail.getEditor().getText();
         if (email == null || email.isBlank()) {
             erreurs.append("• Email candidat obligatoire\n");
-            tfEmail.setStyle(errStyle);
+            cbEmail.getEditor().setStyle(errStyle);
         } else {
             email = email.trim();
             if (!email.matches("^[\\w.%+-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) {
                 erreurs.append("• Email invalide\n");
-                tfEmail.setStyle(errStyle);
+                cbEmail.getEditor().setStyle(errStyle);
             }
         }
 
@@ -448,7 +491,7 @@ public class EntretienController {
             throw new IllegalArgumentException("Erreur recherche candidature : " + ex.getMessage());
         }
         if (candidatureId <= 0) {
-            tfEmail.setStyle(errStyle);
+            cbEmail.getEditor().setStyle(errStyle);
             throw new IllegalArgumentException("Aucune candidature trouvee pour cet email.");
         }
 
@@ -656,7 +699,8 @@ public class EntretienController {
     private void reset() {
         selected = null;
         tvEntretiens.getSelectionModel().clearSelection();
-        tfEmail.clear();     tfEmail.setStyle("");
+        cbEmail.setValue(null); cbEmail.getEditor().clear(); cbEmail.getEditor().setStyle("");
+        cbEmail.setItems(allCandidateEmails);
         dpDate.setValue(null);
         tfHeure.clear();     tfHeure.setStyle("");
         cbType.setValue(null);

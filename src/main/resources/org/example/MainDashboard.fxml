@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Region?>
@@ -15,59 +16,115 @@
             stylesheets="@styles.css">
 
     <left>
-        <VBox prefWidth="240" styleClass="sidebar" BorderPane.alignment="CENTER">
+        <VBox prefWidth="270" styleClass="sidebar" BorderPane.alignment="CENTER">
             <children>
-                <!-- Logo -->
-                <Label text="TalentFlow" styleClass="sidebar-title">
+                <!-- Logo & User Info -->
+                <Label text="✦  TalentFlow" styleClass="sidebar-title">
                     <VBox.margin><Insets bottom="2"/></VBox.margin>
                 </Label>
                 <Label fx:id="welcomeLabel" text="Connecté : ..." styleClass="sidebar-subtitle">
-                    <VBox.margin><Insets bottom="15"/></VBox.margin>
+                    <VBox.margin><Insets bottom="12"/></VBox.margin>
                 </Label>
 
-                <Separator style="-fx-background-color: rgba(255,255,255,0.1);">
-                    <VBox.margin><Insets bottom="20"/></VBox.margin>
+                <Separator styleClass="sidebar-separator">
+                    <VBox.margin><Insets bottom="12"/></VBox.margin>
                 </Separator>
 
-                <!-- Navigation -->
-                <Label text="NAVIGATION" style="-fx-text-fill: #636e72; -fx-font-size: 11px; -fx-font-weight: bold;">
-                    <VBox.margin><Insets bottom="10" left="5"/></VBox.margin>
+                <!-- Navigation label -->
+                <Label text="NAVIGATION" styleClass="sidebar-nav-label">
+                    <VBox.margin><Insets bottom="8" left="5"/></VBox.margin>
                 </Label>
 
-                <VBox spacing="6">
-                    <children>
-                        <Button fx:id="btnDashboard" text="📊  Tableau de bord" onAction="#showDashboard"
-                                maxWidth="Infinity" mnemonicParsing="false" styleClass="sidebar-btn-active"/>
+                <!-- Scrollable navigation -->
+                <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="sidebar-scroll" VBox.vgrow="ALWAYS">
+                    <content>
+                        <VBox spacing="4" styleClass="sidebar-nav">
+                            <children>
+                                <!-- ── Utilisateurs ── -->
+                                <VBox fx:id="sectionUsers" styleClass="sidebar-section">
+                                    <children>
+                                        <Button fx:id="btnUsersHeader" text="👥  Utilisateurs  ▸" onAction="#toggleUsers"
+                                                maxWidth="Infinity" mnemonicParsing="false" styleClass="sidebar-section-header"/>
+                                        <VBox fx:id="subMenuUsers" spacing="2" visible="false" managed="false" styleClass="sidebar-submenu">
+                                            <children>
+                                                <Button fx:id="btnUsers" text="Liste des utilisateurs" onAction="#showUsers"
+                                                        maxWidth="Infinity" mnemonicParsing="false" styleClass="sidebar-submenu-btn"/>
+                                                <Button fx:id="btnUsersDashboard" text="Tableau de bord" onAction="#showDashboardFromUsers"
+                                                        maxWidth="Infinity" mnemonicParsing="false" styleClass="sidebar-submenu-btn"/>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </VBox>
 
-                        <Button fx:id="btnUsers" text="👥  Utilisateurs" onAction="#showUsers"
-                                maxWidth="Infinity" mnemonicParsing="false" styleClass="sidebar-btn"/>
+                                <!-- ── Offres d'emploi ── -->
+                                <VBox fx:id="sectionOffres" styleClass="sidebar-section">
+                                    <children>
+                                        <Button fx:id="btnOffresHeader" text="💼  Offres d'emploi  ▸" onAction="#toggleOffres"
+                                                maxWidth="Infinity" mnemonicParsing="false" styleClass="sidebar-section-header"/>
+                                        <VBox fx:id="subMenuOffres" spacing="2" visible="false" managed="false" styleClass="sidebar-submenu">
+                                            <children>
+                                                <Button fx:id="btnOffres" text="Gestion des offres" onAction="#showOffres"
+                                                        maxWidth="Infinity" mnemonicParsing="false" styleClass="sidebar-submenu-btn"/>
+                                                <Button fx:id="btnOffresConsult" text="Consulter les offres" onAction="#showOffresConsult"
+                                                        maxWidth="Infinity" mnemonicParsing="false" styleClass="sidebar-submenu-btn"/>
+                                                <Button fx:id="btnOffresStats" text="Statistiques" onAction="#showOffreStatistiques"
+                                                        maxWidth="Infinity" mnemonicParsing="false" styleClass="sidebar-submenu-btn"/>
+                                                <Button fx:id="btnMap" text="Carte des offres" onAction="#showMap"
+                                                        maxWidth="Infinity" mnemonicParsing="false" styleClass="sidebar-submenu-btn"/>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </VBox>
 
-                        <Button fx:id="btnOffres" text="💼  Offres d'emploi" onAction="#showOffres"
-                                maxWidth="Infinity" mnemonicParsing="false" styleClass="sidebar-btn"/>
+                                <!-- ── Candidatures ── -->
+                                <VBox fx:id="sectionCandidatures" styleClass="sidebar-section">
+                                    <children>
+                                        <Button fx:id="btnCandidaturesHeader" text="📄  Candidatures  ▸" onAction="#toggleCandidatures"
+                                                maxWidth="Infinity" mnemonicParsing="false" styleClass="sidebar-section-header"/>
+                                        <VBox fx:id="subMenuCandidatures" spacing="2" visible="false" managed="false" styleClass="sidebar-submenu">
+                                            <children>
+                                                <Button fx:id="btnOffresDisponibles" text="Offres disponibles" onAction="#showOffresDisponibles"
+                                                        maxWidth="Infinity" mnemonicParsing="false" styleClass="sidebar-submenu-btn"/>
+                                                <Button fx:id="btnCandidatures" text="Mes candidatures" onAction="#showCandidatures"
+                                                        maxWidth="Infinity" mnemonicParsing="false" styleClass="sidebar-submenu-btn"/>
+                                                <Button fx:id="btnPiecesJointes" text="Pièces jointes" onAction="#showPiecesJointes"
+                                                        maxWidth="Infinity" mnemonicParsing="false" styleClass="sidebar-submenu-btn"/>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </VBox>
 
-                        <Button text="📄  Candidatures"
-                                maxWidth="Infinity" mnemonicParsing="false" styleClass="sidebar-btn"/>
+                                <!-- ── Entretiens ── -->
+                                <VBox fx:id="sectionEntretiens" styleClass="sidebar-section">
+                                    <children>
+                                        <Button fx:id="btnEntretiensHeader" text="📅  Entretiens  ▸" onAction="#toggleEntretiens"
+                                                maxWidth="Infinity" mnemonicParsing="false" styleClass="sidebar-section-header"/>
+                                        <VBox fx:id="subMenuEntretiens" spacing="2" visible="false" managed="false" styleClass="sidebar-submenu">
+                                            <children>
+                                                <Button fx:id="btnEntretiens" text="Gestion des entretiens" onAction="#showEntretiens"
+                                                        maxWidth="Infinity" mnemonicParsing="false" styleClass="sidebar-submenu-btn"/>
+                                                <Button fx:id="btnDecisions" text="Décisions finales" onAction="#showDecisions"
+                                                        maxWidth="Infinity" mnemonicParsing="false" styleClass="sidebar-submenu-btn"/>
+                                                <Button fx:id="btnStatsEntretiens" text="Tableau de bord" onAction="#showEntretienDashboard"
+                                                        maxWidth="Infinity" mnemonicParsing="false" styleClass="sidebar-submenu-btn"/>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </VBox>
+                    </content>
+                </ScrollPane>
 
-                        <Button fx:id="btnEntretiens" text="📅  Entretiens" onAction="#showEntretiens"
-                                maxWidth="Infinity" mnemonicParsing="false" styleClass="sidebar-btn"/>
-
-                        <Button fx:id="btnDecisions" text="📋  Décisions" onAction="#showDecisions"
-                                maxWidth="Infinity" mnemonicParsing="false" styleClass="sidebar-btn"/>
-
-                        <Button fx:id="btnStatsEntretiens" text="📊  Stats Entretiens" onAction="#showEntretienDashboard"
-                                maxWidth="Infinity" mnemonicParsing="false" styleClass="sidebar-btn"/>
-                    </children>
-                </VBox>
-
-                <!-- Spacer -->
-                <Region VBox.vgrow="ALWAYS"/>
-
-                <Separator style="-fx-background-color: rgba(255,255,255,0.1);">
-                    <VBox.margin><Insets top="10" bottom="15"/></VBox.margin>
+                <!-- Bottom separator + Logout -->
+                <Separator styleClass="sidebar-separator">
+                    <VBox.margin><Insets top="8" bottom="8"/></VBox.margin>
                 </Separator>
 
-                <Button text="Déconnexion" onAction="#handleLogout"
-                        maxWidth="Infinity" mnemonicParsing="false" styleClass="sidebar-btn-logout"/>
+                <Button text="🚪  Déconnexion" onAction="#handleLogout"
+                        maxWidth="Infinity" mnemonicParsing="false" styleClass="sidebar-btn-logout">
+                    <VBox.margin><Insets bottom="5"/></VBox.margin>
+                </Button>
             </children>
         </VBox>
     </left>

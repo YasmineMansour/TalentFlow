@@ -29,7 +29,7 @@ module org.example.talentflow {
     opens org.example to javafx.fxml;
 
     // Autorise le TableView à lire les attributs (nom, email...) de tes modèles
-    opens org.example.model to javafx.base;
+    opens org.example.model to javafx.base, javafx.fxml;
 
     // Services (pour FXML et JavaFX)
     opens org.example.services to javafx.fxml;

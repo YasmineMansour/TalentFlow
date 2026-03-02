@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.geometry.Insets?>
+
+<ScrollPane fitToWidth="true" hbarPolicy="NEVER"
+            xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.GUI.WelcomeController"
+            stylesheets="@styles.css" styleClass="scroll-pane">
+
+    <content>
+        <VBox spacing="30" styleClass="content-area" alignment="TOP_CENTER">
+            <padding><Insets top="40" right="50" bottom="40" left="50"/></padding>
+
+            <!-- ── Hero Section ── -->
+            <VBox alignment="CENTER" spacing="10" styleClass="welcome-hero">
+                <padding><Insets top="50" right="40" bottom="50" left="40"/></padding>
+                <Label text="✦" style="-fx-font-size: 48px; -fx-text-fill: rgba(255,255,255,0.9);"/>
+                <Label fx:id="lblWelcome" text="Bienvenue sur TalentFlow" styleClass="welcome-title"/>
+                <Label fx:id="lblUserName" text="" styleClass="welcome-username"/>
+                <HBox alignment="CENTER" spacing="10">
+                    <Label fx:id="lblRole" text="" styleClass="welcome-role-badge"/>
+                </HBox>
+            </VBox>
+
+            <!-- ── Info Cards ── -->
+            <FlowPane hgap="20" vgap="20" alignment="CENTER" fx:id="cardsContainer">
+
+                <!-- Card 1 -->
+                <VBox spacing="10" prefWidth="280" styleClass="welcome-card">
+                    <padding><Insets top="25" right="25" bottom="25" left="25"/></padding>
+                    <Label text="👥" style="-fx-font-size: 32px;"/>
+                    <Label text="Gestion des Utilisateurs" styleClass="welcome-card-title"/>
+                    <Label text="Gérez les comptes utilisateurs, attribuez les rôles (Admin, RH, Candidat) et supervisez l'ensemble des accès à la plateforme."
+                           styleClass="welcome-card-desc" wrapText="true"/>
+                </VBox>
+
+                <!-- Card 2 -->
+                <VBox spacing="10" prefWidth="280" styleClass="welcome-card">
+                    <padding><Insets top="25" right="25" bottom="25" left="25"/></padding>
+                    <Label text="💼" style="-fx-font-size: 32px;"/>
+                    <Label text="Offres d'Emploi" styleClass="welcome-card-title"/>
+                    <Label text="Publiez et gérez vos offres d'emploi, consultez les statistiques de recrutement et visualisez la localisation des postes sur la carte."
+                           styleClass="welcome-card-desc" wrapText="true"/>
+                </VBox>
+
+                <!-- Card 3 -->
+                <VBox spacing="10" prefWidth="280" styleClass="welcome-card">
+                    <padding><Insets top="25" right="25" bottom="25" left="25"/></padding>
+                    <Label text="📄" style="-fx-font-size: 32px;"/>
+                    <Label text="Candidatures" styleClass="welcome-card-title"/>
+                    <Label text="Soumettez vos candidatures, suivez leur avancement en temps réel et gérez vos pièces jointes (CV, lettre de motivation, diplômes)."
+                           styleClass="welcome-card-desc" wrapText="true"/>
+                </VBox>
+
+                <!-- Card 4 -->
+                <VBox spacing="10" prefWidth="280" styleClass="welcome-card">
+                    <padding><Insets top="25" right="25" bottom="25" left="25"/></padding>
+                    <Label text="📅" style="-fx-font-size: 32px;"/>
+                    <Label text="Entretiens" styleClass="welcome-card-title"/>
+                    <Label text="Planifiez et suivez les entretiens, enregistrez les décisions finales et consultez le tableau de bord des statistiques d'entretiens."
+                           styleClass="welcome-card-desc" wrapText="true"/>
+                </VBox>
+            </FlowPane>
+
+            <!-- ── Tip Section ── -->
+            <HBox styleClass="welcome-tip" alignment="CENTER_LEFT" spacing="15">
+                <padding><Insets top="20" right="25" bottom="20" left="25"/></padding>
+                <Label text="💡" style="-fx-font-size: 28px;"/>
+                <VBox spacing="4">
+                    <Label text="Astuce" styleClass="welcome-tip-title"/>
+                    <Label fx:id="lblTip" text="Utilisez le menu latéral pour naviguer entre les différents modules. Cliquez sur une section pour voir ses sous-menus."
+                           styleClass="welcome-tip-desc" wrapText="true"/>
+                </VBox>
+            </HBox>
+
+            <Region prefHeight="20"/>
+        </VBox>
+    </content>
+</ScrollPane>

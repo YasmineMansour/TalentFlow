@@ -319,4 +319,22 @@ public class EntretienService {
         }
         return list;
     }
+
+    // ─────── Emails des candidats ayant postulé ───────
+
+    /**
+     * Retourne la liste distincte des emails des candidats
+     * qui ont déjà soumis une candidature (pour autocomplétion).
+     */
+    public List<String> getCandidateEmails() throws SQLException {
+        List<String> emails = new ArrayList<>();
+        String sql = "SELECT DISTINCT email FROM candidature WHERE email IS NOT NULL AND email <> '' ORDER BY email";
+        try (Statement st = cnx().createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+            while (rs.next()) {
+                emails.add(rs.getString("email"));
+            }
+        }
+        return emails;
+    }
 }

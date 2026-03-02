@@ -190,4 +190,89 @@ public class EmailService {
 
         return sendEmail(to, "🎉 Bienvenue sur TalentFlow, " + prenom + " !", html);
     }
+
+    // ===========================
+    //     TEMPLATES CANDIDATURES
+    // ===========================
+
+    /** Envoie une confirmation de candidature au candidat */
+    public static boolean sendCandidatureConfirmation(String to, int offreId) {
+        String html = """
+            <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 500px; margin: 0 auto;
+                        background: #ffffff; border-radius: 12px; overflow: hidden;
+                        box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                <div style="background: linear-gradient(135deg, #6c5ce7, #a29bfe); padding: 30px; text-align: center;">
+                    <h1 style="color: white; margin: 0; font-size: 24px;">📄 TalentFlow</h1>
+                    <p style="color: rgba(255,255,255,0.85); margin-top: 8px;">Candidature Confirmée</p>
+                </div>
+                <div style="padding: 30px;">
+                    <p style="color: #2d3436; font-size: 15px;">Bonjour,</p>
+                    <p style="color: #636e72; font-size: 14px;">
+                        Nous confirmons la bonne réception de votre candidature pour l'offre
+                        <strong>#%d</strong>.
+                    </p>
+                    <div style="background: #f0f0ff; border-left: 4px solid #6c5ce7; padding: 15px;
+                                border-radius: 0 8px 8px 0; margin: 20px 0;">
+                        <p style="color: #2d3436; font-size: 13px; margin: 0;">
+                            ✅ Notre équipe RH examinera votre dossier dans les meilleurs délais.
+                            Vous serez notifié(e) par email de l'avancement.
+                        </p>
+                    </div>
+                </div>
+                <div style="background: #f8f9fa; padding: 15px; text-align: center;">
+                    <p style="color: #b2bec3; font-size: 11px; margin: 0;">
+                        © TalentFlow — Plateforme de gestion des talents
+                    </p>
+                </div>
+            </div>
+            """.formatted(offreId);
+
+        return sendEmail(to, "📄 Candidature reçue — Offre #" + offreId, html);
+    }
+
+    /** Envoie une notification de changement de statut */
+    public static boolean sendStatutNotification(String to, int candidatureId, String newStatut) {
+        String emoji = switch (newStatut) {
+            case "ACCEPTE" -> "🎉";
+            case "EN_COURS" -> "🔄";
+            case "REFUSE" -> "❌";
+            default -> "📌";
+        };
+        String color = switch (newStatut) {
+            case "ACCEPTE" -> "#27ae60";
+            case "EN_COURS" -> "#3498db";
+            case "REFUSE" -> "#e74c3c";
+            default -> "#f39c12";
+        };
+
+        String html = """
+            <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 500px; margin: 0 auto;
+                        background: #ffffff; border-radius: 12px; overflow: hidden;
+                        box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                <div style="background: linear-gradient(135deg, %s, %s88); padding: 30px; text-align: center;">
+                    <h1 style="color: white; margin: 0; font-size: 24px;">%s TalentFlow</h1>
+                    <p style="color: rgba(255,255,255,0.85); margin-top: 8px;">Mise à jour de candidature</p>
+                </div>
+                <div style="padding: 30px;">
+                    <p style="color: #2d3436; font-size: 15px;">Bonjour,</p>
+                    <p style="color: #636e72; font-size: 14px;">
+                        Le statut de votre candidature <strong>#%d</strong> a été mis à jour :
+                    </p>
+                    <div style="background: #f8f9fa; border: 2px dashed %s; border-radius: 10px;
+                                padding: 20px; text-align: center; margin: 20px 0;">
+                        <span style="font-size: 28px; font-weight: bold; color: %s;">
+                            %s %s
+                        </span>
+                    </div>
+                </div>
+                <div style="background: #f8f9fa; padding: 15px; text-align: center;">
+                    <p style="color: #b2bec3; font-size: 11px; margin: 0;">
+                        © TalentFlow — Plateforme de gestion des talents
+                    </p>
+                </div>
+            </div>
+            """.formatted(color, color, emoji, candidatureId, color, color, emoji, newStatut);
+
+        return sendEmail(to, emoji + " Candidature #" + candidatureId + " — " + newStatut, html);
+    }
 }
