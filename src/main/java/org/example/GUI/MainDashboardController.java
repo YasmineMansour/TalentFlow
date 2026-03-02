@@ -29,18 +29,21 @@ public class MainDashboardController {
     @FXML private VBox sectionOffres;
     @FXML private VBox sectionCandidatures;
     @FXML private VBox sectionEntretiens;
+    @FXML private VBox sectionForum;
 
     // ── Section headers ──
     @FXML private Button btnUsersHeader;
     @FXML private Button btnOffresHeader;
     @FXML private Button btnCandidaturesHeader;
     @FXML private Button btnEntretiensHeader;
+    @FXML private Button btnForumHeader;
 
     // ── Sub-menu containers ──
     @FXML private VBox subMenuUsers;
     @FXML private VBox subMenuOffres;
     @FXML private VBox subMenuCandidatures;
     @FXML private VBox subMenuEntretiens;
+    @FXML private VBox subMenuForum;
 
     // ── Sub-menu buttons ──
     @FXML private Button btnUsers;
@@ -55,6 +58,9 @@ public class MainDashboardController {
     @FXML private Button btnEntretiens;
     @FXML private Button btnDecisions;
     @FXML private Button btnStatsEntretiens;
+    @FXML private Button btnForumFeed;
+    @FXML private Button btnForumMessages;
+    @FXML private Button btnForumAI;
 
     // ── Active state tracking ──
     private Button activeButton;
@@ -143,6 +149,11 @@ public class MainDashboardController {
     @FXML
     private void toggleEntretiens() {
         toggleSubMenu(subMenuEntretiens, btnEntretiensHeader);
+    }
+
+    @FXML
+    private void toggleForum() {
+        toggleSubMenu(subMenuForum, btnForumHeader);
     }
 
     private void toggleSubMenu(VBox subMenu, Button header) {
@@ -244,6 +255,24 @@ public class MainDashboardController {
     private void showEntretienDashboard() {
         setActiveButton(btnStatsEntretiens, btnEntretiensHeader);
         loadView("/org/example/EntretienDashboardView.fxml");
+    }
+
+    @FXML
+    private void showForumFeed() {
+        setActiveButton(btnForumFeed, btnForumHeader);
+        loadView("/org/example/ForumFeed.fxml");
+    }
+
+    @FXML
+    private void showForumMessages() {
+        setActiveButton(btnForumMessages, btnForumHeader);
+        loadView("/org/example/ForumMessaging.fxml");
+    }
+
+    @FXML
+    private void showForumAI() {
+        setActiveButton(btnForumAI, btnForumHeader);
+        loadView("/org/example/ForumAIChat.fxml");
     }
 
     // ═══════════════════════════════════════════

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
+
+<VBox spacing="20" alignment="TOP_LEFT" prefWidth="500" styleClass="card"
+      xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.GUI.ForumEditPostController"
+      stylesheets="@styles.css">
+
+    <!-- Titre de la page -->
+    <VBox spacing="5">
+        <Label text="✏️ Modifier le Post" styleClass="title-label"/>
+        <Label text="Mettez à jour votre publication" styleClass="subtitle-label"/>
+    </VBox>
+
+    <Separator opacity="0.4"/>
+
+    <!-- Formulaire -->
+    <VBox spacing="15">
+        <VBox spacing="5">
+            <Label text="Titre" style="-fx-font-weight: bold; -fx-text-fill: #2d3436;"/>
+            <TextField fx:id="titleField"/>
+        </VBox>
+
+        <VBox spacing="5">
+            <Label text="Contenu" style="-fx-font-weight: bold; -fx-text-fill: #2d3436;"/>
+            <TextArea fx:id="contentField" prefHeight="180" wrapText="true"/>
+        </VBox>
+    </VBox>
+
+    <!-- Image -->
+    <VBox spacing="5">
+        <Label text="Image" style="-fx-font-weight: bold; -fx-text-fill: #2d3436;"/>
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Button text="📷 Changer l'image" onAction="#handleUploadImage" styleClass="btn-secondary"/>
+            <Label fx:id="imageNameLabel" text="Aucun nouveau fichier" styleClass="subtitle-label"/>
+        </HBox>
+        <ImageView fx:id="imagePreview" fitWidth="200" fitHeight="150" preserveRatio="true"/>
+    </VBox>
+
+    <!-- Actions -->
+    <HBox spacing="15" alignment="CENTER_RIGHT">
+        <Button text="Annuler" onAction="#handleCancel" styleClass="btn-secondary"/>
+        <Button text="Enregistrer les modifications" onAction="#handleSave" styleClass="btn-primary"/>
+    </HBox>
+</VBox>

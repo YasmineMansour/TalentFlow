@@ -933,3 +933,179 @@
     -fx-border-width: 0 0 0 5;
     -fx-border-radius: 16;
 }
+
+/* ══════════════════════════════════════════════════════════
+   FORUM — Styles (Mounib)
+   ══════════════════════════════════════════════════════════ */
+
+/* ── Forum Feed Container ── */
+.forum-main-feed {
+    -fx-background-color: #f0f2f5;
+    -fx-padding: 15;
+}
+
+.forum-header-bar {
+    -fx-padding: 10 15;
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 10, 0, 0, 2);
+}
+
+/* ── Post Card ── */
+.forum-post-card {
+    -fx-background-color: white;
+    -fx-background-radius: 16;
+    -fx-border-radius: 16;
+    -fx-border-color: #e8e8e8;
+    -fx-padding: 15;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 12, 0, 0, 3);
+}
+
+.forum-post-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(108,92,231,0.12), 16, 0, 0, 4);
+}
+
+.forum-post-title {
+    -fx-text-fill: #2d3436;
+    -fx-font-size: 18px;
+    -fx-font-weight: 800;
+}
+
+.forum-post-content {
+    -fx-text-fill: #636e72;
+    -fx-font-size: 14px;
+    -fx-wrap-text: true;
+}
+
+.forum-post-meta {
+    -fx-text-fill: #6c5ce7;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+/* ── Role Badge ── */
+.forum-role-badge {
+    -fx-background-color: linear-gradient(to right, #6c5ce7, #a29bfe);
+    -fx-text-fill: white;
+    -fx-padding: 2 10;
+    -fx-background-radius: 10;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+}
+
+/* ── Vote Box ── */
+.forum-vote-box {
+    -fx-padding: 5;
+}
+
+.forum-vote-button {
+    -fx-background-color: #f0f2f5;
+    -fx-background-radius: 50;
+    -fx-text-fill: #6c5ce7;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-padding: 5 8;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 3, 0, 0, 1);
+}
+
+.forum-vote-button:hover {
+    -fx-background-color: #e8e0ff;
+    -fx-effect: dropshadow(gaussian, rgba(108,92,231,0.2), 5, 0, 0, 2);
+}
+
+/* ── Action Buttons ── */
+.forum-action-row {
+    -fx-padding: 8 0 0 0;
+}
+
+.forum-action-btn {
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #e0e0e0;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-padding: 6 14;
+    -fx-font-size: 12px;
+    -fx-text-fill: #636e72;
+    -fx-font-weight: 600;
+    -fx-cursor: hand;
+}
+
+.forum-btn-comment {
+    -fx-text-fill: #6c5ce7;
+}
+.forum-btn-comment:hover {
+    -fx-background-color: #e8e0ff;
+    -fx-border-color: #6c5ce7;
+}
+
+.forum-btn-edit {
+    -fx-text-fill: #fdcb6e;
+}
+.forum-btn-edit:hover {
+    -fx-background-color: #ffeaa7;
+    -fx-border-color: #fdcb6e;
+}
+
+.forum-btn-delete {
+    -fx-text-fill: #ff7675;
+}
+.forum-btn-delete:hover {
+    -fx-background-color: #ffeaea;
+    -fx-border-color: #ff7675;
+}
+
+.forum-btn-message {
+    -fx-text-fill: #00b894;
+}
+.forum-btn-message:hover {
+    -fx-background-color: #e0fff5;
+    -fx-border-color: #00b894;
+}
+
+/* ── Comment Section ── */
+.forum-comment-box {
+    -fx-padding: 10 0 0 50;
+}
+
+.forum-comment-action-btn {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+    -fx-font-size: 14px;
+    -fx-text-fill: #636e72;
+}
+
+.forum-comment-action-btn:hover {
+    -fx-text-fill: #6c5ce7;
+}
+
+/* ── AI Chat ── */
+.forum-ai-chat-root {
+    -fx-background-color: #f0f2f5;
+}
+
+.forum-ai-input-container {
+    -fx-background-color: white;
+    -fx-padding: 12;
+    -fx-background-radius: 12;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 12;
+}
+
+.forum-ai-bubble {
+    -fx-background-color: white;
+    -fx-background-radius: 18;
+    -fx-padding: 12 16;
+    -fx-max-width: 520;
+    -fx-text-fill: #2d3436;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);
+}
+
+.forum-user-bubble {
+    -fx-background-color: linear-gradient(to bottom right, #6c5ce7, #a29bfe);
+    -fx-background-radius: 18;
+    -fx-padding: 12 16;
+    -fx-text-fill: white;
+    -fx-max-width: 520;
+    -fx-font-weight: 600;
+    -fx-effect: dropshadow(gaussian, rgba(108,92,231,0.25), 8, 0, 0, 2);
+}

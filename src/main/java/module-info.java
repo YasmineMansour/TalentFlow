@@ -22,6 +22,10 @@ module org.example.talentflow {
     requires com.google.api.client.auth;
     requires com.google.gson;
 
+    // Forum : OkHttp + JSON
+    requires okhttp3;
+    requires org.json;
+
     // Autorise JavaFX à accéder aux contrôleurs
     opens org.example.GUI to javafx.fxml;
 

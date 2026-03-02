@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.example.GUI.ForumAIChatController"
+      spacing="15" styleClass="forum-ai-chat-root"
+      stylesheets="@styles.css">
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <!-- En-tête -->
+    <Label text="🤖 Assistant IA du Forum"
+           style="-fx-font-size: 22px; -fx-font-weight: 800; -fx-text-fill: #2d3436;"/>
+    <Label text="Posez des questions basées sur les discussions du forum TalentFlow"
+           styleClass="subtitle-label"/>
+
+    <!-- Zone de chat -->
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                style="-fx-background-color: transparent; -fx-background: transparent; -fx-border-color: transparent;">
+        <VBox fx:id="chatContainer" spacing="12" fillWidth="true" style="-fx-padding: 10;"/>
+    </ScrollPane>
+
+    <!-- Zone de saisie -->
+    <HBox spacing="10" alignment="CENTER_LEFT" styleClass="forum-ai-input-container">
+        <TextField fx:id="questionField"
+                   promptText="Posez une question sur les posts du forum..."
+                   HBox.hgrow="ALWAYS"/>
+        <Button text="Demander" onAction="#handleAsk" styleClass="btn-primary"/>
+    </HBox>
+</VBox>

@@ -111,6 +111,24 @@
                                         </VBox>
                                     </children>
                                 </VBox>
+
+                                <!-- ── Forum ── -->
+                                <VBox fx:id="sectionForum" styleClass="sidebar-section">
+                                    <children>
+                                        <Button fx:id="btnForumHeader" text="💬  Forum  ▸" onAction="#toggleForum"
+                                                maxWidth="Infinity" mnemonicParsing="false" styleClass="sidebar-section-header"/>
+                                        <VBox fx:id="subMenuForum" spacing="2" visible="false" managed="false" styleClass="sidebar-submenu">
+                                            <children>
+                                                <Button fx:id="btnForumFeed" text="Fil de discussion" onAction="#showForumFeed"
+                                                        maxWidth="Infinity" mnemonicParsing="false" styleClass="sidebar-submenu-btn"/>
+                                                <Button fx:id="btnForumMessages" text="Messagerie" onAction="#showForumMessages"
+                                                        maxWidth="Infinity" mnemonicParsing="false" styleClass="sidebar-submenu-btn"/>
+                                                <Button fx:id="btnForumAI" text="Assistant IA" onAction="#showForumAI"
+                                                        maxWidth="Infinity" mnemonicParsing="false" styleClass="sidebar-submenu-btn"/>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </VBox>
                             </children>
                         </VBox>
                     </content>

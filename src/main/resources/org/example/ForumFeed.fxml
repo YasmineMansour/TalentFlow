@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="10" styleClass="forum-main-feed"
+      xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.GUI.ForumController"
+      stylesheets="@styles.css">
+
+    <!-- Barre d'en-tête : Recherche + Actions -->
+    <HBox alignment="CENTER_LEFT" spacing="10" styleClass="forum-header-bar">
+        <TextField fx:id="searchBar" promptText="🔍 Rechercher dans le forum..." HBox.hgrow="ALWAYS"/>
+        <Button text="+ Nouveau Post" styleClass="btn-primary" onAction="#handleCreatePost"/>
+        <Button text="✉️ Messages" styleClass="btn-success" onAction="#handleOpenMessages"/>
+        <Button text="🤖 Assistant IA" styleClass="btn-warning" onAction="#handleOpenAIChat"/>
+        <ComboBox fx:id="sortFilter" promptText="Trier par"/>
+    </HBox>
+
+    <!-- Liste des posts (scrollable) -->
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                style="-fx-background-color: transparent; -fx-background: transparent; -fx-border-color: transparent;">
+        <VBox fx:id="postsContainer" spacing="15" style="-fx-padding: 10;"/>
+    </ScrollPane>
+</VBox>
