@@ -14,6 +14,8 @@ import org.example.utils.GoogleAuthService;
 import org.example.utils.SmsService;
 import org.example.utils.ValidationUtils;
 import org.example.utils.VerificationService;
+import org.example.utils.LanguageManager;
+import org.example.utils.ThemeManager;
 
 import java.io.IOException;
 
@@ -32,6 +34,9 @@ public class LoginController {
     public void initialize() {
         // Synchroniser les deux champs de mot de passe
         passwordVisible.textProperty().bindBidirectional(passwordField.textProperty());
+
+        // Appliquer le thème sauvegardé
+        Platform.runLater(() -> ThemeManager.applyTheme(emailField.getScene()));
     }
 
     @FXML
@@ -48,12 +53,12 @@ public class LoginController {
         String password = passwordField.getText();
 
         if (email.isEmpty() || password.isEmpty()) {
-            errorLabel.setText("Veuillez remplir tous les champs !");
+            errorLabel.setText(LanguageManager.get("login.error.empty"));
             return;
         }
 
         if (ValidationUtils.isInvalidEmail(email)) {
-            errorLabel.setText("Format d'email invalide !");
+            errorLabel.setText(LanguageManager.get("login.error.email"));
             return;
         }
 
@@ -70,7 +75,10 @@ public class LoginController {
 
                     // Désactiver le bouton pendant l'envoi
                     errorLabel.setStyle("-fx-text-fill: #636e72;");
-                    errorLabel.setText("Envoi du code de vérification...");
+                    errorLabel.setText(LanguageManager.get("login.sending.code"));
+
+                    // Capturer la référence du Stage AVANT le thread (sinon getScene() peut devenir null)
+                    Stage currentStage = (Stage) emailField.getScene().getWindow();
 
                     // Envoyer le code en arrière-plan
                     new Thread(() -> {
@@ -86,7 +94,7 @@ public class LoginController {
                             if (!emailSent) {
                                 System.err.println("⚠️ Échec de l'envoi du code par email à : " + user.getEmail());
                             }
-                            loadVerification();
+                            loadVerification(currentStage);
                         });
                     }).start();
                 } else {
@@ -96,11 +104,11 @@ public class LoginController {
                 }
             } else {
                 errorLabel.setStyle("-fx-text-fill: #d63031;");
-                errorLabel.setText("Email ou mot de passe incorrect !");
+                errorLabel.setText(LanguageManager.get("login.error.invalid"));
             }
         } catch (Exception e) {
             errorLabel.setStyle("-fx-text-fill: #d63031;");
-            errorLabel.setText("Erreur de connexion au serveur.");
+            errorLabel.setText(LanguageManager.get("login.error.server"));
             e.printStackTrace();
         }
     }
@@ -109,12 +117,12 @@ public class LoginController {
     private void handleGoogleLogin() {
         if (!GoogleAuthService.isConfigured()) {
             errorLabel.setStyle("-fx-text-fill: #d63031;");
-            errorLabel.setText("⚠️ Connexion Google non configurée. Configurez CLIENT_ID et CLIENT_SECRET.");
+            errorLabel.setText(LanguageManager.get("login.google.notconfigured"));
             return;
         }
 
         errorLabel.setStyle("-fx-text-fill: #636e72;");
-        errorLabel.setText("Ouverture du navigateur pour la connexion Google...");
+        errorLabel.setText(LanguageManager.get("login.google.opening"));
 
         GoogleAuthService.authenticate().thenAccept(userInfo -> {
             Platform.runLater(() -> {
@@ -138,22 +146,22 @@ public class LoginController {
                         // Connexion directe (pas de 2FA pour Google)
                         UserSession.setInstance(user);
                         errorLabel.setStyle("-fx-text-fill: #00b894;");
-                        errorLabel.setText("✅ Connexion Google réussie !");
+                        errorLabel.setText(LanguageManager.get("login.google.success"));
                         loadDashboard();
                     } else {
                         errorLabel.setStyle("-fx-text-fill: #d63031;");
-                        errorLabel.setText("❌ Erreur lors de la création du compte Google.");
+                        errorLabel.setText(LanguageManager.get("login.google.error"));
                     }
                 } catch (Exception e) {
                     errorLabel.setStyle("-fx-text-fill: #d63031;");
-                    errorLabel.setText("❌ Erreur lors de la connexion Google.");
+                    errorLabel.setText(LanguageManager.get("login.google.error"));
                     e.printStackTrace();
                 }
             });
         }).exceptionally(ex -> {
             Platform.runLater(() -> {
                 errorLabel.setStyle("-fx-text-fill: #d63031;");
-                errorLabel.setText("❌ Connexion Google annulée ou échouée.");
+                errorLabel.setText(LanguageManager.get("login.google.cancel"));
             });
             return null;
         });
@@ -164,11 +172,13 @@ public class LoginController {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/org/example/RegisterView.fxml"));
             Stage stage = (Stage) emailField.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("TalentFlow - Inscription");
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setTitle("TalentFlow - " + LanguageManager.get("register.title"));
+            ThemeManager.applyTheme(scene);
             stage.setMaximized(true);
         } catch (IOException e) {
-            errorLabel.setText("Erreur de chargement de la page d'inscription.");
+            errorLabel.setText(LanguageManager.get("common.error"));
             e.printStackTrace();
         }
     }
@@ -178,21 +188,24 @@ public class LoginController {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/org/example/ForgotPasswordView.fxml"));
             Stage stage = (Stage) emailField.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("TalentFlow - Mot de passe oublié");
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setTitle("TalentFlow - " + LanguageManager.get("forgot.title"));
+            ThemeManager.applyTheme(scene);
             stage.setMaximized(true);
         } catch (IOException e) {
-            errorLabel.setText("Erreur de chargement de la page.");
+            errorLabel.setText(LanguageManager.get("common.error"));
             e.printStackTrace();
         }
     }
 
-    private void loadVerification() {
+    private void loadVerification(Stage stage) {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/org/example/VerificationView.fxml"));
-            Stage stage = (Stage) emailField.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("TalentFlow - Vérification 2FA");
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setTitle("TalentFlow - " + LanguageManager.get("verify.title"));
+            ThemeManager.applyTheme(scene);
             stage.setMaximized(true);
         } catch (IOException e) {
             System.err.println("Erreur chargement Verification FXML: " + e.getMessage());
@@ -203,8 +216,10 @@ public class LoginController {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/org/example/MainDashboard.fxml"));
             Stage stage = (Stage) emailField.getScene().getWindow();
-            stage.setScene(new Scene(root));
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
             stage.setTitle("TalentFlow - Dashboard");
+            ThemeManager.applyTheme(scene);
             stage.setMinWidth(1200);
             stage.setMinHeight(750);
             stage.setMaximized(true);

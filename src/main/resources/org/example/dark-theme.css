@@ -1,0 +1,416 @@
+/* ============================================
+   TalentFlow - Dark Theme Stylesheet
+   ============================================ */
+
+/* --- Global Dark --- */
+.root.dark-theme {
+    -fx-background-color: #1a1a2e;
+}
+
+/* --- Cards --- */
+.dark-theme .card {
+    -fx-background-color: #1e1e3a;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 20, 0, 0, 4);
+}
+
+.dark-theme .card-small {
+    -fx-background-color: #1e1e3a;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 12, 0, 0, 2);
+}
+
+/* --- Text Fields --- */
+.dark-theme .text-field, .dark-theme .password-field {
+    -fx-background-color: #2a2a4a;
+    -fx-border-color: #3a3a5a;
+    -fx-text-fill: #e0e0e0;
+    -fx-prompt-text-fill: #6a6a8a;
+}
+
+.dark-theme .text-field:focused, .dark-theme .password-field:focused {
+    -fx-border-color: #a29bfe;
+    -fx-background-color: #2e2e50;
+    -fx-effect: dropshadow(gaussian, rgba(162,155,254,0.2), 8, 0, 0, 0);
+}
+
+/* --- Labels --- */
+.dark-theme .title-label {
+    -fx-text-fill: #e8e8e8;
+}
+
+.dark-theme .subtitle-label {
+    -fx-text-fill: #a0a0b8;
+}
+
+.dark-theme .section-title {
+    -fx-text-fill: #e8e8e8;
+}
+
+.dark-theme .label {
+    -fx-text-fill: #d0d0e0;
+}
+
+/* --- Content area --- */
+.dark-theme .content-area {
+    -fx-background-color: #1a1a2e;
+}
+
+/* --- Sidebar (already dark, minimal tweaks) --- */
+.dark-theme .sidebar {
+    -fx-background-color: linear-gradient(to bottom, #0f0f1e, #101028);
+}
+
+/* --- TableView --- */
+.dark-theme .table-view {
+    -fx-background-color: #1e1e3a;
+    -fx-border-color: #3a3a5a;
+}
+
+.dark-theme .table-view .column-header-background {
+    -fx-background-color: #252545;
+}
+
+.dark-theme .table-view .column-header {
+    -fx-border-color: transparent transparent #3a3a5a transparent;
+}
+
+.dark-theme .table-view .column-header .label {
+    -fx-text-fill: #a0a0b8;
+}
+
+.dark-theme .table-view .table-row-cell {
+    -fx-background-color: #1e1e3a;
+    -fx-border-color: transparent transparent #2a2a4a transparent;
+}
+
+.dark-theme .table-view .table-row-cell:odd {
+    -fx-background-color: #222240;
+}
+
+.dark-theme .table-view .table-row-cell:selected {
+    -fx-background-color: rgba(108,92,231,0.25);
+}
+
+.dark-theme .table-view .table-row-cell:hover {
+    -fx-background-color: rgba(108,92,231,0.12);
+}
+
+.dark-theme .table-view .table-cell {
+    -fx-text-fill: #d0d0e0;
+}
+
+.dark-theme .table-view .scroll-bar:vertical .thumb {
+    -fx-background-color: #4a4a6a;
+}
+
+/* --- ComboBox --- */
+.dark-theme .combo-box {
+    -fx-background-color: #2a2a4a;
+    -fx-border-color: #3a3a5a;
+}
+
+.dark-theme .combo-box .list-cell {
+    -fx-text-fill: #d0d0e0;
+    -fx-background-color: #2a2a4a;
+}
+
+.dark-theme .combo-box-popup .list-view {
+    -fx-background-color: #2a2a4a;
+}
+
+.dark-theme .combo-box-popup .list-view .list-cell {
+    -fx-text-fill: #d0d0e0;
+    -fx-background-color: #2a2a4a;
+}
+
+.dark-theme .combo-box-popup .list-view .list-cell:hover {
+    -fx-background-color: #3a3a5a;
+}
+
+.dark-theme .combo-box-popup .list-view .list-cell:selected {
+    -fx-background-color: rgba(108,92,231,0.25);
+}
+
+/* --- Separator --- */
+.dark-theme .separator .line {
+    -fx-border-color: #3a3a5a;
+}
+
+/* --- ScrollPane --- */
+.dark-theme .scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.dark-theme .scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.dark-theme .scroll-pane > .scroll-bar:vertical .thumb {
+    -fx-background-color: #4a4a6a;
+}
+
+/* --- Stat Cards (keep gradients, they look fine on dark) --- */
+
+/* --- Welcome Page --- */
+.dark-theme .welcome-hero {
+    -fx-background-color: linear-gradient(to bottom right, #0f0f1e, #101028);
+    -fx-effect: dropshadow(gaussian, rgba(108,92,231,0.15), 20, 0, 0, 6);
+}
+
+.dark-theme .welcome-card {
+    -fx-background-color: #1e1e3a;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 12, 0, 0, 3);
+}
+
+.dark-theme .welcome-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(108,92,231,0.2), 18, 0, 0, 4);
+    -fx-border-color: rgba(108,92,231,0.3);
+}
+
+.dark-theme .welcome-card-title {
+    -fx-text-fill: #e8e8e8;
+}
+
+.dark-theme .welcome-card-desc {
+    -fx-text-fill: #a0a0b8;
+}
+
+.dark-theme .welcome-tip {
+    -fx-background-color: linear-gradient(to right, #1e1e3a, #252550);
+    -fx-border-color: rgba(108,92,231,0.25);
+}
+
+.dark-theme .welcome-tip-desc {
+    -fx-text-fill: #a0a0b8;
+}
+
+/* --- Buttons (keep gradient buttons mostly the same) --- */
+.dark-theme .btn-secondary {
+    -fx-background-color: #2a2a4a;
+    -fx-text-fill: #a0a0b8;
+}
+
+.dark-theme .btn-secondary:hover {
+    -fx-background-color: #3a3a5a;
+    -fx-text-fill: #e0e0e0;
+}
+
+.dark-theme .btn-google {
+    -fx-background-color: #2a2a4a;
+    -fx-text-fill: #d0d0e0;
+    -fx-border-color: #3a3a5a;
+}
+
+.dark-theme .btn-google:hover {
+    -fx-background-color: #3a3a5a;
+    -fx-border-color: #4285F4;
+    -fx-text-fill: #6ea8fe;
+}
+
+/* --- Entretien Module --- */
+.dark-theme .app-root {
+    -fx-background-color: linear-gradient(to bottom right, #1a1a2e, #16213e);
+}
+
+.dark-theme .panel {
+    -fx-background-color: #1e1e3a;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);
+}
+
+.dark-theme .kpi-card {
+    -fx-background-color: #1e1e3a;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 14, 0, 0, 3);
+}
+
+.dark-theme .kpi-label {
+    -fx-text-fill: #8a8aa8;
+}
+
+.dark-theme .kpi-value {
+    -fx-text-fill: #e8e8e8;
+}
+
+.dark-theme .search {
+    -fx-background-color: #2a2a4a;
+    -fx-border-color: #3a3a5a;
+    -fx-text-fill: #d0d0e0;
+    -fx-prompt-text-fill: #6a6a8a;
+}
+
+.dark-theme .search:focused {
+    -fx-border-color: #a29bfe;
+}
+
+.dark-theme .form-label {
+    -fx-text-fill: #a0a0b8;
+}
+
+.dark-theme .error {
+    -fx-background-color: #3a1a1a;
+    -fx-border-color: #5a2a2a;
+    -fx-text-fill: #ff8888;
+}
+
+/* --- Charts --- */
+.dark-theme .chart-legend-item {
+    -fx-text-fill: #d0d0e0;
+}
+
+.dark-theme .chart-pie-label {
+    -fx-fill: #d0d0e0;
+}
+
+.dark-theme .chart-horizontal-grid-lines {
+    -fx-stroke: #2a2a4a;
+}
+
+.dark-theme .chart-vertical-grid-lines {
+    -fx-stroke: #2a2a4a;
+}
+
+.dark-theme .axis {
+    -fx-tick-label-fill: #8a8aa8;
+}
+
+.dark-theme .axis-label {
+    -fx-text-fill: #a0a0b8;
+}
+
+/* --- ListView --- */
+.dark-theme .list-view {
+    -fx-background-color: #1e1e3a;
+    -fx-border-color: #3a3a5a;
+}
+
+.dark-theme .list-view .list-cell {
+    -fx-text-fill: #d0d0e0;
+    -fx-background-color: #1e1e3a;
+}
+
+.dark-theme .list-view .list-cell:odd {
+    -fx-background-color: #222240;
+}
+
+.dark-theme .list-view .list-cell:selected {
+    -fx-background-color: rgba(108,92,231,0.25);
+    -fx-text-fill: #e8e8e8;
+}
+
+/* --- Offres Module --- */
+.dark-theme .heading {
+    -fx-text-fill: #e8e8e8;
+}
+
+.dark-theme .chart-card {
+    -fx-background-color: #1e1e3a;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 16, 0.1, 0, 3);
+}
+
+/* --- Forum --- */
+.dark-theme .forum-main-feed {
+    -fx-background-color: #1a1a2e;
+}
+
+.dark-theme .forum-header-bar {
+    -fx-background-color: #1e1e3a;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);
+}
+
+.dark-theme .forum-post-card {
+    -fx-background-color: #1e1e3a;
+    -fx-border-color: #2a2a4a;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 12, 0, 0, 3);
+}
+
+.dark-theme .forum-post-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(108,92,231,0.2), 16, 0, 0, 4);
+}
+
+.dark-theme .forum-post-title {
+    -fx-text-fill: #e8e8e8;
+}
+
+.dark-theme .forum-post-content {
+    -fx-text-fill: #a0a0b8;
+}
+
+.dark-theme .forum-vote-button {
+    -fx-background-color: #2a2a4a;
+}
+
+.dark-theme .forum-vote-button:hover {
+    -fx-background-color: #3a3a5a;
+}
+
+.dark-theme .forum-action-btn {
+    -fx-background-color: #2a2a4a;
+    -fx-border-color: #3a3a5a;
+}
+
+.dark-theme .forum-ai-chat-root {
+    -fx-background-color: #1a1a2e;
+}
+
+.dark-theme .forum-ai-input-container {
+    -fx-background-color: #1e1e3a;
+    -fx-border-color: #3a3a5a;
+}
+
+.dark-theme .forum-ai-bubble {
+    -fx-background-color: #2a2a4a;
+    -fx-text-fill: #d0d0e0;
+}
+
+/* --- Hyperlinks --- */
+.dark-theme .hyperlink {
+    -fx-text-fill: #a29bfe;
+}
+
+.dark-theme .hyperlink:hover {
+    -fx-text-fill: #c4bfff;
+}
+
+/* --- Dialog / Alert override --- */
+.dark-theme .dialog-pane {
+    -fx-background-color: #1e1e3a;
+}
+
+.dark-theme .dialog-pane .content {
+    -fx-text-fill: #d0d0e0;
+}
+
+.dark-theme .dialog-pane .header-panel {
+    -fx-background-color: #252545;
+}
+
+.dark-theme .dialog-pane .header-panel .label {
+    -fx-text-fill: #e0e0e0;
+}
+
+/* --- Dashboard Home specifics --- */
+.dark-theme .stat-card-purple, .dark-theme .stat-card-green,
+.dark-theme .stat-card-orange, .dark-theme .stat-card-blue {
+    /* Keep gradients, they look good on dark */
+}
+
+/* --- PieChart in dark --- */
+.dark-theme .chart {
+    -fx-background-color: transparent;
+}
+
+/* --- Tab Pane (if used) --- */
+.dark-theme .tab-pane .tab-header-area .tab-header-background {
+    -fx-background-color: #1e1e3a;
+}
+
+.dark-theme .tab-pane .tab {
+    -fx-background-color: #2a2a4a;
+}
+
+.dark-theme .tab-pane .tab:selected {
+    -fx-background-color: #3a3a5a;
+}
+
+.dark-theme .tab-pane .tab .tab-label {
+    -fx-text-fill: #d0d0e0;
+}

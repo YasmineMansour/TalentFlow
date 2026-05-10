@@ -7,6 +7,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import org.example.dao.UserDAO;
 import org.example.model.User;
+import org.example.utils.LanguageManager;
 import org.example.utils.PdfExportService;
 import org.example.utils.ValidationUtils;
 
@@ -78,7 +79,7 @@ public class UserWindowController {
 
     private void updateCount(int count) {
         if (countLabel != null) {
-            countLabel.setText(count + " utilisateur(s)");
+            countLabel.setText(count + " " + LanguageManager.get("user.count"));
         }
     }
 
@@ -89,7 +90,7 @@ public class UserWindowController {
         telField.setText(user.getTelephone());
         roleCombo.setValue(user.getRole());
         passwordField.clear();
-        passwordField.setPromptText("Laisser vide pour ne pas modifier");
+        passwordField.setPromptText(LanguageManager.get("user.password.hint"));
     }
 
     @FXML
@@ -104,18 +105,18 @@ public class UserWindowController {
     private void handleInsert() {
         if (!validerSaisie(true)) return;
 
-        if (confirmerAction("Voulez-vous vraiment ajouter cet utilisateur ?")) {
+        if (confirmerAction(LanguageManager.get("user.confirm.add"))) {
             User newUser = new User(0, nomField.getText().trim(), prenomField.getText().trim(),
                     emailField.getText().trim(), passwordField.getText(),
                     roleCombo.getValue(), telField.getText().trim());
             boolean success = userDAO.create(newUser);
             if (success) {
-                statusLabel.setText("✅ Utilisateur ajouté avec succès !");
+                statusLabel.setText(LanguageManager.get("user.added"));
                 statusLabel.setStyle("-fx-text-fill: green;");
                 refreshTable();
                 clearFields();
             } else {
-                statusLabel.setText("❌ Échec : Email déjà utilisé.");
+                statusLabel.setText(LanguageManager.get("user.error.duplicate"));
                 statusLabel.setStyle("-fx-text-fill: red;");
             }
         }
@@ -124,14 +125,14 @@ public class UserWindowController {
     @FXML
     private void handleUpdate() {
         if (selectedUser == null) {
-            statusLabel.setText("⚠️ Sélectionnez un utilisateur à modifier.");
+            statusLabel.setText(LanguageManager.get("user.select.edit"));
             statusLabel.setStyle("-fx-text-fill: #e67e22;");
             return;
         }
 
         if (!validerSaisie(false)) return;
 
-        if (confirmerAction("Voulez-vous enregistrer les modifications pour " + selectedUser.getNom() + " ?")) {
+        if (confirmerAction(LanguageManager.get("user.confirm.edit").replace("{0}", selectedUser.getNom()))) {
             selectedUser.setNom(nomField.getText().trim());
             selectedUser.setPrenom(prenomField.getText().trim());
             selectedUser.setEmail(emailField.getText().trim());
@@ -147,11 +148,11 @@ public class UserWindowController {
 
             boolean success = userDAO.update(selectedUser);
             if (success) {
-                statusLabel.setText("✅ Modification réussie !");
+                statusLabel.setText(LanguageManager.get("user.edited"));
                 statusLabel.setStyle("-fx-text-fill: green;");
                 refreshTable();
             } else {
-                statusLabel.setText("❌ Échec : Email déjà utilisé par un autre utilisateur.");
+                statusLabel.setText(LanguageManager.get("user.error.duplicate2"));
                 statusLabel.setStyle("-fx-text-fill: red;");
             }
         }
@@ -160,7 +161,7 @@ public class UserWindowController {
     @FXML
     private void handleDelete() {
         if (selectedUser == null) {
-            statusLabel.setText("⚠️ Sélectionnez un utilisateur à supprimer.");
+            statusLabel.setText(LanguageManager.get("user.select.delete"));
             statusLabel.setStyle("-fx-text-fill: #e67e22;");
             return;
         }
@@ -168,20 +169,20 @@ public class UserWindowController {
         // Empêcher la suppression de son propre compte
         User currentUser = UserSession.getInstance();
         if (currentUser != null && currentUser.getId() == selectedUser.getId()) {
-            statusLabel.setText("⚠️ Vous ne pouvez pas supprimer votre propre compte.");
+            statusLabel.setText(LanguageManager.get("user.error.selfdelete"));
             statusLabel.setStyle("-fx-text-fill: #e67e22;");
             return;
         }
 
-        if (confirmerAction("Êtes-vous sûr de vouloir supprimer l'utilisateur " + selectedUser.getFullName() + " ?")) {
+        if (confirmerAction(LanguageManager.get("user.confirm.delete").replace("{0}", selectedUser.getFullName()))) {
             boolean success = userDAO.delete(selectedUser.getId());
             if (success) {
-                statusLabel.setText("✅ Utilisateur supprimé !");
+                statusLabel.setText(LanguageManager.get("user.deleted"));
                 statusLabel.setStyle("-fx-text-fill: green;");
                 refreshTable();
                 clearFields();
             } else {
-                statusLabel.setText("❌ Erreur lors de la suppression.");
+                statusLabel.setText(LanguageManager.get("user.error.delete"));
                 statusLabel.setStyle("-fx-text-fill: red;");
             }
         }
@@ -204,10 +205,10 @@ public class UserWindowController {
     @FXML
     private void handleExportPdf() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Exporter la liste en PDF");
+        fileChooser.setTitle(LanguageManager.get("user.export.title"));
         fileChooser.setInitialFileName("utilisateurs_talentflow.pdf");
         fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Fichiers PDF", "*.pdf")
+                new FileChooser.ExtensionFilter(LanguageManager.get("user.export.filter"), "*.pdf")
         );
 
         File file = fileChooser.showSaveDialog(userTable.getScene().getWindow());
@@ -216,10 +217,10 @@ public class UserWindowController {
             boolean success = PdfExportService.exportUserList(users, file.getAbsolutePath());
             if (success) {
                 statusLabel.setStyle("-fx-text-fill: green;");
-                statusLabel.setText("✅ PDF exporté : " + file.getName());
+                statusLabel.setText(LanguageManager.get("user.export.ok").replace("{0}", file.getName()));
             } else {
                 statusLabel.setStyle("-fx-text-fill: red;");
-                statusLabel.setText("❌ Erreur lors de l'export PDF.");
+                statusLabel.setText(LanguageManager.get("user.export.error"));
             }
         }
     }
@@ -238,31 +239,31 @@ public class UserWindowController {
         String password = passwordField.getText();
 
         if (nom.isEmpty() || email.isEmpty() || roleCombo.getValue() == null) {
-            statusLabel.setText("⚠️ Nom, Email et Rôle sont obligatoires.");
+            statusLabel.setText(LanguageManager.get("user.valid.required"));
             return false;
         }
         if (ValidationUtils.isInvalidName(nom)) {
-            statusLabel.setText("⚠️ Nom invalide (lettres uniquement, min 2 caractères).");
+            statusLabel.setText(LanguageManager.get("user.valid.nom"));
             return false;
         }
         if (!prenom.isEmpty() && ValidationUtils.isInvalidName(prenom)) {
-            statusLabel.setText("⚠️ Prénom invalide (lettres uniquement, min 2 caractères).");
+            statusLabel.setText(LanguageManager.get("user.valid.prenom"));
             return false;
         }
         if (ValidationUtils.isInvalidEmail(email)) {
-            statusLabel.setText("⚠️ Email invalide.");
+            statusLabel.setText(LanguageManager.get("user.valid.email"));
             return false;
         }
         if (!tel.isEmpty() && ValidationUtils.isInvalidTel(tel)) {
-            statusLabel.setText("⚠️ Téléphone invalide (exactement 8 chiffres).");
+            statusLabel.setText(LanguageManager.get("user.valid.tel"));
             return false;
         }
         if (isInsert && (password == null || password.isEmpty())) {
-            statusLabel.setText("⚠️ Le mot de passe est obligatoire pour un nouvel utilisateur.");
+            statusLabel.setText(LanguageManager.get("user.valid.password.required"));
             return false;
         }
         if (!password.isEmpty() && ValidationUtils.isInvalidPassword(password)) {
-            statusLabel.setText("⚠️ Mot de passe : min 8 caractères, 1 Maj, 1 Chiffre, 1 Symbole.");
+            statusLabel.setText(LanguageManager.get("user.valid.password.weak"));
             return false;
         }
         return true;
@@ -270,12 +271,12 @@ public class UserWindowController {
 
     private boolean confirmerAction(String message) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmation de l'action");
+        alert.setTitle(LanguageManager.get("user.confirm.title"));
         alert.setHeaderText(null);
         alert.setContentText(message);
 
-        ButtonType boutonOui = new ButtonType("Oui");
-        ButtonType boutonNon = new ButtonType("Non", ButtonBar.ButtonData.CANCEL_CLOSE);
+        ButtonType boutonOui = new ButtonType(LanguageManager.get("user.confirm.yes"));
+        ButtonType boutonNon = new ButtonType(LanguageManager.get("user.confirm.no"), ButtonBar.ButtonData.CANCEL_CLOSE);
         alert.getButtonTypes().setAll(boutonOui, boutonNon);
 
         java.util.Optional<ButtonType> result = alert.showAndWait();

@@ -11,6 +11,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
+import org.example.utils.LanguageManager;
 
 import java.io.File;
 import java.sql.SQLException;
@@ -50,28 +51,28 @@ public class ForumEditPostController {
     @FXML
     private void handleUploadImage() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Choisir une image");
+        fileChooser.setTitle(LanguageManager.get("forum.image.choose"));
         fileChooser.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg", "*.gif")
         );
         File selectedFile = fileChooser.showOpenDialog(titleField.getScene().getWindow());
 
         if (selectedFile != null) {
-            imageNameLabel.setText("Upload en cours...");
+            imageNameLabel.setText(LanguageManager.get("forum.image.uploading"));
 
             new Thread(() -> {
                 try {
                     String cloudUrl = ForumCloudService.uploadImage(selectedFile);
                     javafx.application.Platform.runLater(() -> {
                         this.selectedImagePath = cloudUrl;
-                        imageNameLabel.setText("✅ Image mise à jour");
+                        imageNameLabel.setText(LanguageManager.get("forum.image.updated"));
                         imagePreview.setImage(new Image(cloudUrl));
                         imagePreview.setVisible(true);
                         imagePreview.setManaged(true);
                     });
                 } catch (Exception e) {
                     javafx.application.Platform.runLater(() ->
-                            new Alert(Alert.AlertType.ERROR, "Échec de l'upload : " + e.getMessage()).show());
+                            new Alert(Alert.AlertType.ERROR, LanguageManager.get("forum.image.error").replace("{0}", e.getMessage())).show());
                 }
             }).start();
         }
@@ -81,7 +82,7 @@ public class ForumEditPostController {
     @FXML
     private void handleSave() {
         if (titleField.getText().trim().isEmpty() || contentField.getText().trim().isEmpty()) {
-            new Alert(Alert.AlertType.WARNING, "Les champs ne peuvent pas être vides !").show();
+            new Alert(Alert.AlertType.WARNING, LanguageManager.get("forum.edit.empty")).show();
             return;
         }
 
@@ -93,7 +94,7 @@ public class ForumEditPostController {
             postService.modifier(currentPost);
             returnToForum();
         } catch (SQLException e) {
-            new Alert(Alert.AlertType.ERROR, "Échec de la mise à jour : " + e.getMessage()).show();
+            new Alert(Alert.AlertType.ERROR, LanguageManager.get("forum.edit.error").replace("{0}", e.getMessage())).show();
         }
     }
 

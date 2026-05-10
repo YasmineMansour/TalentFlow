@@ -14,6 +14,8 @@ import org.example.model.User;
 import org.example.utils.EmailService;
 import org.example.utils.ValidationUtils;
 import org.example.utils.VerificationService;
+import org.example.utils.LanguageManager;
+import org.example.utils.ThemeManager;
 
 import java.io.IOException;
 
@@ -34,26 +36,26 @@ public class ForgotPasswordController {
         String email = emailField.getText().trim();
 
         if (email.isEmpty()) {
-            showError("Veuillez entrer votre adresse email.");
+            showError(LanguageManager.get("forgot.error.empty"));
             return;
         }
 
         if (ValidationUtils.isInvalidEmail(email)) {
-            showError("Format d'email invalide.");
+            showError(LanguageManager.get("forgot.error.email"));
             return;
         }
 
         // Vérifier si l'email existe
         User user = userDAO.findByEmail(email);
         if (user == null) {
-            showError("Aucun compte associé à cet email.");
+            showError(LanguageManager.get("forgot.error.notfound"));
             return;
         }
 
         // Désactiver le bouton pendant l'envoi
         sendBtn.setDisable(true);
         statusLabel.setStyle("-fx-text-fill: #636e72;");
-        statusLabel.setText("Envoi du code en cours...");
+        statusLabel.setText(LanguageManager.get("forgot.sending"));
 
         // Générer et envoyer le code
         String code = VerificationService.generateCode(email);
@@ -69,7 +71,7 @@ public class ForgotPasswordController {
                 } else {
                     // Mode dev : afficher le code si email non configuré
                     UserSession.setPendingEmail(email);
-                    showError("❌ Échec de l'envoi du code. Vérifiez votre connexion et réessayez.");
+                    showError(LanguageManager.get("forgot.error.send"));
                 }
             });
         }).start();
@@ -80,8 +82,10 @@ public class ForgotPasswordController {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/org/example/LoginView.fxml"));
             Stage stage = (Stage) emailField.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("TalentFlow - Connexion");
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setTitle("TalentFlow - " + LanguageManager.get("login.title"));
+            ThemeManager.applyTheme(scene);
             stage.setMaximized(true);
         } catch (IOException e) {
             e.printStackTrace();
@@ -92,11 +96,13 @@ public class ForgotPasswordController {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/org/example/ResetPasswordView.fxml"));
             Stage stage = (Stage) emailField.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("TalentFlow - Nouveau mot de passe");
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setTitle("TalentFlow - " + LanguageManager.get("forgot.reset.title"));
+            ThemeManager.applyTheme(scene);
             stage.setMaximized(true);
         } catch (IOException e) {
-            showError("Erreur de chargement de la page.");
+            showError(LanguageManager.get("forgot.error.load"));
             e.printStackTrace();
         }
     }

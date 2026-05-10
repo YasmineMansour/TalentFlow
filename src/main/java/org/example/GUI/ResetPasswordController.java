@@ -10,6 +10,8 @@ import javafx.stage.Stage;
 import org.example.dao.UserDAO;
 import org.example.utils.ValidationUtils;
 import org.example.utils.VerificationService;
+import org.example.utils.LanguageManager;
+import org.example.utils.ThemeManager;
 
 import java.io.IOException;
 
@@ -46,7 +48,7 @@ public class ResetPasswordController {
         // Afficher l'email masqué
         String email = UserSession.getPendingEmail();
         if (email != null && infoLabel != null) {
-            infoLabel.setText("Code envoyé à " + maskEmail(email));
+            infoLabel.setText(LanguageManager.get("reset.info") + maskEmail(email));
         }
     }
 
@@ -75,39 +77,39 @@ public class ResetPasswordController {
 
         // Validations
         if (email == null || email.isEmpty()) {
-            showError("Session expirée. Veuillez recommencer.");
+            showError(LanguageManager.get("reset.error.session"));
             return;
         }
 
         if (code.isEmpty()) {
-            showError("Veuillez entrer le code de vérification.");
+            showError(LanguageManager.get("reset.error.code.empty"));
             return;
         }
 
         if (code.length() != 6 || !code.matches("\\d{6}")) {
-            showError("Le code doit contenir 6 chiffres.");
+            showError(LanguageManager.get("reset.error.code.format"));
             return;
         }
 
         if (newPassword.isEmpty()) {
-            showError("Veuillez entrer un nouveau mot de passe.");
+            showError(LanguageManager.get("reset.error.password.empty"));
             return;
         }
 
         if (ValidationUtils.isInvalidPassword(newPassword)) {
             String weakness = ValidationUtils.getPasswordWeakness(newPassword);
-            showError(weakness != null ? weakness : "Mot de passe invalide.");
+            showError(weakness != null ? weakness : LanguageManager.get("reset.error.password.invalid"));
             return;
         }
 
         if (!newPassword.equals(confirmPassword)) {
-            showError("Les mots de passe ne correspondent pas.");
+            showError(LanguageManager.get("reset.error.confirm"));
             return;
         }
 
         // Vérifier le code
         if (!VerificationService.verifyCode(email, code)) {
-            showError("Code incorrect ou expiré.");
+            showError(LanguageManager.get("reset.error.code.invalid"));
             return;
         }
 
@@ -116,7 +118,7 @@ public class ResetPasswordController {
         if (success) {
             UserSession.clearPendingEmail();
             statusLabel.setStyle("-fx-text-fill: #00b894;");
-            statusLabel.setText("✅ Mot de passe réinitialisé avec succès !");
+            statusLabel.setText(LanguageManager.get("reset.success"));
 
             // Rediriger vers la page de connexion après 2 secondes
             new Thread(() -> {
@@ -124,7 +126,7 @@ public class ResetPasswordController {
                 Platform.runLater(this::handleBackToLogin);
             }).start();
         } else {
-            showError("Erreur lors de la réinitialisation. Veuillez réessayer.");
+            showError(LanguageManager.get("reset.error.reset"));
         }
     }
 
@@ -134,8 +136,10 @@ public class ResetPasswordController {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/org/example/LoginView.fxml"));
             Stage stage = (Stage) codeField.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("TalentFlow - Connexion");
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setTitle("TalentFlow - " + LanguageManager.get("login.title"));
+            ThemeManager.applyTheme(scene);
             stage.setMaximized(true);
         } catch (IOException e) {
             e.printStackTrace();

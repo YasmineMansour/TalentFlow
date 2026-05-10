@@ -7,11 +7,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.Node;
 import javafx.stage.Stage;
 import org.example.model.User;
+import org.example.utils.AvatarUtils;
+import org.example.utils.LanguageManager;
+import org.example.utils.ThemeManager;
 
 import java.io.IOException;
 import java.net.URL;
@@ -20,6 +24,7 @@ public class MainDashboardController {
 
     @FXML private StackPane contentArea;
     @FXML private Label welcomeLabel;
+    @FXML private HBox userInfoBox;
 
     // ── Dashboard (standalone) ──
     @FXML private Button btnDashboard;
@@ -61,6 +66,9 @@ public class MainDashboardController {
     @FXML private Button btnForumFeed;
     @FXML private Button btnForumMessages;
     @FXML private Button btnForumAI;
+    @FXML private Button btnThemeToggle;
+    @FXML private Button btnLangToggle;
+    @FXML private Button btnLogout;
 
     // ── Active state tracking ──
     private Button activeButton;
@@ -80,8 +88,23 @@ public class MainDashboardController {
                     + "  •  " + currentUser.getRole().toUpperCase());
         }
 
-        applySecurityRestrictions(currentUser.getRole().toUpperCase());
+        // Avatar dans la sidebar
+        if (userInfoBox != null) {
+            String fullName = currentUser.getPrenom() + " " + currentUser.getNom();
+            StackPane avatar = AvatarUtils.createAvatar(fullName, 18);
+            userInfoBox.getChildren().add(0, avatar);
+        }
 
+        applySecurityRestrictions(currentUser.getRole().toUpperCase());
+        // Appliquer les traductions sidebar
+        applyTranslations();
+
+        // Appliquer le th\u00e8me sauvegard\u00e9 apr\u00e8s le rendu
+        javafx.application.Platform.runLater(() -> {
+            ThemeManager.applyTheme(contentArea.getScene());
+            updateThemeButton();
+            updateLangButton();
+        });
         // Charger la page d'accueil par défaut
         loadView("/org/example/WelcomeView.fxml");
     }
@@ -339,17 +362,103 @@ public class MainDashboardController {
 
     @FXML
     private void handleLogout() {
+        LanguageManager.removeListener(this::applyTranslations);
         UserSession.cleanUserSession();
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/org/example/LoginView.fxml"));
             Stage stage = (Stage) contentArea.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("TalentFlow - Connexion");
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setTitle("TalentFlow - " + LanguageManager.get("login.title"));
+            ThemeManager.applyTheme(scene);
             stage.centerOnScreen();
         } catch (IOException e) {
-            System.err.println("Erreur lors de la déconnexion : " + e.getMessage());
+            System.err.println("Erreur lors de la d\u00e9connexion : " + e.getMessage());
             System.exit(0);
         }
+    }
+
+    // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+    //  Theme & Language
+    // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+
+    @FXML
+    private void handleToggleTheme() {
+        ThemeManager.toggleTheme(contentArea.getScene());
+        updateThemeButton();
+    }
+
+    @FXML
+    private void handleToggleLanguage() {
+        String current = LanguageManager.getLanguage();
+        LanguageManager.setLanguage(current.equals("fr") ? "en" : "fr");
+        applyTranslations();
+        updateLangButton();
+        updateThemeButton();
+    }
+
+    private void updateThemeButton() {
+        if (btnThemeToggle != null) {
+            btnThemeToggle.setText(ThemeManager.isDarkMode()
+                    ? LanguageManager.get("settings.theme.light")
+                    : LanguageManager.get("settings.theme.dark"));
+        }
+    }
+
+    private void updateLangButton() {
+        if (btnLangToggle != null) {
+            btnLangToggle.setText(LanguageManager.getLanguage().equals("fr")
+                    ? "\ud83c\uddec\ud83c\udde7 EN" : "\ud83c\uddeb\ud83c\uddf7 FR");
+        }
+    }
+
+    private void applyTranslations() {
+        // Sidebar buttons
+        if (btnUsersHeader != null) {
+            String arrow = btnUsersHeader.getText().contains("\u25be") ? "\u25be" : "\u25b8";
+            btnUsersHeader.setText(LanguageManager.get("sidebar.users") + "  " + arrow);
+        }
+        if (btnOffresHeader != null) {
+            String arrow = btnOffresHeader.getText().contains("\u25be") ? "\u25be" : "\u25b8";
+            btnOffresHeader.setText(LanguageManager.get("sidebar.offers") + "  " + arrow);
+        }
+        if (btnCandidaturesHeader != null) {
+            String arrow = btnCandidaturesHeader.getText().contains("\u25be") ? "\u25be" : "\u25b8";
+            btnCandidaturesHeader.setText(LanguageManager.get("sidebar.candidatures") + "  " + arrow);
+        }
+        if (btnEntretiensHeader != null) {
+            String arrow = btnEntretiensHeader.getText().contains("\u25be") ? "\u25be" : "\u25b8";
+            btnEntretiensHeader.setText(LanguageManager.get("sidebar.interviews") + "  " + arrow);
+        }
+        if (btnForumHeader != null) {
+            String arrow = btnForumHeader.getText().contains("\u25be") ? "\u25be" : "\u25b8";
+            btnForumHeader.setText(LanguageManager.get("sidebar.forum") + "  " + arrow);
+        }
+
+        // Sub-menu items
+        if (btnUsers != null) btnUsers.setText(LanguageManager.get("sidebar.users.list"));
+        if (btnUsersDashboard != null) btnUsersDashboard.setText(LanguageManager.get("sidebar.users.dashboard"));
+        if (btnOffres != null) btnOffres.setText(LanguageManager.get("sidebar.offers.manage"));
+        if (btnOffresConsult != null) btnOffresConsult.setText(LanguageManager.get("sidebar.offers.browse"));
+        if (btnOffresStats != null) btnOffresStats.setText(LanguageManager.get("sidebar.offers.stats"));
+        if (btnMap != null) btnMap.setText(LanguageManager.get("sidebar.offers.map"));
+        if (btnOffresDisponibles != null) btnOffresDisponibles.setText(LanguageManager.get("sidebar.candidatures.available"));
+        if (btnCandidatures != null) {
+            User user = UserSession.getInstance();
+            if (user != null && "CANDIDAT".equalsIgnoreCase(user.getRole())) {
+                btnCandidatures.setText(LanguageManager.get("sidebar.candidatures.mine"));
+            } else {
+                btnCandidatures.setText(LanguageManager.get("sidebar.candidatures.manage"));
+            }
+        }
+        if (btnPiecesJointes != null) btnPiecesJointes.setText(LanguageManager.get("sidebar.candidatures.attachments"));
+        if (btnEntretiens != null) btnEntretiens.setText(LanguageManager.get("sidebar.interviews.manage"));
+        if (btnDecisions != null) btnDecisions.setText(LanguageManager.get("sidebar.interviews.decisions"));
+        if (btnStatsEntretiens != null) btnStatsEntretiens.setText(LanguageManager.get("sidebar.interviews.dashboard"));
+        if (btnForumFeed != null) btnForumFeed.setText(LanguageManager.get("sidebar.forum.feed"));
+        if (btnForumMessages != null) btnForumMessages.setText(LanguageManager.get("sidebar.forum.messages"));
+        if (btnForumAI != null) btnForumAI.setText(LanguageManager.get("sidebar.forum.ai"));
+        if (btnLogout != null) btnLogout.setText(LanguageManager.get("sidebar.logout"));
     }
 
     private void showErrorAlert(String title, String message) {

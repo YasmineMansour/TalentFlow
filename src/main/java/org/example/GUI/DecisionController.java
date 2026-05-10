@@ -11,6 +11,7 @@ import javafx.scene.control.SpinnerValueFactory.DoubleSpinnerValueFactory;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.example.services.DecisionService;
 import org.example.services.EntretienService;
+import org.example.utils.LanguageManager;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -106,11 +107,11 @@ public class DecisionController {
         ));
 
         cbFilterDecision.setItems(FXCollections.observableArrayList(
-                "Toutes", "ACCEPTE", "REFUSE", "EN_ATTENTE"));
-        cbFilterDecision.setValue("Toutes");
+                LanguageManager.get("decision.filter.all"), "ACCEPTE", "REFUSE", "EN_ATTENTE"));
+        cbFilterDecision.setValue(LanguageManager.get("decision.filter.all"));
         cbTriScore.setItems(FXCollections.observableArrayList(
-                "Par défaut", "Score (plus haut)", "Score (plus bas)"));
-        cbTriScore.setValue("Par défaut");
+                LanguageManager.get("decision.sort.default"), LanguageManager.get("decision.sort.high"), LanguageManager.get("decision.sort.low")));
+        cbTriScore.setValue(LanguageManager.get("decision.sort.default"));
 
         cbFilterDecision.setOnAction(e -> applyFilter());
         cbTriScore.setOnAction(e -> applyFilter());
@@ -172,7 +173,7 @@ public class DecisionController {
         String triScore = cbTriScore.getValue();
 
         java.util.List<DecisionFinale> result = master.stream().filter(d -> {
-            if (decFilter != null && !"Toutes".equals(decFilter)) {
+            if (decFilter != null && !LanguageManager.get("decision.filter.all").equals(decFilter)) {
                 if (d.getDecision() == null || !d.getDecision().equals(decFilter)) return false;
             }
             if (!q.isEmpty()) {
@@ -184,7 +185,7 @@ public class DecisionController {
             return true;
         }).collect(java.util.stream.Collectors.toList());
 
-        if ("Score (plus haut)".equals(triScore)) {
+        if (LanguageManager.get("decision.sort.high").equals(triScore)) {
             result.sort((a, b) -> {
                 Double sa = a.getScore(), sb = b.getScore();
                 if (sa == null && sb == null) return 0;
@@ -192,7 +193,7 @@ public class DecisionController {
                 if (sb == null) return -1;
                 return Double.compare(sb, sa);
             });
-        } else if ("Score (plus bas)".equals(triScore)) {
+        } else if (LanguageManager.get("decision.sort.low").equals(triScore)) {
             result.sort((a, b) -> {
                 Double sa = a.getScore(), sb = b.getScore();
                 if (sa == null && sb == null) return 0;
@@ -210,7 +211,7 @@ public class DecisionController {
         try {
             DecisionFinale d = buildFromForm();
             service.add(d);
-            showInfo("Décision ajoutée.");
+            showInfo(LanguageManager.get("decision.added"));
             onRefresh();
             clearForm();
         } catch (Exception e) {
@@ -222,14 +223,14 @@ public class DecisionController {
     private void onModifier() {
         DecisionFinale selected = tvDecisions.getSelectionModel().getSelectedItem();
         if (selected == null) {
-            showError("Sélectionnez une décision à modifier.");
+            showError(LanguageManager.get("decision.select.edit"));
             return;
         }
         try {
             DecisionFinale d = buildFromForm();
             d.setId(selected.getId());
             service.update(d);
-            showInfo("Décision modifiée.");
+            showInfo(LanguageManager.get("decision.edited"));
             onRefresh();
             clearForm();
         } catch (Exception e) {
@@ -241,17 +242,17 @@ public class DecisionController {
     private void onSupprimer() {
         DecisionFinale selected = tvDecisions.getSelectionModel().getSelectedItem();
         if (selected == null) {
-            showError("Sélectionnez une décision à supprimer.");
+            showError(LanguageManager.get("decision.select.delete"));
             return;
         }
 
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setContentText("Voulez-vous supprimer cette décision ?");
+        confirm.setContentText(LanguageManager.get("decision.confirm.delete"));
 
         if (confirm.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
             try {
                 service.delete(selected.getId());
-                showInfo("Décision supprimée.");
+                showInfo(LanguageManager.get("decision.deleted"));
                 onRefresh();
                 clearForm();
             } catch (Exception e) {
@@ -302,13 +303,13 @@ public class DecisionController {
 
     private DecisionFinale buildFromForm() {
         if (cbEntretien.getValue() == null)
-            throw new IllegalArgumentException("Email candidat obligatoire.");
+            throw new IllegalArgumentException(LanguageManager.get("decision.error.email"));
         if (cbDecision.getValue() == null)
-            throw new IllegalArgumentException("Décision obligatoire.");
+            throw new IllegalArgumentException(LanguageManager.get("decision.error.decision"));
 
         Integer entretienId = emailToEntretienId.get(cbEntretien.getValue());
         if (entretienId == null)
-            throw new IllegalArgumentException("Candidat introuvable.");
+            throw new IllegalArgumentException(LanguageManager.get("decision.error.notfound"));
 
         DecisionFinale d = new DecisionFinale();
         d.setEntretienId(entretienId);
@@ -349,8 +350,8 @@ public class DecisionController {
         }
 
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setTitle("Moteur décisionnel");
-        confirm.setHeaderText("Appliquer les seuils automatiques ?");
+        confirm.setTitle(LanguageManager.get("decision.engine.title"));
+        confirm.setHeaderText(LanguageManager.get("decision.engine.confirm"));
         confirm.setContentText(
                 "Score >= " + sa + " -> ACCEPTE\n" +
                 "Score < " + sr + " -> REFUSE\n" +

@@ -10,7 +10,11 @@ public class PasswordHasher {
     }
 
     // Pour vérifier si le mot de passe saisi correspond au hachage en BDD
+    // Supporte $2y$ (PHP/Symfony) en plus de $2a$ et $2b$ (Java)
     public static boolean check(String password, String hashed) {
+        if (hashed != null && hashed.startsWith("$2y$")) {
+            hashed = "$2a$" + hashed.substring(4);
+        }
         return BCrypt.checkpw(password, hashed);
     }
 }

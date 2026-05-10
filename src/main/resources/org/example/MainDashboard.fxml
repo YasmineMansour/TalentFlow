@@ -5,6 +5,7 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
@@ -22,9 +23,12 @@
                 <Label text="✦  TalentFlow" styleClass="sidebar-title">
                     <VBox.margin><Insets bottom="2"/></VBox.margin>
                 </Label>
-                <Label fx:id="welcomeLabel" text="Connecté : ..." styleClass="sidebar-subtitle">
-                    <VBox.margin><Insets bottom="12"/></VBox.margin>
-                </Label>
+                <HBox fx:id="userInfoBox" spacing="10" alignment="CENTER_LEFT">
+                    <VBox.margin><Insets bottom="12" left="5"/></VBox.margin>
+                    <children>
+                        <Label fx:id="welcomeLabel" text="Connecté : ..." styleClass="sidebar-subtitle"/>
+                    </children>
+                </HBox>
 
                 <Separator styleClass="sidebar-separator">
                     <VBox.margin><Insets bottom="12"/></VBox.margin>
@@ -134,12 +138,25 @@
                     </content>
                 </ScrollPane>
 
-                <!-- Bottom separator + Logout -->
+                <!-- Bottom separator + Theme/Language + Logout -->
                 <Separator styleClass="sidebar-separator">
                     <VBox.margin><Insets top="8" bottom="8"/></VBox.margin>
                 </Separator>
 
-                <Button text="🚪  Déconnexion" onAction="#handleLogout"
+                <!-- Theme & Language controls -->
+                <HBox spacing="6" alignment="CENTER">
+                    <VBox.margin><Insets bottom="6" left="5" right="5"/></VBox.margin>
+                    <children>
+                        <Button fx:id="btnThemeToggle" text="🌙  Mode sombre" onAction="#handleToggleTheme"
+                                maxWidth="Infinity" mnemonicParsing="false" HBox.hgrow="ALWAYS"
+                                style="-fx-background-color: rgba(255,255,255,0.08); -fx-text-fill: rgba(255,255,255,0.65); -fx-font-size: 11px; -fx-background-radius: 8; -fx-cursor: hand; -fx-padding: 8 10;"/>
+                        <Button fx:id="btnLangToggle" text="🇬🇧 EN" onAction="#handleToggleLanguage"
+                                mnemonicParsing="false"
+                                style="-fx-background-color: rgba(255,255,255,0.08); -fx-text-fill: rgba(255,255,255,0.65); -fx-font-size: 11px; -fx-background-radius: 8; -fx-cursor: hand; -fx-padding: 8 12;"/>
+                    </children>
+                </HBox>
+
+                <Button fx:id="btnLogout" text="🚪  Déconnexion" onAction="#handleLogout"
                         maxWidth="Infinity" mnemonicParsing="false" styleClass="sidebar-btn-logout">
                     <VBox.margin><Insets bottom="5"/></VBox.margin>
                 </Button>

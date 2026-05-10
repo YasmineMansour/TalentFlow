@@ -13,6 +13,7 @@ import org.example.services.EntretienService;
 import org.example.services.GoogleCalendarService;
 import org.example.services.DecisionService;
 import org.example.utils.DialogUtil;
+import org.example.utils.LanguageManager;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -161,11 +162,11 @@ public class EntretienController {
                 });
 
         cbFilterStatut.setItems(FXCollections.observableArrayList(
-                "Tous", "PLANIFIE", "REALISE", "ANNULE"));
-        cbFilterStatut.setValue("Tous");
+                LanguageManager.get("entretien.filter.all"), "PLANIFIE", "REALISE", "ANNULE"));
+        cbFilterStatut.setValue(LanguageManager.get("entretien.filter.all"));
         cbFilterType.setItems(FXCollections.observableArrayList(
-                "Tous", "PRESENTIEL", "EN_LIGNE", "TELEPHONIQUE"));
-        cbFilterType.setValue("Tous");
+                LanguageManager.get("entretien.filter.all"), "PRESENTIEL", "EN_LIGNE", "TELEPHONIQUE"));
+        cbFilterType.setValue(LanguageManager.get("entretien.filter.all"));
 
         cbFilterStatut.setOnAction(e -> applyFilters());
         cbFilterType.setOnAction(e -> applyFilters());
@@ -188,10 +189,10 @@ public class EntretienController {
         String type = cbFilterType.getValue();
 
         filteredList.setPredicate(e -> {
-            if (statut != null && !"Tous".equals(statut)) {
+            if (statut != null && !LanguageManager.get("entretien.filter.all").equals(statut)) {
                 if (e.getStatut() == null || !e.getStatut().equals(statut)) return false;
             }
-            if (type != null && !"Tous".equals(type)) {
+            if (type != null && !LanguageManager.get("entretien.filter.all").equals(type)) {
                 if (e.getType() == null || !e.getType().equals(type)) return false;
             }
             if (!search.isEmpty()) {
@@ -321,7 +322,7 @@ public class EntretienController {
                 allCandidateEmails.setAll(service.getCandidateEmails());
             } catch (Exception ignored) { }
         } catch (SQLException e) {
-            DialogUtil.showError("Erreur chargement", e.getMessage());
+            DialogUtil.showError(LanguageManager.get("entretien.error.load"), e.getMessage());
         }
     }
 
@@ -349,16 +350,16 @@ public class EntretienController {
             tfNoteTech.clear();
             tfNoteCom.clear();
             taCommentaire.clear();
-            tfNoteTech.setPromptText("Disponible après réalisation");
-            tfNoteCom.setPromptText("Disponible après réalisation");
-            taCommentaire.setPromptText("Disponible après réalisation");
+            tfNoteTech.setPromptText(LanguageManager.get("entretien.available.after"));
+            tfNoteCom.setPromptText(LanguageManager.get("entretien.available.after"));
+            taCommentaire.setPromptText(LanguageManager.get("entretien.available.after"));
         } else {
             tfNoteTech.setText(e.getNoteTechnique() == null ? "" : String.valueOf(e.getNoteTechnique()));
             tfNoteCom.setText(e.getNoteCommunication() == null ? "" : String.valueOf(e.getNoteCommunication()));
             taCommentaire.setText(e.getCommentaire());
             tfNoteTech.setPromptText("0 - 20");
             tfNoteCom.setPromptText("0 - 20");
-            taCommentaire.setPromptText("Commentaire...");
+            taCommentaire.setPromptText(LanguageManager.get("entretien.comment.prompt"));
         }
         updateScoreLabel(e);
     }
@@ -524,14 +525,13 @@ public class EntretienController {
             Entretien e = buildFromForm();
 
             if (service.existeConflit(e.getDateEntretien())) {
-                DialogUtil.showWarning("Conflit horaire",
-                        "Un entretien existe deja a cette date/heure.\n" +
-                        "Choisissez un autre creneau.");
+                DialogUtil.showWarning(LanguageManager.get("entretien.conflict.title"),
+                        LanguageManager.get("entretien.conflict.msg"));
                 return;
             }
 
             service.add(e);
-            DialogUtil.showInfo("Succes", "Entretien ajoute avec succes.");
+            DialogUtil.showInfo(LanguageManager.get("entretien.success"), LanguageManager.get("entretien.added"));
 
             if (calendarService.isConfigured() && "EN_LIGNE".equals(e.getType())) {
                 syncToGoogleCalendarThenEmail(e);
@@ -543,14 +543,14 @@ public class EntretienController {
             reset();
             loadData();
         } catch (Exception e) {
-            DialogUtil.showError("Erreur", e.getMessage());
+            DialogUtil.showError(LanguageManager.get("entretien.error"), e.getMessage());
         }
     }
 
     @FXML
     private void onModifier() {
         if (selected == null) {
-            DialogUtil.showWarning("Attention", "Selectionnez un entretien dans la liste.");
+            DialogUtil.showWarning(LanguageManager.get("entretien.warning"), LanguageManager.get("entretien.select"));
             return;
         }
         try {
@@ -573,35 +573,35 @@ public class EntretienController {
                 });
             }
 
-            DialogUtil.showInfo("Succes", "Entretien modifie avec succes.");
+            DialogUtil.showInfo(LanguageManager.get("entretien.success"), LanguageManager.get("entretien.edited"));
             reset();
             loadData();
         } catch (Exception e) {
-            DialogUtil.showError("Erreur", e.getMessage());
+            DialogUtil.showError(LanguageManager.get("entretien.error"), e.getMessage());
         }
     }
 
     @FXML
     private void onSupprimer() {
         if (selected == null) {
-            DialogUtil.showWarning("Attention", "Selectionnez un entretien dans la liste.");
+            DialogUtil.showWarning(LanguageManager.get("entretien.warning"), LanguageManager.get("entretien.select"));
             return;
         }
 
         boolean confirmed = DialogUtil.confirmYesNo(
-                "Confirmation",
-                "Supprimer l'entretien #" + selected.getId() + " ?",
-                "Cette action est irreversible."
+                LanguageManager.get("entretien.confirm"),
+                LanguageManager.get("entretien.confirm.delete").replace("{0}", String.valueOf(selected.getId())),
+                LanguageManager.get("entretien.confirm.irreversible")
         );
         if (!confirmed) return;
 
         try {
             service.delete(selected.getId());
-            DialogUtil.showInfo("Succes", "Entretien supprime.");
+            DialogUtil.showInfo(LanguageManager.get("entretien.success"), LanguageManager.get("entretien.deleted"));
             reset();
             loadData();
         } catch (Exception e) {
-            DialogUtil.showError("Erreur", e.getMessage());
+            DialogUtil.showError(LanguageManager.get("entretien.error"), e.getMessage());
         }
     }
 
@@ -613,7 +613,7 @@ public class EntretienController {
     @FXML
     private void onFeedback() {
         if (selected == null) {
-            DialogUtil.showWarning("Attention", "Selectionnez un entretien dans la liste.");
+            DialogUtil.showWarning(LanguageManager.get("entretien.warning"), LanguageManager.get("entretien.select"));
             return;
         }
 
@@ -623,9 +623,9 @@ public class EntretienController {
             tfNoteTech.setDisable(false);
             tfNoteCom.setDisable(false);
             taCommentaire.setDisable(false);
-            tfNoteTech.setPromptText("Note /20");
-            tfNoteCom.setPromptText("Note /20");
-            taCommentaire.setPromptText("Saisissez votre feedback...");
+            tfNoteTech.setPromptText(LanguageManager.get("entretien.note.prompt"));
+            tfNoteCom.setPromptText(LanguageManager.get("entretien.note.prompt"));
+            taCommentaire.setPromptText(LanguageManager.get("entretien.feedback.prompt"));
 
             tfNoteTech.clear();
             tfNoteCom.clear();
@@ -633,12 +633,11 @@ public class EntretienController {
 
             cbStatut.setValue("REALISE");
 
-            btnFeedback.setText("Valider Feedback");
+            btnFeedback.setText(LanguageManager.get("entretien.feedback.validate"));
             btnFeedback.setStyle("-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold;");
 
-            DialogUtil.showInfo("Mode Feedback",
-                    "Les champs notes et commentaire sont maintenant actifs.\n" +
-                    "Saisissez vos notes puis cliquez sur 'Valider Feedback'.");
+            DialogUtil.showInfo(LanguageManager.get("entretien.feedback.mode"),
+                    LanguageManager.get("entretien.feedback.mode.msg"));
             return;
         }
 
@@ -647,8 +646,8 @@ public class EntretienController {
             Integer noteCom  = parseNote(tfNoteCom);
 
             if (noteTech == null && noteCom == null && (taCommentaire.getText() == null || taCommentaire.getText().isBlank())) {
-                DialogUtil.showWarning("Feedback vide",
-                        "Remplissez au moins une note ou un commentaire.");
+                DialogUtil.showWarning(LanguageManager.get("entretien.feedback.empty"),
+                        LanguageManager.get("entretien.feedback.empty.msg"));
                 return;
             }
 
@@ -676,21 +675,20 @@ public class EntretienController {
             String niveau = selected.getNiveau();
             String autoMsg = "";
             if (autoDecision != null && !"EN_ATTENTE".equals(autoDecision)) {
-                autoMsg = "\n\nDécision automatique : " + autoDecision +
-                          "\nEmail envoyé au candidat.";
+                autoMsg = "\n\n" + LanguageManager.get("entretien.auto.decision").replace("{0}", autoDecision);
             }
-            DialogUtil.showInfo("Feedback enregistré",
-                    "Statut -> RÉALISÉ\n" +
-                    "Score final : " + (score != null ? String.format("%.1f", score) + " / 20" : "-") + "\n" +
-                    "Niveau : " + niveau + autoMsg);
+            DialogUtil.showInfo(LanguageManager.get("entretien.feedback.saved"),
+                    LanguageManager.get("entretien.feedback.saved.msg")
+                    .replace("{0}", score != null ? String.format("%.1f", score) + " / 20" : "-")
+                    .replace("{1}", niveau) + autoMsg);
 
             feedbackMode = false;
-            btnFeedback.setText("Ajouter feedback + REALISE");
+            btnFeedback.setText(LanguageManager.get("entretien.feedback.btn"));
             btnFeedback.setStyle("");
             reset();
             loadData();
         } catch (Exception e) {
-            DialogUtil.showError("Erreur", e.getMessage());
+            DialogUtil.showError(LanguageManager.get("entretien.error"), e.getMessage());
         }
     }
 
@@ -709,10 +707,10 @@ public class EntretienController {
         tfLien.clear();      tfLien.setDisable(false);
         tfNoteTech.clear();  tfNoteTech.setStyle("");  tfNoteTech.setDisable(false);  tfNoteTech.setPromptText("0 - 20");
         tfNoteCom.clear();   tfNoteCom.setStyle("");   tfNoteCom.setDisable(false);   tfNoteCom.setPromptText("0 - 20");
-        taCommentaire.clear(); taCommentaire.setDisable(false); taCommentaire.setPromptText("Commentaire...");
+        taCommentaire.clear(); taCommentaire.setDisable(false); taCommentaire.setPromptText(LanguageManager.get("entretien.comment.prompt"));
         if (btnFeedback != null) {
             btnFeedback.setDisable(false);
-            btnFeedback.setText("Ajouter feedback + REALISE");
+            btnFeedback.setText(LanguageManager.get("entretien.feedback.btn"));
             btnFeedback.setStyle("-fx-font-size:14;");
         }
         feedbackMode = false;
@@ -733,9 +731,8 @@ public class EntretienController {
                     String[] parts = result.split("\\|", 2);
                     System.out.println("Google Calendar: événement créé, ID=" + parts[0]);
                     javafx.application.Platform.runLater(() ->
-                        DialogUtil.showInfo("Google Calendar",
-                                "Événement créé avec succès !\n" +
-                                "Invitation envoyée à " + e.getEmailCandidat())
+                        DialogUtil.showInfo(LanguageManager.get("entretien.gcal"),
+                                LanguageManager.get("entretien.gcal.created").replace("{0}", e.getEmailCandidat()))
                     );
                 })
                 .exceptionally(ex -> {
@@ -758,10 +755,10 @@ public class EntretienController {
 
                     javafx.application.Platform.runLater(() -> {
                         sendConfirmationEmail(e, meetLink);
-                        DialogUtil.showInfo("Google Calendar + Email",
-                                "Événement créé avec succès !\n" +
-                                "Lien Meet : " + (meetLink != null ? meetLink : "N/A") + "\n" +
-                                "Email envoyé à " + e.getEmailCandidat() + " avec le lien Meet.");
+                        DialogUtil.showInfo(LanguageManager.get("entretien.gcal.email"),
+                                LanguageManager.get("entretien.gcal.email.msg")
+                                .replace("{0}", meetLink != null ? meetLink : "N/A")
+                                .replace("{1}", e.getEmailCandidat()));
                     });
                 })
                 .exceptionally(ex -> {

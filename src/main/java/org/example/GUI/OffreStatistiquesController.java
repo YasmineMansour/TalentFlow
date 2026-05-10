@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Map;
 
+import org.example.utils.LanguageManager;
+
 public class OffreStatistiquesController {
 
     // ── Pie Charts ──
@@ -89,7 +91,7 @@ public class OffreStatistiquesController {
             pieData.add(new PieChart.Data(label + " (" + String.format("%.0f", pct) + "%)", entry.getValue()));
         }
         pieStatut.setData(pieData);
-        pieStatut.setTitle("R\u00e9partition par Statut");
+        pieStatut.setTitle(LanguageManager.get("stats.pie.statut"));
         pieStatut.setLabelsVisible(true);
         pieStatut.setLegendVisible(true);
         addPieTooltips(pieStatut, totalItems);
@@ -105,7 +107,7 @@ public class OffreStatistiquesController {
             pieData.add(new PieChart.Data(label + " (" + String.format("%.0f", pct) + "%)", entry.getValue()));
         }
         pieContrat.setData(pieData);
-        pieContrat.setTitle("R\u00e9partition par Contrat");
+        pieContrat.setTitle(LanguageManager.get("stats.pie.contrat"));
         pieContrat.setLabelsVisible(true);
         pieContrat.setLegendVisible(true);
         addPieTooltips(pieContrat, totalItems);
@@ -114,12 +116,12 @@ public class OffreStatistiquesController {
     private void chargerBarLocalisations() throws SQLException {
         Map<String, Integer> data = service.statsTopLocalisations(8);
         XYChart.Series<String, Number> series = new XYChart.Series<>();
-        series.setName("Nombre d'offres");
+        series.setName(LanguageManager.get("stats.series.offres"));
         for (Map.Entry<String, Integer> entry : data.entrySet())
             series.getData().add(new XYChart.Data<>(entry.getKey(), entry.getValue()));
         barLocalisations.getData().clear();
         barLocalisations.getData().add(series);
-        barLocalisations.setTitle("Top Localisations");
+        barLocalisations.setTitle(LanguageManager.get("stats.bar.locations"));
         barLocalisations.setLegendVisible(false);
         barLocalisations.setAnimated(true);
         addBarTooltips(series);
@@ -128,14 +130,14 @@ public class OffreStatistiquesController {
     private void chargerBarModeTravail() throws SQLException {
         Map<String, Integer> data = service.statsParModeTravail();
         XYChart.Series<String, Number> series = new XYChart.Series<>();
-        series.setName("Nombre d'offres");
+        series.setName(LanguageManager.get("stats.series.offres"));
         for (Map.Entry<String, Integer> entry : data.entrySet()) {
             String label = formatLabel(entry.getKey());
             series.getData().add(new XYChart.Data<>(label, entry.getValue()));
         }
         barModeTravail.getData().clear();
         barModeTravail.getData().add(series);
-        barModeTravail.setTitle("Mode de Travail");
+        barModeTravail.setTitle(LanguageManager.get("stats.bar.mode"));
         barModeTravail.setLegendVisible(false);
         barModeTravail.setAnimated(true);
         addBarTooltips(series);
@@ -144,7 +146,7 @@ public class OffreStatistiquesController {
     private void chargerBarAvantages() throws SQLException {
         Map<String, Integer> data = service.statsAvantagesParOffre();
         XYChart.Series<String, Number> series = new XYChart.Series<>();
-        series.setName("Nombre d'avantages");
+        series.setName(LanguageManager.get("stats.series.avantages"));
         int count = 0;
         for (Map.Entry<String, Integer> entry : data.entrySet()) {
             if (count++ >= 10) break;
@@ -153,7 +155,7 @@ public class OffreStatistiquesController {
         }
         barAvantages.getData().clear();
         barAvantages.getData().add(series);
-        barAvantages.setTitle("Avantages par Offre");
+        barAvantages.setTitle(LanguageManager.get("stats.bar.avantages"));
         barAvantages.setLegendVisible(false);
         barAvantages.setAnimated(true);
         addBarTooltips(series);
@@ -162,7 +164,7 @@ public class OffreStatistiquesController {
     private void addPieTooltips(PieChart chart, int total) {
         for (PieChart.Data d : chart.getData()) {
             double pct = total > 0 ? (d.getPieValue() * 100.0 / total) : 0;
-            Tooltip tooltip = new Tooltip(d.getName() + "\n" + (int) d.getPieValue() + " offres \u2014 " + String.format("%.1f%%", pct));
+            Tooltip tooltip = new Tooltip(d.getName() + "\n" + (int) d.getPieValue() + " " + LanguageManager.get("stats.tooltip.offers") + " \u2014 " + String.format("%.1f%%", pct));
             tooltip.setShowDelay(Duration.millis(100));
             Tooltip.install(d.getNode(), tooltip);
             d.getNode().setOnMouseEntered(e -> d.getNode().setStyle("-fx-opacity: 0.8;"));
@@ -174,7 +176,7 @@ public class OffreStatistiquesController {
         for (XYChart.Data<String, Number> d : series.getData()) {
             d.nodeProperty().addListener((obs, oldNode, newNode) -> {
                 if (newNode != null) {
-                    Tooltip tooltip = new Tooltip(d.getXValue() + " : " + d.getYValue() + " offres");
+                    Tooltip tooltip = new Tooltip(d.getXValue() + " : " + d.getYValue() + " " + LanguageManager.get("stats.tooltip.offers"));
                     tooltip.setShowDelay(Duration.millis(100));
                     Tooltip.install(newNode, tooltip);
                     newNode.setOnMouseEntered(e -> newNode.setStyle("-fx-opacity: 0.75;"));
@@ -185,15 +187,15 @@ public class OffreStatistiquesController {
     }
 
     private String formatLabel(String raw) {
-        if (raw == null) return "Non d\u00e9fini";
+        if (raw == null) return LanguageManager.get("stats.undefined");
         return switch (raw) {
-            case "ON_SITE"   -> "Sur site";
-            case "REMOTE"    -> "T\u00e9l\u00e9travail";
-            case "HYBRID"    -> "Hybride";
-            case "PUBLISHED" -> "Publi\u00e9e";
-            case "CLOSED"    -> "Ferm\u00e9e";
-            case "ARCHIVED"  -> "Archiv\u00e9e";
-            case "BIEN_ETRE" -> "Bien-\u00eatre";
+            case "ON_SITE"   -> LanguageManager.get("stats.mode.onsite");
+            case "REMOTE"    -> LanguageManager.get("stats.mode.remote");
+            case "HYBRID"    -> LanguageManager.get("stats.mode.hybrid");
+            case "PUBLISHED" -> LanguageManager.get("stats.statut.published");
+            case "CLOSED"    -> LanguageManager.get("stats.statut.closed");
+            case "ARCHIVED"  -> LanguageManager.get("stats.statut.archived");
+            case "BIEN_ETRE" -> LanguageManager.get("stats.type.bienetre");
             default          -> raw;
         };
     }
@@ -228,7 +230,7 @@ public class OffreStatistiquesController {
                     entry.getValue()));
         }
         pieCoherence.setData(pieData);
-        pieCoherence.setTitle("Coh\u00e9rence Salaire vs Avantages");
+        pieCoherence.setTitle(LanguageManager.get("stats.pie.coherence"));
         pieCoherence.setLabelsVisible(true);
         pieCoherence.setLegendVisible(true);
         addPieTooltips(pieCoherence, totalItems);

@@ -12,6 +12,8 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import org.example.utils.AvatarUtils;
+import org.example.utils.LanguageManager;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -32,8 +34,8 @@ public class ForumController {
     @FXML
     public void initialize() {
         if (sortFilter != null) {
-            sortFilter.getItems().addAll("Plus récents", "Plus populaires");
-            sortFilter.setValue("Plus récents");
+            sortFilter.getItems().addAll(LanguageManager.get("forum.sort.recent"), LanguageManager.get("forum.sort.popular"));
+            sortFilter.setValue(LanguageManager.get("forum.sort.recent"));
             sortFilter.setOnAction(e -> refreshFeed(searchBar.getText()));
         }
 
@@ -66,7 +68,7 @@ public class ForumController {
             }
 
             // Tri
-            if (sortFilter != null && "Plus populaires".equals(sortFilter.getValue())) {
+            if (sortFilter != null && LanguageManager.get("forum.sort.popular").equals(sortFilter.getValue())) {
                 posts.sort((p1, p2) -> Integer.compare(p2.getUpvotes(), p1.getUpvotes()));
             } else {
                 posts.sort((p1, p2) -> Integer.compare(p2.getId(), p1.getId()));
@@ -109,11 +111,15 @@ public class ForumController {
 
         HBox metaRow = new HBox(8);
         metaRow.setAlignment(Pos.CENTER_LEFT);
-        Label authorInfo = new Label("👤 " + p.getAuthorName());
+
+        // Avatar de l'auteur
+        StackPane authorAvatar = AvatarUtils.createAvatar(p.getAuthorName(), 14);
+
+        Label authorInfo = new Label(p.getAuthorName());
         authorInfo.getStyleClass().add("forum-post-meta");
 
         // --- BADGE DE TONALITÉ IA ---
-        Label toneBadge = new Label("✨ Analyse...");
+        Label toneBadge = new Label(LanguageManager.get("forum.tone.analyzing"));
         toneBadge.setStyle("-fx-font-size: 10px; -fx-padding: 2 8; -fx-background-radius: 10; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-color: #6c757d;");
 
         new Thread(() -> {
@@ -121,15 +127,15 @@ public class ForumController {
             javafx.application.Platform.runLater(() -> {
                 switch (tone) {
                     case "pos" -> {
-                        toneBadge.setText("😊 POSITIF");
+                        toneBadge.setText(LanguageManager.get("forum.tone.positive"));
                         toneBadge.setStyle("-fx-font-size: 10px; -fx-padding: 2 8; -fx-background-radius: 10; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-color: #00b894;");
                     }
                     case "neg" -> {
-                        toneBadge.setText("⚠️ HOSTILE");
+                        toneBadge.setText(LanguageManager.get("forum.tone.hostile"));
                         toneBadge.setStyle("-fx-font-size: 10px; -fx-padding: 2 8; -fx-background-radius: 10; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-color: #d63031;");
                     }
                     default -> {
-                        toneBadge.setText("😐 NEUTRE");
+                        toneBadge.setText(LanguageManager.get("forum.tone.neutral"));
                         toneBadge.setStyle("-fx-font-size: 10px; -fx-padding: 2 8; -fx-background-radius: 10; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-color: #0984e3;");
                     }
                 }
@@ -139,7 +145,7 @@ public class ForumController {
         Label roleBadge = new Label(p.getAuthorRole() != null ? p.getAuthorRole().toUpperCase() : "");
         roleBadge.getStyleClass().add("forum-role-badge");
 
-        metaRow.getChildren().addAll(authorInfo, roleBadge, toneBadge);
+        metaRow.getChildren().addAll(authorAvatar, authorInfo, roleBadge, toneBadge);
 
         Label title = new Label(p.getTitle());
         title.getStyleClass().add("forum-post-title");
@@ -229,7 +235,7 @@ public class ForumController {
     /** Supprime un post après confirmation */
     private void handleDeletePost(Post p) {
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
-                "Êtes-vous sûr de vouloir supprimer ce post ?", ButtonType.YES, ButtonType.NO);
+                LanguageManager.get("forum.confirm.delete"), ButtonType.YES, ButtonType.NO);
         confirm.showAndWait().ifPresent(response -> {
             if (response == ButtonType.YES) {
                 try {
@@ -256,7 +262,7 @@ public class ForumController {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "Impossible de charger la page d'édition.").show();
+            new Alert(Alert.AlertType.ERROR, LanguageManager.get("forum.error.edit")).show();
         }
     }
 
@@ -286,14 +292,14 @@ public class ForumController {
         HBox inputArea = new HBox(8);
         inputArea.setPadding(new Insets(5));
         TextField commentInput = new TextField();
-        commentInput.setPromptText("Ajouter un commentaire...");
+        commentInput.setPromptText(LanguageManager.get("forum.comment.prompt"));
         HBox.setHgrow(commentInput, Priority.ALWAYS);
-        Button btnAdd = new Button("Publier");
+        Button btnAdd = new Button(LanguageManager.get("forum.comment.publish"));
         btnAdd.getStyleClass().add("btn-primary");
         btnAdd.setOnAction(e -> {
             String text = commentInput.getText().trim();
             if (text.isEmpty()) {
-                showAlert("Saisie invalide", "Le commentaire ne peut pas être vide !", Alert.AlertType.WARNING);
+                showAlert(LanguageManager.get("forum.input.invalid"), LanguageManager.get("forum.comment.empty"), Alert.AlertType.WARNING);
                 return;
             }
             try {
@@ -320,11 +326,15 @@ public class ForumController {
                 commentBox.setPadding(new Insets(5, 10, 5, 10));
                 commentBox.setStyle("-fx-background-color: #f8f9fa; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #e0e0e0;");
 
-                HBox header = new HBox(10);
+                HBox header = new HBox(8);
                 header.setAlignment(Pos.CENTER_LEFT);
-                Label cUser = new Label("👤 " + c.getAuthorName());
+
+                // Avatar du commentateur
+                StackPane commentAvatar = AvatarUtils.createAvatar(c.getAuthorName(), 12);
+
+                Label cUser = new Label(c.getAuthorName());
                 cUser.setStyle("-fx-font-weight: bold; -fx-font-size: 12px;");
-                header.getChildren().add(cUser);
+                header.getChildren().addAll(commentAvatar, cUser);
 
                 // Boutons édition/suppression pour l'auteur ou l'admin
                 if (isAdminOrOwner(c.getAuthorName())) {
@@ -332,12 +342,12 @@ public class ForumController {
                     editC.getStyleClass().add("forum-comment-action-btn");
                     editC.setOnAction(e -> {
                         TextInputDialog diag = new TextInputDialog(c.getContent());
-                        diag.setTitle("Modifier le commentaire");
-                        diag.setHeaderText("Modifiez votre commentaire :");
+                        diag.setTitle(LanguageManager.get("forum.comment.edit.title"));
+                        diag.setHeaderText(LanguageManager.get("forum.comment.edit.header"));
                         diag.setContentText("Commentaire :");
                         diag.showAndWait().ifPresent(newText -> {
                             if (newText.trim().isEmpty()) {
-                                showAlert("Saisie invalide", "Le commentaire ne peut pas être vide !", Alert.AlertType.WARNING);
+                                showAlert(LanguageManager.get("forum.input.invalid"), LanguageManager.get("forum.comment.empty"), Alert.AlertType.WARNING);
                             } else {
                                 try {
                                     commentService.modifierCommentaire(c.getId(), newText);
@@ -353,7 +363,7 @@ public class ForumController {
                     delC.getStyleClass().add("forum-comment-action-btn");
                     delC.setOnAction(e -> {
                         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
-                                "Supprimer ce commentaire ?", ButtonType.YES, ButtonType.NO);
+                                LanguageManager.get("forum.comment.delete"), ButtonType.YES, ButtonType.NO);
                         confirm.showAndWait().ifPresent(resp -> {
                             if (resp == ButtonType.YES) {
                                 try {

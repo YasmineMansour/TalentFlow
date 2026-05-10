@@ -28,7 +28,9 @@ import javafx.stage.FileChooser;
 import org.example.model.Candidature;
 import org.example.model.PieceJointe;
 import org.example.services.*;
+import org.example.utils.AvatarUtils;
 import org.example.utils.EmailService;
+import org.example.utils.LanguageManager;
 
 import java.awt.Color;
 import java.io.File;
@@ -80,35 +82,13 @@ public class RhCandidatureController {
         if (colNomCandidat != null) {
             colNomCandidat.setCellValueFactory(cell -> new javafx.beans.property.SimpleStringProperty(
                     cell.getValue().getNomCandidat() != null ? cell.getValue().getNomCandidat() : "User #" + cell.getValue().getUserId()));
-            // Avatar API — affiche un cercle avec initiales + image API en arrière-plan
+            // Avatar API — affiche avatar via AvatarUtils
             colNomCandidat.setCellFactory(col -> new TableCell<>() {
-                private final javafx.scene.layout.StackPane avatarPane = new javafx.scene.layout.StackPane();
-                private final Circle avatarCircle = new Circle(16);
-                private final javafx.scene.text.Text initialsText = new javafx.scene.text.Text();
-                private final ImageView avatarImg = new ImageView();
-                private final Label nameLabel = new Label();
                 private final HBox container = new HBox(10);
+                private final Label nameLabel = new Label();
                 {
-                    // Cercle d'initiales (fallback toujours visible)
-                    avatarCircle.setFill(javafx.scene.paint.Color.web("#6c5ce7"));
-                    initialsText.setFill(javafx.scene.paint.Color.WHITE);
-                    initialsText.setStyle("-fx-font-weight: bold; -fx-font-size: 13;");
-
-                    // Image API par-dessus le cercle
-                    avatarImg.setFitWidth(32);
-                    avatarImg.setFitHeight(32);
-                    avatarImg.setPreserveRatio(true);
-                    avatarImg.setSmooth(true);
-                    Circle imgClip = new Circle(16, 16, 16);
-                    avatarImg.setClip(imgClip);
-
-                    avatarPane.getChildren().addAll(avatarCircle, initialsText, avatarImg);
-                    avatarPane.setMinSize(34, 34);
-                    avatarPane.setMaxSize(34, 34);
-
                     nameLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: #2d3436; -fx-font-size: 13;");
                     container.setAlignment(Pos.CENTER_LEFT);
-                    container.getChildren().addAll(avatarPane, nameLabel);
                 }
 
                 @Override
@@ -119,41 +99,8 @@ public class RhCandidatureController {
                         setText(null);
                     } else {
                         nameLabel.setText(name);
-
-                        // Initiales colorées
-                        String initials = getInitials(name);
-                        initialsText.setText(initials);
-                        avatarCircle.setFill(getAvatarColor(name));
-
-                        // Charger avatar API en arrière-plan
-                        String encoded = java.net.URLEncoder.encode(name, java.nio.charset.StandardCharsets.UTF_8);
-                        String avatarUrl = "https://ui-avatars.com/api/?name=" + encoded
-                                + "&size=64&rounded=true&background="
-                                + colorToHex(getAvatarColor(name)) + "&color=fff&bold=true&format=png";
-                        try {
-                            Image img = new Image(avatarUrl, 32, 32, true, true, true);
-                            avatarImg.setImage(img);
-                            // Si l'image charge avec succès, masquer les initiales
-                            img.progressProperty().addListener((obs, oldP, newP) -> {
-                                if (newP.doubleValue() >= 1.0 && !img.isError()) {
-                                    initialsText.setVisible(false);
-                                    avatarCircle.setVisible(false);
-                                }
-                            });
-                            // Si erreur, garder les initiales
-                            img.errorProperty().addListener((obs, oldE, newE) -> {
-                                if (newE) {
-                                    initialsText.setVisible(true);
-                                    avatarCircle.setVisible(true);
-                                    avatarImg.setImage(null);
-                                }
-                            });
-                        } catch (Exception e) {
-                            avatarImg.setImage(null);
-                            initialsText.setVisible(true);
-                            avatarCircle.setVisible(true);
-                        }
-
+                        StackPane avatar = AvatarUtils.createAvatar(name, 16);
+                        container.getChildren().setAll(avatar, nameLabel);
                         setGraphic(container);
                         setText(null);
                     }
@@ -282,7 +229,7 @@ public class RhCandidatureController {
             a.getDialogPane().setMinWidth(500);
             a.show();
         } catch (SQLException e) {
-            lblMsg.setText("❌ Erreur chargement PJ.");
+            lblMsg.setText(LanguageManager.get("rh.error.pj"));
         }
     }
 
@@ -304,12 +251,12 @@ public class RhCandidatureController {
             chartContainer.getChildren().clear();
             if (total > 0) {
                 PieChart pieChart = new PieChart(FXCollections.observableArrayList(
-                        new PieChart.Data("Accepté (" + accepte + ")", accepte),
-                        new PieChart.Data("En Attente (" + attente + ")", attente),
-                        new PieChart.Data("En Cours (" + enCours + ")", enCours),
-                        new PieChart.Data("Refusé (" + refuse + ")", refuse)
+                        new PieChart.Data(LanguageManager.get("rh.chart.accepte") + " (" + accepte + ")", accepte),
+                        new PieChart.Data(LanguageManager.get("rh.chart.attente") + " (" + attente + ")", attente),
+                        new PieChart.Data(LanguageManager.get("rh.chart.encours") + " (" + enCours + ")", enCours),
+                        new PieChart.Data(LanguageManager.get("rh.chart.refuse") + " (" + refuse + ")", refuse)
                 ));
-                pieChart.setTitle("Répartition des Statuts");
+                pieChart.setTitle(LanguageManager.get("rh.chart.title"));
                 pieChart.setLabelsVisible(true);
                 pieChart.setLegendVisible(true);
                 pieChart.setPrefHeight(250);
@@ -336,8 +283,8 @@ public class RhCandidatureController {
     private void handleUpdateStatut() {
         Candidature selected = tvCandidatures.getSelectionModel().getSelectedItem();
         String newStatut = cbStatut.getValue();
-        if (selected == null) { lblMsg.setText("⚠️ Sélectionnez une candidature."); return; }
-        if (newStatut == null) { lblMsg.setText("⚠️ Sélectionnez un statut."); return; }
+        if (selected == null) { lblMsg.setText(LanguageManager.get("rh.select")); return; }
+        if (newStatut == null) { lblMsg.setText(LanguageManager.get("rh.select.statut")); return; }
 
         try {
             service.updateStatut(selected.getId(), newStatut);
@@ -353,7 +300,7 @@ public class RhCandidatureController {
                 }).start();
             }
 
-            lblMsg.setText("✅ Statut mis à jour : " + newStatut);
+            lblMsg.setText(LanguageManager.get("rh.statut.ok").replace("{0}", newStatut));
             refresh();
         } catch (SQLException e) {
             lblMsg.setText("❌ Erreur SQL : " + e.getMessage());
@@ -363,16 +310,16 @@ public class RhCandidatureController {
     @FXML
     private void handleDelete() {
         Candidature selected = tvCandidatures.getSelectionModel().getSelectedItem();
-        if (selected == null) { lblMsg.setText("⚠️ Sélectionnez une candidature."); return; }
+        if (selected == null) { lblMsg.setText(LanguageManager.get("rh.select")); return; }
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
-                "Supprimer la candidature #" + selected.getId() + " ?\nCela supprimera aussi les pièces jointes associées.",
+                LanguageManager.get("rh.confirm.msg").replace("{0}", String.valueOf(selected.getId())),
                 ButtonType.YES, ButtonType.NO);
-        confirm.setTitle("Confirmation de suppression");
+        confirm.setTitle(LanguageManager.get("rh.confirm.title"));
         confirm.showAndWait().ifPresent(res -> {
             if (res == ButtonType.YES) {
                 try {
                     service.delete(selected.getId());
-                    lblMsg.setText("🗑 Candidature supprimée.");
+                    lblMsg.setText(LanguageManager.get("rh.deleted"));
                     refresh();
                 } catch (SQLException e) {
                     lblMsg.setText("❌ Erreur suppression : " + e.getMessage());
@@ -383,9 +330,9 @@ public class RhCandidatureController {
 
     @FXML
     private void handleExport() {
-        if (data.isEmpty()) { lblMsg.setText("⚠️ Aucune donnée à exporter."); return; }
+        if (data.isEmpty()) { lblMsg.setText(LanguageManager.get("rh.export.empty")); return; }
         FileChooser fc = new FileChooser();
-        fc.setTitle("Exporter en PDF");
+        fc.setTitle(LanguageManager.get("rh.export.title"));
         fc.setInitialFileName("Export_Candidatures_TalentFlow.pdf");
         fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
         File f = fc.showSaveDialog(tvCandidatures.getScene().getWindow());
@@ -464,7 +411,7 @@ public class RhCandidatureController {
                 document.add(footer);
 
                 document.close();
-                lblMsg.setText("📥 PDF exporté avec succès !");
+                lblMsg.setText(LanguageManager.get("rh.export.ok"));
             } catch (Exception e) {
                 lblMsg.setText("❌ Erreur export PDF : " + e.getMessage());
                 e.printStackTrace();
@@ -506,33 +453,5 @@ public class RhCandidatureController {
         lblMsg.setText("🔥 Liste triée par force du dossier (nombre de PJ) !");
     }
 
-    // ─────── Avatar Helpers ───────
-
-    /** Extrait les initiales d'un nom (ex: "Jean Dupont" → "JD") */
-    private static String getInitials(String name) {
-        if (name == null || name.isBlank()) return "?";
-        String[] parts = name.trim().split("\\s+");
-        if (parts.length == 1) return parts[0].substring(0, Math.min(2, parts[0].length())).toUpperCase();
-        return (parts[0].charAt(0) + "" + parts[parts.length - 1].charAt(0)).toUpperCase();
-    }
-
-    /** Génère une couleur unique et agréable basée sur le nom */
-    private static javafx.scene.paint.Color getAvatarColor(String name) {
-        if (name == null) return javafx.scene.paint.Color.web("#6c5ce7");
-        String[] palette = {
-            "#6c5ce7", "#00b894", "#e17055", "#0984e3", "#d63031",
-            "#00cec9", "#e84393", "#fdcb6e", "#6ab04c", "#eb4d4b",
-            "#7ed6df", "#22a6b3", "#be2edd", "#f9ca24", "#30336b"
-        };
-        int idx = Math.abs(name.hashCode()) % palette.length;
-        return javafx.scene.paint.Color.web(palette[idx]);
-    }
-
-    /** Convertit un Color JavaFX en hex sans le # (ex: "6c5ce7") */
-    private static String colorToHex(javafx.scene.paint.Color c) {
-        return String.format("%02x%02x%02x",
-                (int) (c.getRed() * 255),
-                (int) (c.getGreen() * 255),
-                (int) (c.getBlue() * 255));
-    }
+    // ─────── Avatar Helpers (déplacés vers AvatarUtils) ───────
 }

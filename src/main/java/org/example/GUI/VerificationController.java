@@ -13,6 +13,8 @@ import org.example.model.User;
 import org.example.utils.EmailService;
 import org.example.utils.SmsService;
 import org.example.utils.VerificationService;
+import org.example.utils.LanguageManager;
+import org.example.utils.ThemeManager;
 
 import java.io.IOException;
 
@@ -35,7 +37,7 @@ public class VerificationController {
         User pending = UserSession.getPendingUser();
         if (pending != null && infoLabel != null) {
             String maskedEmail = maskEmail(pending.getEmail());
-            infoLabel.setText("Un code a été envoyé à " + maskedEmail);
+            infoLabel.setText(LanguageManager.get("verify.info") + maskedEmail);
         }
     }
 
@@ -44,18 +46,18 @@ public class VerificationController {
         String code = codeField.getText().trim();
 
         if (code.isEmpty()) {
-            showError("Veuillez entrer le code de vérification.");
+            showError(LanguageManager.get("verify.error.empty"));
             return;
         }
 
         if (code.length() != 6 || !code.matches("\\d{6}")) {
-            showError("Le code doit contenir exactement 6 chiffres.");
+            showError(LanguageManager.get("verify.error.format"));
             return;
         }
 
         User pending = UserSession.getPendingUser();
         if (pending == null) {
-            showError("Session expirée. Veuillez vous reconnecter.");
+            showError(LanguageManager.get("verify.error.session"));
             return;
         }
 
@@ -65,7 +67,7 @@ public class VerificationController {
             UserSession.clearPendingUser();
             loadDashboard();
         } else {
-            showError("Code incorrect ou expiré. Veuillez réessayer.");
+            showError(LanguageManager.get("verify.error.invalid"));
         }
     }
 
@@ -73,13 +75,13 @@ public class VerificationController {
     private void handleResendCode() {
         User pending = UserSession.getPendingUser();
         if (pending == null) {
-            showError("Session expirée. Veuillez vous reconnecter.");
+            showError(LanguageManager.get("verify.error.session"));
             return;
         }
 
         // Cooldown pour éviter le spam
         if (resendCooldown > 0) {
-            showError("Veuillez patienter avant de renvoyer un code.");
+            showError(LanguageManager.get("verify.error.cooldown"));
             return;
         }
 
@@ -98,9 +100,9 @@ public class VerificationController {
 
             Platform.runLater(() -> {
                 if (sent) {
-                    showSuccess("✅ Nouveau code envoyé à votre adresse email !");
+                    showSuccess(LanguageManager.get("verify.resend.success"));
                 } else {
-                    showError("❌ Échec de l'envoi du code. Vérifiez votre connexion et réessayez.");
+                    showError(LanguageManager.get("verify.resend.error"));
                 }
             });
         }).start();
@@ -115,8 +117,10 @@ public class VerificationController {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/org/example/LoginView.fxml"));
             Stage stage = (Stage) codeField.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("TalentFlow - Connexion");
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setTitle("TalentFlow - " + LanguageManager.get("login.title"));
+            ThemeManager.applyTheme(scene);
             stage.setMaximized(true);
         } catch (IOException e) {
             e.printStackTrace();
@@ -127,8 +131,10 @@ public class VerificationController {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/org/example/MainDashboard.fxml"));
             Stage stage = (Stage) codeField.getScene().getWindow();
-            stage.setScene(new Scene(root));
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
             stage.setTitle("TalentFlow - Dashboard");
+            ThemeManager.applyTheme(scene);
             stage.setMinWidth(1200);
             stage.setMinHeight(750);
             stage.setMaximized(true);
@@ -150,7 +156,7 @@ public class VerificationController {
             }
             Platform.runLater(() -> {
                 resendBtn.setDisable(false);
-                resendBtn.setText("Renvoyer le code");
+                resendBtn.setText(LanguageManager.get("verify.resend.button"));
             });
         }).start();
     }

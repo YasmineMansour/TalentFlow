@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import org.example.utils.LanguageManager;
 
 public class OffreController implements Initializable {
 
@@ -81,7 +82,7 @@ public class OffreController implements Initializable {
         comboStatut.setItems(FXCollections.observableArrayList("PUBLISHED", "CLOSED", "ARCHIVED"));
         comboTypeContrat.setItems(FXCollections.observableArrayList("CDI", "CDD", "Stage", "Freelance", "Alternance"));
         comboModeTravail.setItems(FXCollections.observableArrayList("ON_SITE", "REMOTE", "HYBRID"));
-        comboTri.setItems(FXCollections.observableArrayList("Titre", "Localisation", "Statut", "Date (ID)", "Score \u2193"));
+        comboTri.setItems(FXCollections.observableArrayList(LanguageManager.get("offre.sort.titre"), LanguageManager.get("offre.sort.loc"), LanguageManager.get("offre.sort.statut"), LanguageManager.get("offre.sort.date"), LanguageManager.get("offre.sort.score")));
 
         comboDeviseSource.setItems(FXCollections.observableArrayList(Devise.values()));
         comboDeviseSource.setValue(Devise.TND);
@@ -171,13 +172,13 @@ public class OffreController implements Initializable {
                     lblLocValidation.setText("");
                     lblLocValidation.setStyle("-fx-font-size: 11px;");
                 } else if (newVal.trim().length() < 2) {
-                    lblLocValidation.setText("\u26a0 Trop court \u2014 saisissez un nom de ville valide");
+                    lblLocValidation.setText(LanguageManager.get("offre.loc.short.hint"));
                     lblLocValidation.setStyle("-fx-text-fill: #D97706; -fx-font-size: 11px;");
                 } else if (!newVal.matches("[a-zA-Z\u00c0-\u00ff\\s\\-',\\.]+")) {
-                    lblLocValidation.setText("\u26a0 Caract\u00e8res invalides \u2014 lettres, espaces et tirets uniquement");
+                    lblLocValidation.setText(LanguageManager.get("offre.loc.chars.hint"));
                     lblLocValidation.setStyle("-fx-text-fill: #D97706; -fx-font-size: 11px;");
                 } else {
-                    lblLocValidation.setText("\ud83d\udd0e Quittez le champ pour v\u00e9rifier l'adresse...");
+                    lblLocValidation.setText(LanguageManager.get("offre.loc.hint"));
                     lblLocValidation.setStyle("-fx-text-fill: #6B7280; -fx-font-size: 11px;");
                 }
             }
@@ -216,7 +217,7 @@ public class OffreController implements Initializable {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            afficherAlerte(Alert.AlertType.ERROR, "Erreur de navigation", e.getMessage());
+            afficherAlerte(Alert.AlertType.ERROR, LanguageManager.get("offre.error.navigation"), e.getMessage());
         }
     }
 
@@ -225,7 +226,7 @@ public class OffreController implements Initializable {
     // ══════════════════════════════════════════════════════════
 
     private void validerLocalisationAsync(String location) {
-        lblLocValidation.setText("\u23f3 V\u00e9rification de l'adresse en cours...");
+        lblLocValidation.setText(LanguageManager.get("offre.loc.verifying"));
         lblLocValidation.setStyle("-fx-text-fill: #2563EB; -fx-font-size: 11px;");
 
         Task<double[]> task = new Task<>() {
@@ -237,12 +238,12 @@ public class OffreController implements Initializable {
             if (coords != null) {
                 localisationValide = true;
                 derni\u00e8reLocValid\u00e9e = location;
-                lblLocValidation.setText("\u2705 Adresse valide \u2014 " + String.format("%.4f, %.4f", coords[0], coords[1]));
+                lblLocValidation.setText(LanguageManager.get("offre.loc.valid.coords").replace("{0}", String.format("%.4f, %.4f", coords[0], coords[1])));
                 lblLocValidation.setStyle("-fx-text-fill: #059669; -fx-font-size: 11px; -fx-font-weight: bold;");
             } else {
                 localisationValide = false;
                 derni\u00e8reLocValid\u00e9e = "";
-                lblLocValidation.setText("\u274c Adresse introuvable \u2014 v\u00e9rifiez l'orthographe (ex: Tunis, Ariana, Sousse)");
+                lblLocValidation.setText(LanguageManager.get("offre.loc.notfound.hint"));
                 lblLocValidation.setStyle("-fx-text-fill: #DC2626; -fx-font-size: 11px; -fx-font-weight: bold;");
             }
         });
@@ -250,7 +251,7 @@ public class OffreController implements Initializable {
         task.setOnFailed(e -> {
             localisationValide = false;
             derni\u00e8reLocValid\u00e9e = "";
-            lblLocValidation.setText("\u26a0 Impossible de v\u00e9rifier \u2014 v\u00e9rifiez votre connexion internet");
+            lblLocValidation.setText(LanguageManager.get("offre.loc.verify.error"));
             lblLocValidation.setStyle("-fx-text-fill: #D97706; -fx-font-size: 11px;");
         });
 
@@ -261,49 +262,49 @@ public class OffreController implements Initializable {
         StringBuilder erreurs = new StringBuilder();
 
         if (tfTitre.getText() == null || tfTitre.getText().trim().isEmpty())
-            erreurs.append("\u2022 Le titre est obligatoire.\n");
+            erreurs.append("\u2022 " + LanguageManager.get("offre.valid.titre") + "\n");
         else if (tfTitre.getText().trim().length() < 3)
-            erreurs.append("\u2022 Le titre doit contenir au moins 3 caract\u00e8res.\n");
+            erreurs.append("\u2022 " + LanguageManager.get("offre.valid.titre.min") + "\n");
         else if (tfTitre.getText().trim().length() > 100)
-            erreurs.append("\u2022 Le titre ne doit pas d\u00e9passer 100 caract\u00e8res.\n");
+            erreurs.append("\u2022 " + LanguageManager.get("offre.valid.titre.max") + "\n");
 
         if (taDescription.getText() == null || taDescription.getText().trim().isEmpty())
-            erreurs.append("\u2022 La description est obligatoire.\n");
+            erreurs.append("\u2022 " + LanguageManager.get("offre.valid.desc") + "\n");
         else if (taDescription.getText().trim().length() < 10)
-            erreurs.append("\u2022 La description doit contenir au moins 10 caract\u00e8res.\n");
+            erreurs.append("\u2022 " + LanguageManager.get("offre.valid.desc.min") + "\n");
 
         String loc = tfLocalisation.getText();
         if (loc == null || loc.trim().isEmpty()) {
-            erreurs.append("\u2022 La localisation est obligatoire.\n");
+            erreurs.append("\u2022 " + LanguageManager.get("offre.valid.loc") + "\n");
         } else if (loc.trim().length() < 2) {
-            erreurs.append("\u2022 La localisation doit contenir au moins 2 caract\u00e8res.\n");
+            erreurs.append("\u2022 " + LanguageManager.get("offre.valid.loc.min") + "\n");
         } else if (!loc.matches("[a-zA-Z\u00c0-\u00ff\\s\\-',\\.]+")) {
-            erreurs.append("\u2022 La localisation contient des caract\u00e8res invalides.\n");
+            erreurs.append("\u2022 " + LanguageManager.get("offre.valid.loc.invalid") + "\n");
         } else if (!localisationValide) {
             double[] coords = geoService.geocode(loc.trim());
             if (coords != null) {
                 localisationValide = true;
                 derni\u00e8reLocValid\u00e9e = loc.trim();
-                lblLocValidation.setText("\u2705 Adresse valide \u2014 " + String.format("%.4f, %.4f", coords[0], coords[1]));
+                lblLocValidation.setText(LanguageManager.get("offre.loc.valid.coords").replace("{0}", String.format("%.4f, %.4f", coords[0], coords[1])));
                 lblLocValidation.setStyle("-fx-text-fill: #059669; -fx-font-size: 11px; -fx-font-weight: bold;");
             } else {
-                erreurs.append("\u2022 La localisation '" + loc.trim() + "' est introuvable.\n");
+                erreurs.append("\u2022 " + LanguageManager.get("offre.valid.loc.notfound").replace("{0}", loc.trim()) + "\n");
             }
         }
 
-        if (comboStatut.getValue() == null) erreurs.append("\u2022 Le statut est obligatoire.\n");
-        if (comboTypeContrat.getValue() == null) erreurs.append("\u2022 Le type de contrat est obligatoire.\n");
-        if (comboModeTravail.getValue() == null) erreurs.append("\u2022 Le mode de travail est obligatoire.\n");
+        if (comboStatut.getValue() == null) erreurs.append("\u2022 " + LanguageManager.get("offre.valid.statut") + "\n");
+        if (comboTypeContrat.getValue() == null) erreurs.append("\u2022 " + LanguageManager.get("offre.valid.contrat") + "\n");
+        if (comboModeTravail.getValue() == null) erreurs.append("\u2022 " + LanguageManager.get("offre.valid.mode") + "\n");
 
         double salMin = parseSalaire(tfSalaireMin.getText());
         double salMax = parseSalaire(tfSalaireMax.getText());
-        if (salMin < 0) erreurs.append("\u2022 Le salaire minimum ne peut pas \u00eatre n\u00e9gatif.\n");
-        if (salMax < 0) erreurs.append("\u2022 Le salaire maximum ne peut pas \u00eatre n\u00e9gatif.\n");
+        if (salMin < 0) erreurs.append("\u2022 " + LanguageManager.get("offre.valid.salaire.min") + "\n");
+        if (salMax < 0) erreurs.append("\u2022 " + LanguageManager.get("offre.valid.salaire.max") + "\n");
         if (salMin > 0 && salMax > 0 && salMin > salMax)
-            erreurs.append("\u2022 Le salaire minimum ne peut pas \u00eatre sup\u00e9rieur au maximum.\n");
+            erreurs.append("\u2022 " + LanguageManager.get("offre.valid.salaire.order") + "\n");
 
         if (erreurs.length() > 0) {
-            afficherAlerte(Alert.AlertType.WARNING, "Validation \u00e9chou\u00e9e", erreurs.toString());
+            afficherAlerte(Alert.AlertType.WARNING, LanguageManager.get("offre.valid.title"), erreurs.toString());
             return false;
         }
         return true;
@@ -337,18 +338,18 @@ public class OffreController implements Initializable {
         if (!validerFormulaire()) return;
         try {
             if (service.titreExiste(tfTitre.getText().trim(), 0)) {
-                afficherAlerte(Alert.AlertType.WARNING, "Doublon d\u00e9tect\u00e9",
-                        "Une offre avec ce titre existe d\u00e9j\u00e0. Veuillez choisir un autre titre.");
+                afficherAlerte(Alert.AlertType.WARNING, LanguageManager.get("offre.duplicate"),
+                        LanguageManager.get("offre.duplicate.msg.choose"));
                 return;
             }
             Offre o = buildOffreFromForm();
             service.ajouter(o);
             rafraichir();
             nettoyer();
-            afficherAlerte(Alert.AlertType.INFORMATION, "Succ\u00e8s", "L'offre a \u00e9t\u00e9 ajout\u00e9e avec succ\u00e8s !");
+            afficherAlerte(Alert.AlertType.INFORMATION, LanguageManager.get("common.success"), LanguageManager.get("offre.success.add"));
         } catch (SQLException e) {
             e.printStackTrace();
-            afficherAlerte(Alert.AlertType.ERROR, "Erreur de base de donn\u00e9es", "D\u00e9tail : " + e.getMessage());
+            afficherAlerte(Alert.AlertType.ERROR, LanguageManager.get("offre.error.db"), LanguageManager.get("offre.error.detail").replace("{0}", e.getMessage()));
         }
     }
 
@@ -356,16 +357,16 @@ public class OffreController implements Initializable {
     private void handleModifier() {
         Offre selection = tableOffres.getSelectionModel().getSelectedItem();
         if (selection == null) {
-            afficherAlerte(Alert.AlertType.WARNING, "S\u00e9lection requise", "Veuillez s\u00e9lectionner une offre dans le tableau.");
+            afficherAlerte(Alert.AlertType.WARNING, LanguageManager.get("offre.select.required"), LanguageManager.get("offre.select.msg"));
             return;
         }
         if (!validerFormulaire()) return;
-        if (!confirmerAction("Voulez-vous modifier cette offre ?")) return;
+        if (!confirmerAction(LanguageManager.get("offre.confirm.edit"))) return;
 
         try {
             if (service.titreExiste(tfTitre.getText().trim(), selection.getId())) {
-                afficherAlerte(Alert.AlertType.WARNING, "Doublon d\u00e9tect\u00e9",
-                        "Une autre offre avec ce titre existe d\u00e9j\u00e0.");
+                afficherAlerte(Alert.AlertType.WARNING, LanguageManager.get("offre.duplicate"),
+                        LanguageManager.get("offre.duplicate.msg.other"));
                 return;
             }
             selection.setTitre(tfTitre.getText().trim());
@@ -381,10 +382,10 @@ public class OffreController implements Initializable {
             tableOffres.refresh();
             rafraichir();
             nettoyer();
-            afficherAlerte(Alert.AlertType.INFORMATION, "Succ\u00e8s", "L'offre a \u00e9t\u00e9 modifi\u00e9e !");
+            afficherAlerte(Alert.AlertType.INFORMATION, LanguageManager.get("common.success"), LanguageManager.get("offre.success.edit"));
         } catch (SQLException e) {
             e.printStackTrace();
-            afficherAlerte(Alert.AlertType.ERROR, "Erreur de modification", e.getMessage());
+            afficherAlerte(Alert.AlertType.ERROR, LanguageManager.get("offre.error.edit"), e.getMessage());
         }
     }
 
@@ -392,19 +393,19 @@ public class OffreController implements Initializable {
     private void handleSupprimer() {
         Offre selection = tableOffres.getSelectionModel().getSelectedItem();
         if (selection == null) {
-            afficherAlerte(Alert.AlertType.WARNING, "S\u00e9lection requise", "Veuillez s\u00e9lectionner une offre \u00e0 supprimer.");
+            afficherAlerte(Alert.AlertType.WARNING, LanguageManager.get("offre.select.required"), LanguageManager.get("offre.select.delete"));
             return;
         }
-        if (!confirmerAction("Voulez-vous vraiment supprimer l'offre : " + selection.getTitre() + " ?\n\n\u26a0 Cela supprimera aussi ses avantages.")) return;
+        if (!confirmerAction(LanguageManager.get("offre.confirm.delete.full").replace("{0}", selection.getTitre()))) return;
 
         try {
             service.supprimer(selection.getId());
             rafraichir();
             nettoyer();
-            afficherAlerte(Alert.AlertType.INFORMATION, "Succ\u00e8s", "L'offre a \u00e9t\u00e9 supprim\u00e9e.");
+            afficherAlerte(Alert.AlertType.INFORMATION, LanguageManager.get("common.success"), LanguageManager.get("offre.success.delete"));
         } catch (SQLException e) {
             e.printStackTrace();
-            afficherAlerte(Alert.AlertType.ERROR, "Erreur de suppression", e.getMessage());
+            afficherAlerte(Alert.AlertType.ERROR, LanguageManager.get("offre.error.delete"), e.getMessage());
         }
     }
 
@@ -415,8 +416,8 @@ public class OffreController implements Initializable {
     private void ouvrirAvantages() {
         Offre selection = tableOffres.getSelectionModel().getSelectedItem();
         if (selection == null) {
-            afficherAlerte(Alert.AlertType.WARNING, "S\u00e9lection requise",
-                    "Veuillez s\u00e9lectionner une offre pour voir ses avantages.");
+            afficherAlerte(Alert.AlertType.WARNING, LanguageManager.get("offre.select.required"),
+                    LanguageManager.get("offre.select.avantages"));
             return;
         }
         try {
@@ -436,7 +437,7 @@ public class OffreController implements Initializable {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            afficherAlerte(Alert.AlertType.ERROR, "Erreur", "Impossible de charger la page des avantages : " + e.getMessage());
+            afficherAlerte(Alert.AlertType.ERROR, LanguageManager.get("common.error"), LanguageManager.get("offre.error.load.avantages").replace("{0}", e.getMessage()));
         }
     }
 
@@ -463,7 +464,7 @@ public class OffreController implements Initializable {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            afficherAlerte(Alert.AlertType.ERROR, "Erreur", "Impossible de charger la carte : " + e.getMessage());
+            afficherAlerte(Alert.AlertType.ERROR, LanguageManager.get("common.error"), LanguageManager.get("offre.error.load.map").replace("{0}", e.getMessage()));
         }
     }
 
@@ -477,8 +478,8 @@ public class OffreController implements Initializable {
         String localisation = tfLocalisation.getText();
 
         if ((titre == null || titre.isBlank()) && (description == null || description.isBlank())) {
-            afficherAlerte(Alert.AlertType.WARNING, "Rien \u00e0 traduire",
-                    "Veuillez s\u00e9lectionner une offre ou remplir le formulaire avant de traduire.");
+            afficherAlerte(Alert.AlertType.WARNING, LanguageManager.get("offre.translate.nothing"),
+                    LanguageManager.get("offre.translate.nothing.msg"));
             return;
         }
 
@@ -486,18 +487,18 @@ public class OffreController implements Initializable {
         Langue cible = comboLangueCible.getValue();
 
         if (source == null || cible == null) {
-            afficherAlerte(Alert.AlertType.WARNING, "Langues manquantes",
-                    "Veuillez s\u00e9lectionner la langue source et la langue cible.");
+            afficherAlerte(Alert.AlertType.WARNING, LanguageManager.get("offre.translate.lang.missing"),
+                    LanguageManager.get("offre.translate.lang.missing.msg"));
             return;
         }
 
         if (source == cible) {
-            afficherAlerte(Alert.AlertType.INFORMATION, "M\u00eame langue",
-                    "La langue source et la langue cible sont identiques.");
+            afficherAlerte(Alert.AlertType.INFORMATION, LanguageManager.get("offre.translate.same.lang"),
+                    LanguageManager.get("offre.translate.same.lang.msg"));
             return;
         }
 
-        lblTraduction.setText("\u23f3 Traduction en cours (" + source.getLabel() + " \u2192 " + cible.getLabel() + ")...");
+        lblTraduction.setText(LanguageManager.get("offre.translate.progress").replace("{0}", source.getLabel()).replace("{1}", cible.getLabel()));
         lblTraduction.setStyle("-fx-text-fill: #2563EB; -fx-font-size: 11px;");
 
         Task<String[]> task = new Task<>() {
@@ -519,16 +520,16 @@ public class OffreController implements Initializable {
                 taDescriptionTraduite.setText(result[1]);
                 lblLocTraduite.setText(result[2]);
                 paneTraduction.setExpanded(true);
-                lblTraduction.setText("\u2705 Traduit : " + source.getLabel() + " \u2192 " + cible.getLabel());
+                lblTraduction.setText(LanguageManager.get("offre.translate.success").replace("{0}", source.getLabel()).replace("{1}", cible.getLabel()));
                 lblTraduction.setStyle("-fx-text-fill: #059669; -fx-font-size: 11px; -fx-font-weight: bold;");
             } else {
-                lblTraduction.setText("\u274c \u00c9chec de la traduction \u2014 v\u00e9rifiez votre connexion internet.");
+                lblTraduction.setText(LanguageManager.get("offre.translate.failed"));
                 lblTraduction.setStyle("-fx-text-fill: #DC2626; -fx-font-size: 11px; -fx-font-weight: bold;");
             }
         });
 
         task.setOnFailed(e -> {
-            lblTraduction.setText("\u274c Erreur : " + task.getException().getMessage());
+            lblTraduction.setText(LanguageManager.get("offre.translate.error").replace("{0}", task.getException().getMessage()));
             lblTraduction.setStyle("-fx-text-fill: #DC2626; -fx-font-size: 11px;");
         });
 
@@ -554,8 +555,8 @@ public class OffreController implements Initializable {
         }
 
         if (salMin == 0 && salMax == 0) {
-            afficherAlerte(Alert.AlertType.WARNING, "Aucun salaire",
-                    "Veuillez saisir un salaire ou s\u00e9lectionner une offre avec un salaire d\u00e9fini.");
+            afficherAlerte(Alert.AlertType.WARNING, LanguageManager.get("offre.currency.none"),
+                    LanguageManager.get("offre.currency.none.msg"));
             return;
         }
 
@@ -563,7 +564,7 @@ public class OffreController implements Initializable {
         if (source == null) { source = Devise.TND; comboDeviseSource.setValue(source); }
 
         if (lblConversionStatus != null) {
-            lblConversionStatus.setText("\u23f3 Conversion en cours...");
+            lblConversionStatus.setText(LanguageManager.get("offre.currency.progress"));
             lblConversionStatus.setStyle("-fx-text-fill: #2563EB; -fx-font-size: 11px;");
         }
         if (taConversionResult != null) taConversionResult.setText("");
@@ -582,7 +583,7 @@ public class OffreController implements Initializable {
             CurrencyService.ConversionResult convResult = task.getValue();
             if (convResult == null) {
                 if (lblConversionStatus != null) {
-                    lblConversionStatus.setText("\u274c R\u00e9sultat vide.");
+                    lblConversionStatus.setText(LanguageManager.get("offre.currency.empty"));
                     lblConversionStatus.setStyle("-fx-text-fill: #DC2626; -fx-font-size: 11px; -fx-font-weight: bold;");
                 }
                 return;
@@ -593,10 +594,10 @@ public class OffreController implements Initializable {
                     lblConversionStatus.setText("\u274c " + convResult.getErrorMessage());
                     lblConversionStatus.setStyle("-fx-text-fill: #DC2626; -fx-font-size: 11px; -fx-font-weight: bold;");
                 } else if (convResult.getConversions().isEmpty()) {
-                    lblConversionStatus.setText("\u274c Impossible de r\u00e9cup\u00e9rer les taux.");
+                    lblConversionStatus.setText(LanguageManager.get("offre.currency.rates.error"));
                     lblConversionStatus.setStyle("-fx-text-fill: #DC2626; -fx-font-size: 11px; -fx-font-weight: bold;");
                 } else {
-                    lblConversionStatus.setText("\u2705 Conversion r\u00e9ussie \u2014 " + convResult.getConversions().size() + " devise(s)");
+                    lblConversionStatus.setText(LanguageManager.get("offre.currency.success").replace("{0}", String.valueOf(convResult.getConversions().size())));
                     lblConversionStatus.setStyle("-fx-text-fill: #059669; -fx-font-size: 11px; -fx-font-weight: bold;");
                 }
             }
@@ -604,12 +605,12 @@ public class OffreController implements Initializable {
 
         task.setOnFailed(e -> {
             Throwable ex = task.getException();
-            String msg = ex != null ? ex.getMessage() : "Erreur inconnue";
+            String msg = ex != null ? ex.getMessage() : LanguageManager.get("offre.currency.error.unknown");
             if (lblConversionStatus != null) {
-                lblConversionStatus.setText("\u274c Erreur : " + msg);
+                lblConversionStatus.setText(LanguageManager.get("offre.currency.error").replace("{0}", msg));
                 lblConversionStatus.setStyle("-fx-text-fill: #DC2626; -fx-font-size: 11px;");
             }
-            if (taConversionResult != null) taConversionResult.setText("Une erreur s'est produite.\n" + msg);
+            if (taConversionResult != null) taConversionResult.setText(LanguageManager.get("offre.currency.error.detail").replace("{0}", msg));
             if (ex != null) ex.printStackTrace();
         });
 
@@ -635,7 +636,7 @@ public class OffreController implements Initializable {
             tfSalaireMax.setText(selection.getSalaireMax() > 0 ? String.valueOf(selection.getSalaireMax()) : "");
             localisationValide = true;
             derni\u00e8reLocValid\u00e9e = selection.getLocalisation();
-            lblLocValidation.setText("\u2705 Adresse existante");
+            lblLocValidation.setText(LanguageManager.get("offre.loc.existing"));
             lblLocValidation.setStyle("-fx-text-fill: #059669; -fx-font-size: 11px; -fx-font-weight: bold;");
         }
     }
@@ -649,7 +650,7 @@ public class OffreController implements Initializable {
             updateCount(results.size());
         } catch (SQLException e) {
             e.printStackTrace();
-            afficherAlerte(Alert.AlertType.ERROR, "Erreur recherche", e.getMessage());
+            afficherAlerte(Alert.AlertType.ERROR, LanguageManager.get("offre.error.search"), e.getMessage());
         }
     }
 
@@ -669,7 +670,7 @@ public class OffreController implements Initializable {
         try {
             String choix = comboTri.getValue();
 
-            if ("Score \u2193".equals(choix)) {
+            if (LanguageManager.get("offre.sort.score").equals(choix)) {
                 List<Offre> offres = service.afficher();
                 Map<Integer, Integer> scores = service.scoresAttractivite();
                 for (Offre o : offres) {
@@ -689,9 +690,9 @@ public class OffreController implements Initializable {
             }
 
             String colonne = "id";
-            if ("Titre".equals(choix)) colonne = "titre";
-            else if ("Localisation".equals(choix)) colonne = "localisation";
-            else if ("Statut".equals(choix)) colonne = "statut";
+            if (LanguageManager.get("offre.sort.titre").equals(choix)) colonne = "titre";
+            else if (LanguageManager.get("offre.sort.loc").equals(choix)) colonne = "localisation";
+            else if (LanguageManager.get("offre.sort.statut").equals(choix)) colonne = "statut";
 
             List<Offre> sorted = service.trierPar(colonne);
             appliquerClassement(sorted);
@@ -699,7 +700,7 @@ public class OffreController implements Initializable {
             updateCount(sorted.size());
         } catch (SQLException e) {
             e.printStackTrace();
-            afficherAlerte(Alert.AlertType.ERROR, "Erreur tri", e.getMessage());
+            afficherAlerte(Alert.AlertType.ERROR, LanguageManager.get("offre.error.sort"), e.getMessage());
         }
     }
 
@@ -708,7 +709,7 @@ public class OffreController implements Initializable {
     // ══════════════════════════════════════════════════════════
     private boolean confirmerAction(String message) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmation");
+        alert.setTitle(LanguageManager.get("offre.confirm.title"));
         alert.setHeaderText(null);
         alert.setContentText(message);
         Optional<ButtonType> result = alert.showAndWait();
@@ -752,7 +753,7 @@ public class OffreController implements Initializable {
 
     private void updateCount(int count) {
         if (lblCount != null) {
-            lblCount.setText(count + " offre" + (count > 1 ? "s" : "") + " trouv\u00e9e" + (count > 1 ? "s" : ""));
+            lblCount.setText(LanguageManager.get("offre.count").replace("{0}", String.valueOf(count)));
         }
     }
 

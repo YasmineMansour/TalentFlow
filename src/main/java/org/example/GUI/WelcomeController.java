@@ -2,7 +2,10 @@ package org.example.GUI;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
 import org.example.model.User;
+import org.example.utils.AvatarUtils;
+import org.example.utils.LanguageManager;
 
 public class WelcomeController {
 
@@ -10,6 +13,7 @@ public class WelcomeController {
     @FXML private Label lblUserName;
     @FXML private Label lblRole;
     @FXML private Label lblTip;
+    @FXML private StackPane avatarContainer;
 
     @FXML
     public void initialize() {
@@ -20,23 +24,29 @@ public class WelcomeController {
         String nom = user.getNom();
         String role = user.getRole().toUpperCase();
 
-        lblWelcome.setText("Bienvenue sur TalentFlow !");
+        lblWelcome.setText(LanguageManager.get("welcome.title"));
         lblUserName.setText(prenom + " " + nom);
 
+        // Avatar dans la section hero
+        if (avatarContainer != null) {
+            StackPane avatar = AvatarUtils.createAvatar(prenom + " " + nom, 40);
+            avatarContainer.getChildren().add(avatar);
+        }
+
         String roleLabel = switch (role) {
-            case "ADMIN" -> "Administrateur";
-            case "RH" -> "Ressources Humaines";
-            case "CANDIDAT" -> "Candidat";
+            case "ADMIN" -> LanguageManager.get("welcome.role.admin");
+            case "RH" -> LanguageManager.get("welcome.role.rh");
+            case "CANDIDAT" -> LanguageManager.get("welcome.role.candidat");
             default -> role;
         };
-        lblRole.setText("Connecté en tant que : " + roleLabel);
+        lblRole.setText(LanguageManager.get("welcome.role.prefix") + " " + roleLabel);
 
         // Astuce contextuelle selon le rôle
         String tip = switch (role) {
-            case "ADMIN" -> "En tant qu'administrateur, vous avez un accès complet : gestion des utilisateurs et des droits d'accès, gestion des offres d'emploi, suivi des candidatures, planification des entretiens et prise de décisions.";
-            case "RH" -> "En tant que RH, vous gérez les offres d'emploi, traitez les candidatures reçues, planifiez les entretiens avec les candidats, prenez les décisions finales et envoyez les résultats par email.";
-            case "CANDIDAT" -> "En tant que candidat, consultez les offres d'emploi disponibles, postulez en joignant votre CV et lettre de motivation, puis suivez l'avancement de vos candidatures.";
-            default -> "Utilisez le menu latéral pour naviguer entre les différents modules.";
+            case "ADMIN" -> LanguageManager.get("welcome.tip.admin");
+            case "RH" -> LanguageManager.get("welcome.tip.rh");
+            case "CANDIDAT" -> LanguageManager.get("welcome.tip.candidat");
+            default -> LanguageManager.get("welcome.tip.default");
         };
         lblTip.setText(tip);
     }

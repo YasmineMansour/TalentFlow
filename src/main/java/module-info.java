@@ -3,6 +3,7 @@ module org.example.talentflow {
     requires javafx.fxml;
     requires javafx.web;
     requires java.sql;
+    requires java.prefs;
     requires javafx.graphics;
     requires mysql.connector.j;     // Base de données MySQL
     requires jbcrypt;               // Hachage des mots de passe (BCrypt)

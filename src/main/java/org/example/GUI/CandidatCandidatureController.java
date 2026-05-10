@@ -17,6 +17,7 @@ import org.example.model.User;
 import org.example.services.CandidatureService;
 import org.example.services.OffreService;
 import org.example.utils.EmailService;
+import org.example.utils.LanguageManager;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -165,11 +166,11 @@ public class CandidatCandidatureController {
     private void handlePostuler() {
         try {
             if (tfEmail.getText().isEmpty() || !tfEmail.getText().contains("@")) {
-                showError("⚠️ Email invalide !");
+                showError(LanguageManager.get("cand.error.email"));
                 return;
             }
             if (tfOffreId.getText().isEmpty()) {
-                showError("⚠️ Sélectionnez une offre dans la liste !");
+                showError(LanguageManager.get("cand.error.selectoffre"));
                 return;
             }
 
@@ -177,7 +178,7 @@ public class CandidatCandidatureController {
             int userId = getCurrentUserId();
 
             if (candidatureService.alreadyApplied(userId, oId)) {
-                showError("📌 Vous avez déjà postulé à cette offre !");
+                showError(LanguageManager.get("cand.error.already"));
                 return;
             }
 
@@ -202,11 +203,11 @@ public class CandidatCandidatureController {
                 }
             }).start();
 
-            showOk("🎉 Candidature envoyée avec succès ! 📧 Email de confirmation envoyé.");
+            showOk(LanguageManager.get("cand.success"));
             handleVider();
             refresh();
         } catch (NumberFormatException e) {
-            showError("❌ ID offre invalide.");
+            showError(LanguageManager.get("cand.error.id"));
         } catch (Exception e) {
             showError("❌ Erreur : " + e.getMessage());
             e.printStackTrace();
@@ -216,13 +217,13 @@ public class CandidatCandidatureController {
     @FXML
     private void handleModifier() {
         Candidature selected = tvMesCandidatures.getSelectionModel().getSelectedItem();
-        if (selected == null) { showError("❌ Sélectionnez une candidature à modifier."); return; }
+        if (selected == null) { showError(LanguageManager.get("cand.select.edit")); return; }
         if (!"EN_ATTENTE".equals(selected.getStatut())) {
-            showError("⚠️ Vous ne pouvez modifier qu'une candidature en attente.");
+            showError(LanguageManager.get("cand.error.pending"));
             return;
         }
         if (tfEmail.getText().isEmpty() || !tfEmail.getText().contains("@")) {
-            showError("⚠️ Email invalide !");
+            showError(LanguageManager.get("cand.error.email"));
             return;
         }
         try {
@@ -230,24 +231,24 @@ public class CandidatCandidatureController {
             selected.setMotivation(taMotivation.getText());
             selected.setEmail(tfEmail.getText());
             candidatureService.update(selected);
-            showOk("✅ Candidature mise à jour !");
+            showOk(LanguageManager.get("cand.edited"));
             refresh();
         } catch (SQLException e) {
-            showError("❌ Erreur SQL : " + e.getMessage());
+            showError(LanguageManager.get("cand.error.sql").replace("{0}", e.getMessage()));
         }
     }
 
     @FXML
     private void handleSupprimer() {
         Candidature selected = tvMesCandidatures.getSelectionModel().getSelectedItem();
-        if (selected == null) { showError("❌ Sélectionnez une candidature."); return; }
+        if (selected == null) { showError(LanguageManager.get("cand.select.delete")); return; }
         if (!"EN_ATTENTE".equals(selected.getStatut())) {
-            showError("⚠️ Vous ne pouvez supprimer qu'une candidature en attente.");
+            showError(LanguageManager.get("cand.error.pending2"));
             return;
         }
         try {
             candidatureService.delete(selected.getId());
-            showOk("🗑 Candidature supprimée.");
+            showOk(LanguageManager.get("cand.deleted"));
             handleVider();
             refresh();
         } catch (SQLException e) {
@@ -270,7 +271,7 @@ public class CandidatCandidatureController {
     private void handleGererPieces() {
         Candidature selected = tvMesCandidatures.getSelectionModel().getSelectedItem();
         if (selected == null) {
-            showError("⚠️ Sélectionnez une candidature pour gérer les pièces jointes !");
+            showError(LanguageManager.get("cand.select.pj"));
             return;
         }
         try {
@@ -289,7 +290,7 @@ public class CandidatCandidatureController {
                 }
             }
         } catch (IOException e) {
-            showError("❌ Erreur chargement pièces jointes.");
+            showError(LanguageManager.get("cand.error.pj"));
             e.printStackTrace();
         }
     }
@@ -305,7 +306,7 @@ public class CandidatCandidatureController {
             // Forcer le rafraîchissement visuel du tableau des offres
             tvOffres.refresh();
         } catch (Exception e) {
-            showError("❌ Erreur chargement candidatures.");
+            showError(LanguageManager.get("cand.error.load"));
             e.printStackTrace();
         }
     }

@@ -10,6 +10,7 @@ import javafx.scene.control.ListView;
 import org.example.services.DashboardService;
 import org.example.services.EntretienService;
 import org.example.utils.DialogUtil;
+import org.example.utils.LanguageManager;
 
 import java.sql.ResultSet;
 import java.time.LocalDateTime;
@@ -61,7 +62,7 @@ public class EntretienDashboardController {
             loadBarDistribution();
             loadTodayList();
         } catch (Exception e) {
-            DialogUtil.error("Erreur", "Dashboard: " + e.getMessage());
+            DialogUtil.error(LanguageManager.get("common.error"), "Dashboard: " + e.getMessage());
         }
     }
 
@@ -139,7 +140,7 @@ public class EntretienDashboardController {
         barEntretiens.getData().clear();
         Map<String, Integer> stats = service.entretiensParMois(6);
         XYChart.Series<String, Number> series = new XYChart.Series<>();
-        series.setName("Entretiens");
+        series.setName(LanguageManager.get("entdash.series.entretiens"));
         stats.forEach((mois, count) ->
                 series.getData().add(new XYChart.Data<>(mois, count)));
         barEntretiens.getData().add(series);
@@ -152,7 +153,7 @@ public class EntretienDashboardController {
         barDistribution.getData().clear();
         Map<String, Integer> stats = service.distributionNotes();
         XYChart.Series<String, Number> series = new XYChart.Series<>();
-        series.setName("Candidats");
+        series.setName(LanguageManager.get("entdash.series.candidats"));
         stats.forEach((tranche, count) ->
                 series.getData().add(new XYChart.Data<>(tranche, count)));
         barDistribution.getData().add(series);
@@ -182,7 +183,7 @@ public class EntretienDashboardController {
             }
         }
         if (items.isEmpty()) {
-            items.add("Aucun entretien prévu aujourd'hui.");
+            items.add(LanguageManager.get("entdash.empty"));
         }
         lvToday.setItems(items);
     }

@@ -2,27 +2,47 @@ package org.example.utils;
 
 import jakarta.mail.*;
 import jakarta.mail.internet.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 /**
  * Service d'envoi d'emails via Jakarta Mail (SMTP Gmail).
+ * La configuration est lue depuis mail.properties dans les resources.
  *
  * CONFIGURATION REQUISE :
  * 1. Activez la vérification en 2 étapes sur votre compte Google
  * 2. Créez un "Mot de passe d'application" : https://myaccount.google.com/apppasswords
- * 3. Remplacez EMAIL_FROM et EMAIL_PASSWORD ci-dessous
+ * 3. Renseignez mail.username et mail.appPassword dans src/main/resources/mail.properties
  */
 public class EmailService {
 
-    // ===== CONFIGURATION SMTP — À MODIFIER =====
-    private static final String SMTP_HOST = "smtp.gmail.com";
-    private static final String SMTP_PORT = "587";
-    private static final String EMAIL_FROM = "yasminemansour912@gmail.com";           // ← Remplacez par votre email
-    private static final String EMAIL_PASSWORD = "mlisaeceegtruqst";      // ← Remplacez par le mot de passe d'application
+    // ===== CONFIGURATION SMTP — lue depuis mail.properties =====
+    private static final String SMTP_HOST;
+    private static final String SMTP_PORT;
+    private static final String EMAIL_FROM;
+    private static final String EMAIL_PASSWORD;
+
+    static {
+        Properties cfg = new Properties();
+        try (InputStream in = EmailService.class.getClassLoader().getResourceAsStream("mail.properties")) {
+            if (in != null) {
+                cfg.load(in);
+            } else {
+                System.err.println("⚠️ mail.properties introuvable dans les resources !");
+            }
+        } catch (IOException e) {
+            System.err.println("⚠️ Erreur lecture mail.properties : " + e.getMessage());
+        }
+        SMTP_HOST = cfg.getProperty("mail.host", "smtp.gmail.com");
+        SMTP_PORT = cfg.getProperty("mail.port", "587");
+        EMAIL_FROM = cfg.getProperty("mail.username", "votre.email@gmail.com");
+        EMAIL_PASSWORD = cfg.getProperty("mail.appPassword", "");
+    }
 
     /** Vérifie si le service email est configuré */
     public static boolean isConfigured() {
-        return !EMAIL_FROM.equals("votre.email@gmail.com");
+        return !EMAIL_FROM.equals("votre.email@gmail.com") && !EMAIL_PASSWORD.isBlank();
     }
 
     /** Crée une session SMTP authentifiée */
@@ -33,6 +53,10 @@ public class EmailService {
         props.put("mail.smtp.host", SMTP_HOST);
         props.put("mail.smtp.port", SMTP_PORT);
         props.put("mail.smtp.ssl.trust", SMTP_HOST);
+        props.put("mail.smtp.ssl.protocols", "TLSv1.2");
+        props.put("mail.smtp.connectiontimeout", "10000");
+        props.put("mail.smtp.timeout", "10000");
+        props.put("mail.smtp.writetimeout", "10000");
 
         return Session.getInstance(props, new Authenticator() {
             @Override

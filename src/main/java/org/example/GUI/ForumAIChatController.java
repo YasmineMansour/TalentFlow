@@ -8,6 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import org.example.utils.LanguageManager;
 
 /**
  * Contrôleur du chat IA du forum TalentFlow.
@@ -34,7 +35,7 @@ public class ForumAIChatController {
                 String response = aiService.askForumAI(question);
                 Platform.runLater(() -> addAIMessage(response));
             } catch (Exception e) {
-                Platform.runLater(() -> addAIMessage("Erreur lors du traitement de la requête."));
+                Platform.runLater(() -> addAIMessage(LanguageManager.get("forum.ai.error")));
             }
         }).start();
     }

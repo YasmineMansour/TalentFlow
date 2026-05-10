@@ -8,9 +8,12 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import org.example.dao.UserDAO;
 import org.example.model.User;
+import org.example.utils.AvatarUtils;
+import org.example.utils.LanguageManager;
 
 import java.util.List;
 
@@ -31,7 +34,7 @@ public class DashboardHomeController {
         // Greeting
         User currentUser = UserSession.getInstance();
         if (currentUser != null && greetingLabel != null) {
-            greetingLabel.setText("Bonjour, " + currentUser.getPrenom() + " !");
+            greetingLabel.setText(LanguageManager.get("dashboard.greeting") + " " + currentUser.getPrenom() + " !");
         }
 
         loadStatistics();
@@ -71,7 +74,7 @@ public class DashboardHomeController {
         List<User> recent = userDAO.getRecentUsers(5);
 
         if (recent.isEmpty()) {
-            Label empty = new Label("Aucun utilisateur inscrit.");
+            Label empty = new Label(LanguageManager.get("dashboard.empty"));
             empty.setStyle("-fx-text-fill: #b2bec3; -fx-font-size: 13px;");
             recentUsersBox.getChildren().add(empty);
             return;
@@ -82,18 +85,10 @@ public class DashboardHomeController {
             row.setStyle("-fx-background-color: #f8f9fa; -fx-background-radius: 8; -fx-padding: 12 16;");
             row.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
 
-            // Avatar circle with initials
-            String initials = "";
-            if (user.getPrenom() != null && !user.getPrenom().isEmpty())
-                initials += user.getPrenom().charAt(0);
-            if (user.getNom() != null && !user.getNom().isEmpty())
-                initials += user.getNom().charAt(0);
-
-            Label avatar = new Label(initials.toUpperCase());
-            avatar.setStyle("-fx-background-color: linear-gradient(to bottom right, #6c5ce7, #a29bfe); " +
-                    "-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; " +
-                    "-fx-min-width: 38; -fx-min-height: 38; -fx-max-width: 38; -fx-max-height: 38; " +
-                    "-fx-background-radius: 19; -fx-alignment: center;");
+            // Avatar circle avec ui-avatars.com
+            String fullName = (user.getPrenom() != null ? user.getPrenom() : "") + " " +
+                              (user.getNom() != null ? user.getNom() : "");
+            StackPane avatar = AvatarUtils.createAvatar(fullName.trim(), 19);
 
             // Name + email
             VBox info = new VBox(2);

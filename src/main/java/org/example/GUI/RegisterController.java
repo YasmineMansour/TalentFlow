@@ -14,6 +14,8 @@ import org.example.utils.EmailService;
 import org.example.utils.FraudDetectionService;
 import org.example.utils.GoogleAuthService;
 import org.example.utils.ValidationUtils;
+import org.example.utils.LanguageManager;
+import org.example.utils.ThemeManager;
 
 import java.io.IOException;
 
@@ -34,6 +36,8 @@ public class RegisterController {
         // Synchroniser password fields avec leurs TextField visibles
         passwordVisible.textProperty().bindBidirectional(passwordField.textProperty());
         confirmPasswordVisible.textProperty().bindBidirectional(confirmPasswordField.textProperty());
+
+        Platform.runLater(() -> ThemeManager.applyTheme(nomField.getScene()));
     }
 
     @FXML
@@ -68,7 +72,7 @@ public class RegisterController {
         FraudCheckResult fraudCheck = FraudDetectionService.analyzeUser(email, nom, prenom, tel);
         if (fraudCheck.isFlaggedForReview()) {
             statusLabel.setStyle("-fx-text-fill: #d63031;");
-            statusLabel.setText("🛡️ Inscription bloquée : " + fraudCheck.getRiskLevel().getLabel()
+            statusLabel.setText(LanguageManager.get("register.error.fraud") + fraudCheck.getRiskLevel().getLabel()
                     + " — " + String.join(", ", fraudCheck.getFlags()));
             return;
         }
@@ -87,7 +91,7 @@ public class RegisterController {
             boolean created = userDAO.create(newUser);
             if (created) {
                 statusLabel.setStyle("-fx-text-fill: #00b894;");
-                statusLabel.setText("✅ Compte créé avec succès !");
+                statusLabel.setText(LanguageManager.get("register.success"));
 
                 // Envoyer un email de bienvenue en arrière-plan
                 final String userEmail = newUser.getEmail();
@@ -101,10 +105,10 @@ public class RegisterController {
                     } catch (InterruptedException ignored) {}
                 }).start();
             } else {
-                statusLabel.setText("❌ Email déjà utilisé. Veuillez en choisir un autre.");
+                statusLabel.setText(LanguageManager.get("register.error.duplicate"));
             }
         } catch (Exception e) {
-            statusLabel.setText("❌ Erreur lors de la création du compte.");
+            statusLabel.setText(LanguageManager.get("register.error.create"));
             e.printStackTrace();
         }
     }
@@ -118,19 +122,19 @@ public class RegisterController {
         String confirmPassword = confirmPasswordField.getText();
 
         if (nom.isEmpty() || prenom.isEmpty() || email.isEmpty() || tel.isEmpty() || password.isEmpty()) {
-            statusLabel.setText("⚠️ Tous les champs sont obligatoires.");
+            statusLabel.setText(LanguageManager.get("register.error.required"));
             return false;
         }
         if (ValidationUtils.isInvalidName(nom)) {
-            statusLabel.setText("⚠️ Nom invalide (lettres uniquement, min 2 caractères).");
+            statusLabel.setText(LanguageManager.get("register.error.nom"));
             return false;
         }
         if (ValidationUtils.isInvalidName(prenom)) {
-            statusLabel.setText("⚠️ Prénom invalide (lettres uniquement, min 2 caractères).");
+            statusLabel.setText(LanguageManager.get("register.error.prenom"));
             return false;
         }
         if (ValidationUtils.isInvalidEmail(email)) {
-            statusLabel.setText("⚠️ Format email incorrect.");
+            statusLabel.setText(LanguageManager.get("register.error.email"));
             return false;
         }
         // 🛡️ Vérification rapide email jetable en temps réel
@@ -140,16 +144,16 @@ public class RegisterController {
             return false;
         }
         if (ValidationUtils.isInvalidTel(tel)) {
-            statusLabel.setText("⚠️ Le téléphone doit contenir exactement 8 chiffres.");
+            statusLabel.setText(LanguageManager.get("register.error.tel"));
             return false;
         }
         if (ValidationUtils.isInvalidPassword(password)) {
             String weakness = ValidationUtils.getPasswordWeakness(password);
-            statusLabel.setText("⚠️ " + (weakness != null ? weakness : "Mot de passe invalide."));
+            statusLabel.setText("\u26a0\ufe0f " + (weakness != null ? weakness : LanguageManager.get("register.error.password")));
             return false;
         }
         if (!password.equals(confirmPassword)) {
-            statusLabel.setText("⚠️ Les mots de passe ne correspondent pas.");
+            statusLabel.setText(LanguageManager.get("register.error.confirm"));
             return false;
         }
         return true;
@@ -159,12 +163,12 @@ public class RegisterController {
     private void handleGoogleRegister() {
         if (!GoogleAuthService.isConfigured()) {
             statusLabel.setStyle("-fx-text-fill: #d63031;");
-            statusLabel.setText("⚠️ Connexion Google non configurée. Configurez CLIENT_ID et CLIENT_SECRET.");
+            statusLabel.setText(LanguageManager.get("register.google.notconfigured"));
             return;
         }
 
         statusLabel.setStyle("-fx-text-fill: #636e72;");
-        statusLabel.setText("Ouverture du navigateur pour l'inscription Google...");
+        statusLabel.setText(LanguageManager.get("register.google.opening"));
 
         GoogleAuthService.authenticate().thenAccept(userInfo -> {
             Platform.runLater(() -> {
@@ -173,7 +177,7 @@ public class RegisterController {
                     User existingUser = userDAO.findByEmail(userInfo.getEmail());
                     if (existingUser != null) {
                         statusLabel.setStyle("-fx-text-fill: #fdcb6e;");
-                        statusLabel.setText("ℹ️ Ce compte Google existe déjà. Redirection vers la connexion...");
+                        statusLabel.setText(LanguageManager.get("register.google.exists"));
                         new Thread(() -> {
                             try { Thread.sleep(1500); } catch (InterruptedException ignored) {}
                             Platform.runLater(this::handleBackToLogin);
@@ -195,7 +199,7 @@ public class RegisterController {
                         new Thread(() -> EmailService.sendWelcomeEmail(email, prenom)).start();
 
                         statusLabel.setStyle("-fx-text-fill: #00b894;");
-                        statusLabel.setText("✅ Compte créé avec Google ! Redirection...");
+                        statusLabel.setText(LanguageManager.get("register.google.success"));
 
                         new Thread(() -> {
                             try { Thread.sleep(1500); } catch (InterruptedException ignored) {}
@@ -203,18 +207,18 @@ public class RegisterController {
                         }).start();
                     } else {
                         statusLabel.setStyle("-fx-text-fill: #d63031;");
-                        statusLabel.setText("❌ Erreur lors de la création du compte Google.");
+                        statusLabel.setText(LanguageManager.get("register.google.error"));
                     }
                 } catch (Exception e) {
                     statusLabel.setStyle("-fx-text-fill: #d63031;");
-                    statusLabel.setText("❌ Erreur lors de l'inscription Google.");
+                    statusLabel.setText(LanguageManager.get("register.google.error"));
                     e.printStackTrace();
                 }
             });
         }).exceptionally(ex -> {
             Platform.runLater(() -> {
                 statusLabel.setStyle("-fx-text-fill: #d63031;");
-                statusLabel.setText("❌ Inscription Google annulée ou échouée.");
+                statusLabel.setText(LanguageManager.get("register.google.cancel"));
             });
             return null;
         });
@@ -225,8 +229,10 @@ public class RegisterController {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/org/example/LoginView.fxml"));
             Stage stage = (Stage) nomField.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("TalentFlow - Connexion");
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setTitle("TalentFlow - " + LanguageManager.get("login.title"));
+            ThemeManager.applyTheme(scene);
             stage.setMaximized(true);
         } catch (IOException e) {
             e.printStackTrace();

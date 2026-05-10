@@ -8,6 +8,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import org.example.utils.AvatarUtils;
+import org.example.utils.LanguageManager;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -28,15 +30,23 @@ public class ForumMessagingController {
 
     @FXML
     public void initialize() {
-        // Afficher le nom complet dans la liste de contacts
+        // Afficher avatar + nom dans la liste de contacts
         contactList.setCellFactory(param -> new ListCell<>() {
             @Override
             protected void updateItem(User item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null) {
                     setText(null);
+                    setGraphic(null);
                 } else {
-                    setText(item.getFullName());
+                    HBox cell = new HBox(8);
+                    cell.setAlignment(Pos.CENTER_LEFT);
+                    StackPane avatar = AvatarUtils.createAvatar(item.getFullName(), 16);
+                    Label name = new Label(item.getFullName());
+                    name.setStyle("-fx-font-size: 13px; -fx-text-fill: #2d3436;");
+                    cell.getChildren().addAll(avatar, name);
+                    setGraphic(cell);
+                    setText(null);
                 }
             }
         });
@@ -164,7 +174,7 @@ public class ForumMessagingController {
 
         String text = messageInput.getText().trim();
         if (text.isEmpty()) {
-            showAlert("Saisie invalide", "Impossible d'envoyer un message vide !", Alert.AlertType.WARNING);
+            showAlert(LanguageManager.get("forum.input.invalid"), LanguageManager.get("forum.msg.empty"), Alert.AlertType.WARNING);
             return;
         }
 
@@ -183,13 +193,13 @@ public class ForumMessagingController {
         if (msg == null) return;
 
         TextInputDialog dialog = new TextInputDialog(msg.getContent());
-        dialog.setTitle("Modifier le message");
-        dialog.setHeaderText("Modifiez votre message :");
+        dialog.setTitle(LanguageManager.get("forum.msg.edit.title"));
+        dialog.setHeaderText(LanguageManager.get("forum.msg.edit.header"));
         dialog.setContentText("Message :");
 
         dialog.showAndWait().ifPresent(newContent -> {
             if (newContent.trim().isEmpty()) {
-                showAlert("Saisie invalide", "Le message ne peut pas être vide !", Alert.AlertType.WARNING);
+                showAlert(LanguageManager.get("forum.input.invalid"), LanguageManager.get("forum.msg.edit.empty"), Alert.AlertType.WARNING);
             } else {
                 try {
                     messageService.modifierMessage(msg.getId(), newContent);
@@ -207,8 +217,8 @@ public class ForumMessagingController {
         if (msg == null) return;
 
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setTitle("Supprimer le message");
-        confirm.setHeaderText("Êtes-vous sûr de vouloir supprimer ce message ?");
+        confirm.setTitle(LanguageManager.get("forum.msg.delete.title"));
+        confirm.setHeaderText(LanguageManager.get("forum.msg.delete.confirm"));
         confirm.setContentText(msg.getContent());
 
         confirm.showAndWait().ifPresent(response -> {

@@ -43,8 +43,8 @@ public class UserDAO {
                     String storedPassword = rs.getString("password");
                     boolean passwordMatch = false;
 
-                    if (storedPassword.startsWith("$2a$") || storedPassword.startsWith("$2b$")) {
-                        // Le mot de passe est déjà haché avec BCrypt
+                    if (storedPassword.startsWith("$2a$") || storedPassword.startsWith("$2b$") || storedPassword.startsWith("$2y$")) {
+                        // Le mot de passe est haché avec BCrypt ($2a$/$2b$ Java ou $2y$ PHP/Symfony)
                         passwordMatch = PasswordHasher.check(rawPassword, storedPassword);
                     } else {
                         // Ancien mot de passe en clair — comparaison directe
@@ -102,14 +102,14 @@ public class UserDAO {
             System.err.println("❌ Email déjà utilisé : " + user.getEmail());
             return false;
         }
-        String sql = "INSERT INTO user (nom, prenom, email, password, role, telephone) VALUES (?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO user (nom, prenom, email, password, roles, telephone, created_at, blocked, two_factor_enabled, is_active) VALUES (?, ?, ?, ?, ?, ?, NOW(), 0, 1, 1)";
         try (PreparedStatement pstmt = getConn().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setString(1, user.getNom());
             pstmt.setString(2, user.getPrenom());
             pstmt.setString(3, user.getEmail());
             // Hacher le mot de passe avant l'insertion
             pstmt.setString(4, PasswordHasher.hash(user.getPassword()));
-            pstmt.setString(5, user.getRole());
+            pstmt.setString(5, toRolesJson(user.getRole()));
             pstmt.setString(6, user.getTelephone());
             int rows = pstmt.executeUpdate();
             if (rows > 0) {
@@ -219,18 +219,18 @@ public class UserDAO {
             return false;
         }
 
-        String sql = "UPDATE user SET nom=?, prenom=?, email=?, password=?, role=?, telephone=? WHERE id=?";
+        String sql = "UPDATE user SET nom=?, prenom=?, email=?, password=?, roles=?, telephone=? WHERE id=?";
         try (PreparedStatement pstmt = getConn().prepareStatement(sql)) {
             pstmt.setString(1, user.getNom());
             pstmt.setString(2, user.getPrenom());
             pstmt.setString(3, user.getEmail());
             // Si le mot de passe a été modifié (non-haché), le hacher
             String password = user.getPassword();
-            if (password != null && !password.isEmpty() && !password.startsWith("$2a$")) {
+            if (password != null && !password.isEmpty() && !password.startsWith("$2a$") && !password.startsWith("$2b$") && !password.startsWith("$2y$")) {
                 password = PasswordHasher.hash(password);
             }
             pstmt.setString(4, password);
-            pstmt.setString(5, user.getRole());
+            pstmt.setString(5, toRolesJson(user.getRole()));
             pstmt.setString(6, user.getTelephone());
             pstmt.setInt(7, user.getId());
             return pstmt.executeUpdate() > 0;
@@ -269,7 +269,7 @@ public class UserDAO {
     // --- COMPTER PAR RÔLE ---
     public int countByRole(String role) {
         if (getConn() == null) return 0;
-        String sql = "SELECT COUNT(*) FROM user WHERE role = ?";
+        String sql = "SELECT COUNT(*) FROM user WHERE JSON_CONTAINS(roles, JSON_QUOTE(?))";
         try (PreparedStatement pstmt = getConn().prepareStatement(sql)) {
             pstmt.setString(1, role);
             try (ResultSet rs = pstmt.executeQuery()) {
@@ -321,6 +321,23 @@ public class UserDAO {
         return null;
     }
 
+    // --- HELPERS RÔLES (compatible JSON Symfony: ["ROLE_ADMIN"]) ---
+    private String parseRole(String rolesJson) {
+        if (rolesJson == null || rolesJson.isEmpty()) return "ROLE_USER";
+        if (rolesJson.startsWith("[")) {
+            int s = rolesJson.indexOf('"');
+            int e = rolesJson.indexOf('"', s + 1);
+            if (s >= 0 && e > s) return rolesJson.substring(s + 1, e);
+        }
+        return rolesJson;
+    }
+
+    private String toRolesJson(String role) {
+        if (role == null || role.isEmpty()) return "[\"ROLE_USER\"]";
+        if (role.startsWith("[")) return role;
+        return "[\"" + role + "\"]";
+    }
+
     // --- MÉTHODE UTILITAIRE : Mapper un ResultSet vers un objet User ---
     private User mapUser(ResultSet rs) throws SQLException {
         return new User(
@@ -329,7 +346,7 @@ public class UserDAO {
                 rs.getString("prenom"),
                 rs.getString("email"),
                 rs.getString("password"),
-                rs.getString("role"),
+                parseRole(rs.getString("roles")),
                 rs.getString("telephone")
         );
     }

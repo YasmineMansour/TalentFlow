@@ -12,6 +12,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
+import org.example.utils.LanguageManager;
 
 import java.io.File;
 
@@ -32,28 +33,28 @@ public class ForumAddPostController {
     @FXML
     private void handleUploadImage() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Choisir une image");
+        fileChooser.setTitle(LanguageManager.get("forum.image.choose"));
         fileChooser.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg", "*.gif")
         );
         File selectedFile = fileChooser.showOpenDialog(titleField.getScene().getWindow());
 
         if (selectedFile != null) {
-            imageNameLabel.setText("Upload en cours...");
+            imageNameLabel.setText(LanguageManager.get("forum.image.uploading"));
 
             new Thread(() -> {
                 try {
                     String cloudUrl = ForumCloudService.uploadImage(selectedFile);
                     javafx.application.Platform.runLater(() -> {
                         this.selectedImagePath = cloudUrl;
-                        imageNameLabel.setText("✅ Image uploadée");
+                        imageNameLabel.setText(LanguageManager.get("forum.image.success"));
                         imagePreview.setImage(new javafx.scene.image.Image(cloudUrl));
                         imagePreview.setVisible(true);
                         imagePreview.setManaged(true);
                     });
                 } catch (Exception e) {
                     javafx.application.Platform.runLater(() ->
-                            new Alert(Alert.AlertType.ERROR, "Échec de l'upload : " + e.getMessage()).show());
+                            new Alert(Alert.AlertType.ERROR, LanguageManager.get("forum.image.error").replace("{0}", e.getMessage())).show());
                 }
             }).start();
         }
@@ -70,14 +71,14 @@ public class ForumAddPostController {
         String fullName = currentUser.getFullName();
 
         if (title.isEmpty() || content.isEmpty()) {
-            new Alert(Alert.AlertType.WARNING, "Le titre et le contenu sont obligatoires !").show();
+            new Alert(Alert.AlertType.WARNING, LanguageManager.get("forum.post.title.required")).show();
             return;
         }
 
         try {
             // Vérification rate limit
             if (ModerationService.isRateLimited(fullName)) {
-                new Alert(Alert.AlertType.ERROR, "Veuillez attendre 60 secondes avant de poster à nouveau !").show();
+                new Alert(Alert.AlertType.ERROR, LanguageManager.get("forum.post.cooldown")).show();
                 return;
             }
 
