@@ -12,6 +12,9 @@ import java.util.List;
  * Service de messagerie privée du forum.
  * Utilise la table messages de talent_flow_db.
  * Jointure avec la table user pour récupérer les partenaires de chat.
+ *
+ * IMPORTANT : Symfony stocke les rôles dans la colonne `roles` (JSON),
+ * pas dans une colonne `role`. On utilise parseRole() pour extraire le rôle.
  */
 public class MessageService {
     private Connection getConn() {
@@ -78,10 +81,11 @@ public class MessageService {
     /**
      * Récupérer les partenaires de chat de l'utilisateur courant.
      * Jointure avec la table user de TalentFlow.
+     * Utilise `u.roles` (JSON Symfony) au lieu de `u.role`.
      */
     public List<User> getChatPartners(int currentUserId) throws SQLException {
         List<User> partners = new ArrayList<>();
-        String query = "SELECT DISTINCT u.id, u.nom, u.prenom, u.email, u.role " +
+        String query = "SELECT DISTINCT u.id, u.nom, u.prenom, u.email, u.roles " +
                 "FROM user u " +
                 "JOIN messages m ON (u.id = m.senderId OR u.id = m.receiverId) " +
                 "WHERE (m.senderId = ? OR m.receiverId = ?) AND u.id != ?";
@@ -97,7 +101,7 @@ public class MessageService {
                             rs.getString("prenom"),
                             rs.getString("email"),
                             "", // password non nécessaire
-                            rs.getString("role"),
+                            parseRole(rs.getString("roles")),
                             ""  // telephone non nécessaire
                     );
                     partners.add(u);
@@ -109,10 +113,10 @@ public class MessageService {
 
     /**
      * Rechercher un utilisateur par nom complet (prénom + nom).
-     * Jointure avec la table user de TalentFlow.
+     * Utilise `u.roles` (JSON Symfony) au lieu de `u.role`.
      */
     public User getUserByFullName(String fullName) throws SQLException {
-        String query = "SELECT id, nom, prenom, email, role FROM user WHERE CONCAT(prenom, ' ', nom) = ?";
+        String query = "SELECT id, nom, prenom, email, roles FROM user WHERE CONCAT(prenom, ' ', nom) = ?";
         try (PreparedStatement ps = getConn().prepareStatement(query)) {
             ps.setString(1, fullName);
             try (ResultSet rs = ps.executeQuery()) {
@@ -123,12 +127,25 @@ public class MessageService {
                             rs.getString("prenom"),
                             rs.getString("email"),
                             "",
-                            rs.getString("role"),
+                            parseRole(rs.getString("roles")),
                             ""
                     );
                 }
             }
         }
         return null;
+    }
+
+    /**
+     * Extrait le premier rôle depuis le JSON Symfony.
+     * Symfony stocke les rôles sous forme JSON : ["ROLE_ADMIN","ROLE_USER"]
+     */
+    private String parseRole(String rolesJson) {
+        if (rolesJson == null || rolesJson.isEmpty()) return "ROLE_USER";
+        int start = rolesJson.indexOf('"');
+        if (start < 0) return "ROLE_USER";
+        int end = rolesJson.indexOf('"', start + 1);
+        if (end < 0) return "ROLE_USER";
+        return rolesJson.substring(start + 1, end);
     }
 }

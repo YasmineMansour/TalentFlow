@@ -9,7 +9,9 @@ import java.util.List;
 
 /**
  * Service CRUD pour les posts du forum.
- * Utilise la table posts de talent_flow_db.
+ * Utilise la table posts de talent_flow_db (schema Symfony).
+ * La table posts n'a PAS de colonnes authorName/authorRole —
+ * on fait un JOIN avec la table user pour récupérer ces infos.
  */
 public class PostService {
     private Connection getConn() {
@@ -18,15 +20,15 @@ public class PostService {
 
     /** Ajouter un nouveau post */
     public void ajouter(Post p) throws SQLException {
-        String req = "INSERT INTO posts (title, content, author_id, authorName, authorRole, upvotes, image_path) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        // La table posts Symfony n'a PAS authorName ni authorRole : on stocke
+        // seulement author_id (FK vers user)
+        String req = "INSERT INTO posts (title, content, author_id, upvotes, image_path, created_at) VALUES (?, ?, ?, ?, ?, NOW())";
         try (PreparedStatement pst = getConn().prepareStatement(req)) {
             pst.setString(1, p.getTitle());
             pst.setString(2, p.getContent());
             pst.setInt(3, p.getAuthorId());
-            pst.setString(4, p.getAuthorName());
-            pst.setString(5, p.getAuthorRole());
-            pst.setInt(6, p.getUpvotes());
-            pst.setString(7, p.getImagePath());
+            pst.setInt(4, p.getUpvotes());
+            pst.setString(5, p.getImagePath());
             pst.executeUpdate();
         }
     }
@@ -55,10 +57,13 @@ public class PostService {
         }
     }
 
-    /** Récupérer tous les posts (du plus récent au plus ancien) */
+    /** Récupérer tous les posts (du plus récent au plus ancien).
+     *  JOIN avec user pour récupérer nom/prenom/roles de l'auteur. */
     public List<Post> afficher() throws SQLException {
         List<Post> list = new ArrayList<>();
-        String req = "SELECT * FROM posts ORDER BY id DESC";
+        String req = "SELECT p.id, p.title, p.content, p.author_id, p.upvotes, p.image_path, " +
+                "CONCAT(u.prenom, ' ', u.nom) AS authorName, u.roles AS authorRoles " +
+                "FROM posts p LEFT JOIN user u ON p.author_id = u.id ORDER BY p.id DESC";
         try (Statement st = getConn().createStatement();
              ResultSet rs = st.executeQuery(req)) {
             while (rs.next()) {
@@ -67,7 +72,7 @@ public class PostService {
                         rs.getString("title"),
                         rs.getString("content"),
                         rs.getString("authorName"),
-                        rs.getString("authorRole"),
+                        parseRole(rs.getString("authorRoles")),
                         rs.getInt("upvotes"),
                         rs.getString("image_path")
                 );
@@ -147,5 +152,18 @@ public class PostService {
         } finally {
             conn.setAutoCommit(true);
         }
+    }
+
+    /**
+     * Extrait le premier rôle depuis le JSON Symfony.
+     * Symfony stocke les rôles sous forme JSON : ["ROLE_ADMIN","ROLE_USER"]
+     */
+    private String parseRole(String rolesJson) {
+        if (rolesJson == null || rolesJson.isEmpty()) return "ROLE_USER";
+        int start = rolesJson.indexOf('"');
+        if (start < 0) return "ROLE_USER";
+        int end = rolesJson.indexOf('"', start + 1);
+        if (end < 0) return "ROLE_USER";
+        return rolesJson.substring(start + 1, end);
     }
 }
